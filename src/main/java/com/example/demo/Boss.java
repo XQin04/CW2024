@@ -1,38 +1,51 @@
 package com.example.demo;
 
 import java.util.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
 
 public class Boss extends FighterPlane {
 
-	private static final String IMAGE_NAME = "bossplane.png";
+	private static final String IMAGE_NAME = "enemyboss.png";
 	private static final double INITIAL_X_POSITION = 1000.0;
 	private static final double INITIAL_Y_POSITION = 400;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
-	private static final double BOSS_FIRE_RATE = .04;
-	private static final double BOSS_SHIELD_PROBABILITY = .002;
+	private static final double BOSS_FIRE_RATE = .015;
+	private static final double BOSS_SHIELD_PROBABILITY = 0;
 	private static final int IMAGE_HEIGHT = 300;
 	private static final int VERTICAL_VELOCITY = 8;
-	private static final int HEALTH = 100;
+	private static final int HEALTH = 3;
 	private static final int MOVE_FREQUENCY_PER_CYCLE = 5;
 	private static final int ZERO = 0;
 	private static final int MAX_FRAMES_WITH_SAME_MOVE = 10;
 	private static final int Y_POSITION_UPPER_BOUND = -100;
 	private static final int Y_POSITION_LOWER_BOUND = 475;
 	private static final int MAX_FRAMES_WITH_SHIELD = 500;
+
 	private final List<Integer> movePattern;
 	private boolean isShielded;
 	private int consecutiveMovesInSameDirection;
 	private int indexOfCurrentMove;
 	private int framesWithShieldActivated;
+	private DropShadow shieldGlowEffect; // Effect for glow
 
-	public Boss() {
+	private LevelParent levelParent; // Reference to the LevelParent
+
+	public Boss(LevelParent levelParent) {
 		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
+		this.levelParent = levelParent; // Assign LevelParent reference
 		movePattern = new ArrayList<>();
 		consecutiveMovesInSameDirection = 0;
 		indexOfCurrentMove = 0;
 		framesWithShieldActivated = 0;
 		isShielded = false;
 		initializeMovePattern();
+
+		// Initialize the glow effect
+		shieldGlowEffect = new DropShadow();
+		shieldGlowEffect.setColor(Color.YELLOW); // Blue glow for the shield
+		shieldGlowEffect.setRadius(30);       // Adjust the radius for the glow size
+		shieldGlowEffect.setSpread(0.5);      // Spread makes the glow more intense
 	}
 
 	@Override
@@ -44,7 +57,7 @@ public class Boss extends FighterPlane {
 			setTranslateY(initialTranslateY);
 		}
 	}
-	
+
 	@Override
 	public void updateActor() {
 		updatePosition();
@@ -53,14 +66,29 @@ public class Boss extends FighterPlane {
 
 	@Override
 	public ActiveActorDestructible fireProjectile() {
-		return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition()) : null;
+		return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition(), levelParent) : null;
 	}
-	
+
 	@Override
 	public void takeDamage() {
 		if (!isShielded) {
 			super.takeDamage();
 		}
+	}
+
+	public javafx.geometry.Bounds getCustomHitbox() {
+		// Get the default bounds of the Boss
+		javafx.geometry.Bounds originalBounds = super.getBoundsInParent();
+
+		// Adjust the bounds to make the hitbox more precise
+		double paddingX = 80; // Horizontal padding
+		double paddingY = 80; // Vertical padding
+		return new javafx.geometry.BoundingBox(
+				originalBounds.getMinX() + paddingX, // Adjust left boundary
+				originalBounds.getMinY() + paddingY, // Adjust top boundary
+				originalBounds.getWidth() - 2 * paddingX, // Adjust width
+				originalBounds.getHeight() - 2 * paddingY // Adjust height
+		);
 	}
 
 	private void initializeMovePattern() {
@@ -74,7 +102,7 @@ public class Boss extends FighterPlane {
 
 	private void updateShield() {
 		if (isShielded) framesWithShieldActivated++;
-		else if (shieldShouldBeActivated()) activateShield();	
+		else if (shieldShouldBeActivated()) activateShield();
 		if (shieldExhausted()) deactivateShield();
 	}
 
@@ -110,11 +138,12 @@ public class Boss extends FighterPlane {
 
 	private void activateShield() {
 		isShielded = true;
+		setEffect(shieldGlowEffect); // Apply the glow effect
 	}
 
 	private void deactivateShield() {
 		isShielded = false;
 		framesWithShieldActivated = 0;
+		setEffect(null); // Remove the glow effect
 	}
-
 }

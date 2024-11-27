@@ -3,7 +3,7 @@ package com.example.demo;
 import javafx.scene.image.*;
 
 public abstract class ActiveActor extends ImageView {
-	
+
 	private static final String IMAGE_LOCATION = "/com/example/demo/images/";
 
 	public ActiveActor(String imageName, int imageHeight, double initialXPos, double initialYPos) {
