@@ -15,7 +15,8 @@ import javafx.util.Duration;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
 import com.example.demo.controller.Main;
-
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 
 
@@ -54,6 +55,7 @@ public abstract class LevelParent extends Observable {
 
 	private PauseMenu pauseMenu;
 	private EndGameMenu endGameMenu;
+	private MediaPlayer gameBackgroundMediaPlayer; // New MediaPlayer for game music
 
 
 
@@ -100,6 +102,8 @@ public abstract class LevelParent extends Observable {
 		initializePauseButton();
 		initializePauseMenu();// Initialize pause menu
 		initializeEndGameMenu(); // EndGameMenu setup
+		initializeGameBackgroundMusic(); // Initialize game background music
+
 
 		levelView.showHeartDisplay();
 		return scene;
@@ -109,10 +113,13 @@ public abstract class LevelParent extends Observable {
 
 	public void startGame() {
 		background.requestFocus();
+		if (gameBackgroundMediaPlayer != null) {
+			gameBackgroundMediaPlayer.play(); // Play the game background music
+		}
 		timeline.play();
 	}
-
 	public void goToNextLevel(String levelName) {
+		stopGameBackgroundMusic(); // Stop the background music when transitioning
 		timeline.stop(); // Stop the current game loop.
 		root.getChildren().clear(); // Clear all nodes from the scene to release resources.
 
@@ -121,7 +128,18 @@ public abstract class LevelParent extends Observable {
 		notifyObservers(levelName);
 	}
 
-
+	private void initializeGameBackgroundMusic() {
+		try {
+			// Load the game background music
+			Media gameMusic = new Media(getClass().getResource("/com/example/demo/sounds/Menu.mp3").toExternalForm());
+			gameBackgroundMediaPlayer = new MediaPlayer(gameMusic);
+			gameBackgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the game music
+			gameBackgroundMediaPlayer.setVolume(0.6); // Set an appropriate volume level
+		} catch (Exception e) {
+			System.err.println("Error loading game background music.");
+			e.printStackTrace();
+		}
+	}
 
 	private void updateScene() {
 		if (isPaused) return; // Skip updates if the game is paused
@@ -283,6 +301,9 @@ public abstract class LevelParent extends Observable {
 
 	private void pauseGame() {
 		timeline.pause(); // Pause the game loop
+		if (gameBackgroundMediaPlayer != null) {
+			gameBackgroundMediaPlayer.pause(); // Pause the game background music
+		}
 		isPaused = true; // Update pause state
 		pauseButton.setText("Resume"); // Update button text
 		pauseButton.setVisible(false); // Hide the pause button
@@ -307,6 +328,9 @@ public abstract class LevelParent extends Observable {
 
 	private void resumeGame() {
 		timeline.play(); // Resume the game loop
+		if (gameBackgroundMediaPlayer != null) {
+			gameBackgroundMediaPlayer.play(); // Resume the game background music
+		}
 		isPaused = false; // Update pause state
 		pauseButton.setText("Pause"); // Update button text
 		pauseButton.setVisible(true); // Ensure pause button is visible
@@ -315,15 +339,21 @@ public abstract class LevelParent extends Observable {
 	}
 
 
+
 	private void goToMainMenu(Stage stage) {
 		timeline.stop(); // Stop the game loop
+		stopGameBackgroundMusic(); // Stop the game background music
 		root.getChildren().clear(); // Clear all game components
 
 		// Create and initialize the MainMenu
 		MainMenu mainMenu = new MainMenu();
 		mainMenu.start(stage, new Main()); // Pass stage and a new Main instance
 	}
-
+	private void stopGameBackgroundMusic() {
+		if (gameBackgroundMediaPlayer != null) {
+			gameBackgroundMediaPlayer.stop();
+		}
+	}
 
 
 

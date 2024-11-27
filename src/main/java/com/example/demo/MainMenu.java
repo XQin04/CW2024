@@ -104,10 +104,11 @@ public class MainMenu {
         // Set button actions
         startButton.setOnAction(e -> {
             if (backgroundMediaPlayer != null) {
-                restartBackgroundMusic("/com/example/demo/sounds/Menu.mp3"); // Restart the music for the game
+                backgroundMediaPlayer.stop(); // Stop the menu music
             }
             main.startGame(stage); // Call startGame from Main
         });
+
         settingsButton.setOnAction(e -> switchToLayout(root, 1)); // Switch to Settings layout
         howToPlayButton.setOnAction(e -> switchToLayout(root, 2)); // Switch to How to Play layout
         exitButton.setOnAction(e -> stage.close());
