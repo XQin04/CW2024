@@ -502,8 +502,6 @@ public abstract class LevelParent extends Observable {
 	}
 
 
-
-
 	protected UserPlane getUser() {
 		return user;
 	}
