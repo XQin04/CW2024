@@ -6,6 +6,10 @@ import javafx.scene.control.Button;
 public class PauseMenu extends VBox {
 
     public PauseMenu(double screenWidth, double screenHeight, Runnable onResume, Runnable onRestart, Runnable onMainMenu) {
+        this(screenWidth, screenHeight, onResume, onRestart, onMainMenu, () -> System.exit(0));
+    }
+
+    public PauseMenu(double screenWidth, double screenHeight, Runnable onResume, Runnable onRestart, Runnable onMainMenu, Runnable onExit) {
         this.setPrefSize(screenWidth * 0.6, screenHeight * 0.4); // Set the menu to 60% width and 40% height of the screen
         this.setLayoutX((screenWidth - this.getPrefWidth()) / 2); // Center horizontally
         this.setLayoutY((screenHeight - this.getPrefHeight()) / 2); // Center vertically
@@ -33,6 +37,13 @@ public class PauseMenu extends VBox {
             this.setVisible(false); // Hide the pause menu
         });
 
-        this.getChildren().addAll(resumeButton, restartButton, mainMenuButton);
+        // Exit Button
+        Button exitButton = new Button("Exit");
+        exitButton.setOnAction(e -> {
+            onExit.run(); // Call exit logic
+            this.setVisible(false); // Hide the pause menu
+        });
+
+        this.getChildren().addAll(resumeButton, restartButton, mainMenuButton, exitButton);
     }
 }
