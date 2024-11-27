@@ -13,7 +13,7 @@ public class LevelTwo extends LevelParent {
 
 	public LevelTwo(double screenHeight, double screenWidth,  Stage stage) {
 		// Call the parent constructor with background image, height, width, and initial player health
-		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage);
+		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage,"Level 2");
 
 		// Instantiate Boss with the current LevelParent reference
 		boss = new Boss(this);

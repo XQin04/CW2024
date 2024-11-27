@@ -16,7 +16,7 @@ public class LevelThree extends LevelParent {
 
     // Constructor
     public LevelThree(double screenHeight, double screenWidth, Stage stage) {
-        super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage);
+        super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage, "Final Level");
 
         // Initialize Boss with the LevelParent reference
         levelThreeBoss = new Boss(this);

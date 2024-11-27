@@ -10,14 +10,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.*;
 import javafx.scene.input.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
 import com.example.demo.controller.Main;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
 
 
 public abstract class LevelParent extends Observable {
@@ -56,12 +57,13 @@ public abstract class LevelParent extends Observable {
 	private PauseMenu pauseMenu;
 	private EndGameMenu endGameMenu;
 	private MediaPlayer gameBackgroundMediaPlayer; // New MediaPlayer for game music
+	private String currentLevel;
 
 
 
 
 
-	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth, Stage stage) {
+	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth, Stage stage, String levelName) {
 		this.menuLayer = new Group();
 		this.stage = stage; // Initialize stage
 		this.root = new Group();
@@ -77,7 +79,6 @@ public abstract class LevelParent extends Observable {
 		this.root.getChildren().add(menuLayer);
 		menuLayer.toFront();
 
-
 		this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
@@ -85,11 +86,14 @@ public abstract class LevelParent extends Observable {
 		this.levelView = instantiateLevelView();
 		this.currentNumberOfEnemies = 0;
 		this.isPaused = false;
+		this.currentLevel = levelName; // Fix: initialize currentLevel using levelName parameter
 
 		initializeTimeline();
 		initializePauseButton(); // Add pause button initialization
 		friendlyUnits.add(user);
+		initializeGameBackgroundMusic();
 	}
+
 
 	protected abstract void initializeFriendlyUnits();
 	protected abstract void checkIfGameOver();
@@ -111,14 +115,39 @@ public abstract class LevelParent extends Observable {
 
 
 
-	public void startGame() {
-		background.requestFocus();
-		if (gameBackgroundMediaPlayer != null) {
-			gameBackgroundMediaPlayer.play(); // Play the game background music
-		}
-		timeline.play();
+
+	public void startGame(String levelName) {
+		showLevelInfo(currentLevel);
 	}
+
+
+	private void showLevelInfo(String levelName) {
+		// Create a text label to show the level name
+		Text levelInfo = new Text(levelName);
+		levelInfo.setFont(Font.font("Arial", 30));
+		levelInfo.setFill(Color.WHITE);
+		levelInfo.setStroke(Color.BLACK);
+		levelInfo.setStrokeWidth(1);
+		// Positioning the text at the top of the screen
+		levelInfo.setX(screenWidth / 2 - levelInfo.getLayoutBounds().getWidth() / 2); // Center horizontally
+		levelInfo.setY(50); // Adjust as needed to ensure proper positioning at the top
+
+		root.getChildren().add(levelInfo);
+
+		PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+		pause.setOnFinished(event -> {
+			root.getChildren().remove(levelInfo);
+			background.requestFocus();
+			if (gameBackgroundMediaPlayer != null && gameBackgroundMediaPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
+				gameBackgroundMediaPlayer.play(); // Play the game background music if it isn't already playing
+			}
+			timeline.play();
+		});
+		pause.play();
+	}
+
 	public void goToNextLevel(String levelName) {
+		currentLevel = levelName; // Update the current level name
 		stopGameBackgroundMusic(); // Stop the background music when transitioning
 		timeline.stop(); // Stop the current game loop.
 		root.getChildren().clear(); // Clear all nodes from the scene to release resources.
@@ -480,7 +509,6 @@ public abstract class LevelParent extends Observable {
 		timeline.stop();
 		root.getChildren().clear(); // Clear all nodes from the current scene
 		stage.setScene(initializeScene(stage)); // Reload the current level
-		startGame(); // Start the game again
 	}
 
 

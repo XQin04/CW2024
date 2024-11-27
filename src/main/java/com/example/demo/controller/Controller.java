@@ -30,12 +30,22 @@ public class Controller implements Observer {
 	private void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Class<?> myClass = Class.forName(className);
+		String levelName;
+		if (className.endsWith("LevelOne")) {
+			levelName = "Level 1";
+		} else if (className.endsWith("LevelTwo")) {
+			levelName = "Level 2";
+		} else if (className.endsWith("LevelThree")) {
+			levelName = "Final Level";
+		} else {
+			levelName = "Unknown Level";
+		}
 		Constructor<?> constructor = myClass.getConstructor(double.class, double.class, Stage.class);
 		LevelParent myLevel = (LevelParent) constructor.newInstance(stage.getHeight(), stage.getWidth(), stage);
 		myLevel.addObserver(this);
 		Scene scene = myLevel.initializeScene(stage);
 		stage.setScene(scene);
-		myLevel.startGame();
+		myLevel.startGame(levelName);
 
 	}
 
