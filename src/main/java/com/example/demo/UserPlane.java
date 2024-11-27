@@ -6,10 +6,10 @@ import java.util.List;
 public class UserPlane extends FighterPlane {
 
 	private static final String IMAGE_NAME = "user.png";
-	private static final double Y_UPPER_BOUND = -40;
-	private static final double Y_LOWER_BOUND = 600.0;
+	private static final double Y_UPPER_BOUND = 0;
+	private static final double Y_LOWER_BOUND = 630.0;
 	private static final double X_LEFT_BOUND = 0.0; // Define left boundary
-	private static final double X_RIGHT_BOUND = 800.0; // Define right boundary
+	private static final double X_RIGHT_BOUND = 1000.0; // Define right boundary
 	private static final double INITIAL_X_POSITION = 5.0;
 	private static final double INITIAL_Y_POSITION = 300.0;
 	private static final int IMAGE_HEIGHT = 80;
