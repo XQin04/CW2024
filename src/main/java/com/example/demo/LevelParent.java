@@ -282,7 +282,6 @@ public abstract class LevelParent extends Observable {
 				screenWidth,
 				screenHeight,
 				this::resumeGame, // Resume logic
-				() -> restartLevel(stage), // Restart level logic
 				() -> goToMainMenu(stage)  // Main menu logic
 		);
 		menuLayer.getChildren().add(pauseMenu); // Add to menuLayer
@@ -292,7 +291,6 @@ public abstract class LevelParent extends Observable {
 		endGameMenu = new EndGameMenu(
 				screenWidth,
 				screenHeight,
-				() -> restartLevel(stage), // Restart logic
 				() -> goToMainMenu(stage)  // Main menu logic
 		);
 		menuLayer.getChildren().add(endGameMenu); // Add to menuLayer
@@ -501,14 +499,6 @@ public abstract class LevelParent extends Observable {
 	}
 	public SoundManager getSoundManager() {
 		return soundManager;
-	}
-
-
-
-	private void restartLevel(Stage stage) {
-		timeline.stop();
-		root.getChildren().clear(); // Clear all nodes from the current scene
-		stage.setScene(initializeScene(stage)); // Reload the current level
 	}
 
 

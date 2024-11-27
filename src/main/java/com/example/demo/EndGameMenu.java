@@ -6,7 +6,7 @@ import javafx.scene.text.Text;
 
 public class EndGameMenu extends VBox {
 
-    public EndGameMenu(double screenWidth, double screenHeight, Runnable onRestart, Runnable onMainMenu) {
+    public EndGameMenu(double screenWidth, double screenHeight, Runnable onMainMenu) {
         // Adjust menu size and styling
         this.setPrefSize(screenWidth * 0.6, screenHeight * 0.4); // Set the menu to 60% width and 40% height of the screen
         this.setLayoutX((screenWidth - this.getPrefWidth()) / 2); // Center horizontally
@@ -19,13 +19,6 @@ public class EndGameMenu extends VBox {
         Text resultMessage = new Text("Game Over");
         resultMessage.setStyle("-fx-font-size: 28px; -fx-fill: white; -fx-font-weight: bold;");
 
-        // Restart Button
-        Button restartButton = new Button("Restart");
-        restartButton.setStyle("-fx-font-size: 16px; -fx-background-color: orange; -fx-text-fill: white; -fx-border-radius: 5;");
-        restartButton.setOnAction(e -> {
-            onRestart.run(); // Call restart logic
-            this.setVisible(false); // Hide the endgame menu
-        });
 
         // Main Menu Button
         Button mainMenuButton = new Button("Main Menu");
@@ -46,7 +39,7 @@ public class EndGameMenu extends VBox {
         this.setSpacing(20);
 
         // Add components to the menu
-        this.getChildren().addAll(resultMessage, restartButton, mainMenuButton, exitButton);
+        this.getChildren().addAll(resultMessage, mainMenuButton, exitButton);
     }
 
     public void show(boolean isWin) {
