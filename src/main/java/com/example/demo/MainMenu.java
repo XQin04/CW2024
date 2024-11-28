@@ -19,13 +19,11 @@ public class MainMenu {
 
     private static final int SCREEN_WIDTH = 1300;
     private static final int SCREEN_HEIGHT = 750;
-
-    // Flags for sound effects and background music
-    private boolean isSoundMuted = false;
-    private boolean isMusicMuted = false;
-
     // MediaPlayer for background music
     private MediaPlayer backgroundMediaPlayer;
+
+    // Instance of SoundManager
+    private SoundManager soundManager = SoundManager.getInstance();
 
     public void start(Stage stage, Main main) {
         // Load and play the background music for the main menu
@@ -67,19 +65,7 @@ public class MainMenu {
         Media media = new Media(getClass().getResource(filePath).toExternalForm());
         backgroundMediaPlayer = new MediaPlayer(media);
         backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the music
-        backgroundMediaPlayer.setVolume(isMusicMuted ? 0 : 1); // Adjust volume based on mute flag
-        backgroundMediaPlayer.play();
-    }
-
-    private void restartBackgroundMusic(String filePath) {
-        if (backgroundMediaPlayer != null) {
-            backgroundMediaPlayer.stop(); // Stop current music
-        }
-        // Recreate the MediaPlayer and play from the beginning
-        Media media = new Media(getClass().getResource(filePath).toExternalForm());
-        backgroundMediaPlayer = new MediaPlayer(media);
-        backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        backgroundMediaPlayer.setVolume(isMusicMuted ? 0 : 1);
+        backgroundMediaPlayer.setVolume(soundManager.isMusicMuted() ? 0 : 1); // Adjust volume based on mute flag
         backgroundMediaPlayer.play();
     }
 
@@ -132,20 +118,21 @@ public class MainMenu {
 
         // Checkboxes for sound and music
         CheckBox soundCheckBox = new CheckBox("Mute Sound Effects");
-        soundCheckBox.setSelected(isSoundMuted);
+        soundCheckBox.setSelected(soundManager.isSoundEffectsMuted());
         soundCheckBox.setStyle("-fx-font-size: 20px;");
         soundCheckBox.setOnAction(e -> {
-            isSoundMuted = soundCheckBox.isSelected();
-            System.out.println("Sound Effects Muted: " + isSoundMuted);
+            boolean isMuted = soundCheckBox.isSelected();
+            soundManager.setSoundEffectsMuted(isMuted);
         });
 
         CheckBox musicCheckBox = new CheckBox("Mute Background Music");
-        musicCheckBox.setSelected(isMusicMuted);
+        musicCheckBox.setSelected(soundManager.isMusicMuted());
         musicCheckBox.setStyle("-fx-font-size: 20px;");
         musicCheckBox.setOnAction(e -> {
-            isMusicMuted = musicCheckBox.isSelected();
+            boolean isMuted = musicCheckBox.isSelected();
+            soundManager.setMusicMuted(isMuted);
             if (backgroundMediaPlayer != null) {
-                backgroundMediaPlayer.setVolume(isMusicMuted ? 0 : 1);
+                backgroundMediaPlayer.setVolume(isMuted ? 0 : 1);
             }
         });
 

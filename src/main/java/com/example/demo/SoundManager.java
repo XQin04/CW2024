@@ -9,20 +9,33 @@ import java.util.Map;
 
 public class SoundManager {
 
+    // Static instance for singleton
+    private static SoundManager instance;
+
     private static final String SHOOT_SOUND_PATH = "/com/example/demo/sounds/Shoot.mp3";
     private static final String WIN_SOUND_PATH = "/com/example/demo/sounds/Win.mp3";
     private static final String GAME_OVER_SOUND_PATH = "/com/example/demo/sounds/GameOver.mp3";
-    private static final String POWER_UP_SOUND_PATH = "/com/example/demo/sounds/Spreadshot.mp3"; // Added Power-Up sound
+    private static final String POWER_UP_SOUND_PATH = "/com/example/demo/sounds/Spreadshot.mp3";
 
     private AudioClip shootClip; // Use AudioClip for low latency shooting sound
     private AudioClip powerUpClip; // Use AudioClip for power-up collection sound
     private Map<String, MediaPlayer> soundEffects;
 
     private boolean soundEffectsMuted = false; // Flag to mute/unmute sound effects
+    private boolean musicMuted = false; // Flag to mute/unmute music
 
-    public SoundManager() {
+    // Private constructor to enforce singleton pattern
+    private SoundManager() {
         soundEffects = new HashMap<>();
         loadSounds();
+    }
+
+    // Public method to get the single instance of SoundManager
+    public static SoundManager getInstance() {
+        if (instance == null) {
+            instance = new SoundManager();
+        }
+        return instance;
     }
 
     private void loadSounds() {
@@ -76,6 +89,21 @@ public class SoundManager {
         System.out.println("Sound effects muted: " + soundEffectsMuted);
     }
 
+    public void setMusicMuted(boolean muted) {
+        musicMuted = muted;
+
+        if (soundEffects.containsKey("backgroundMusic")) {
+            MediaPlayer backgroundMusic = soundEffects.get("backgroundMusic");
+            backgroundMusic.setVolume(musicMuted ? 0 : 1);
+        }
+
+        System.out.println("Background music muted: " + musicMuted);
+    }
+
+    public boolean isMusicMuted() {
+        return musicMuted;
+    }
+
     public void playShootSound() {
         if (!soundEffectsMuted && shootClip != null) {
             try {
@@ -101,21 +129,30 @@ public class SoundManager {
     }
 
     public void playSound(String soundName) {
-        if (!soundEffectsMuted && soundEffects.containsKey(soundName)) {
+        if (soundEffectsMuted) {
+            System.out.println("Sound effects muted, not playing: " + soundName);
+            return;
+        }
+
+        if (soundEffects.containsKey(soundName)) {
             try {
                 MediaPlayer player = soundEffects.get(soundName);
                 System.out.println("Playing sound: " + soundName);
-
                 player.stop();  // Stop the sound if it is already playing
                 player.seek(javafx.util.Duration.ZERO); // Reset to the start of the sound
                 player.play(); // Play the sound
-
             } catch (Exception e) {
                 System.err.println("Error playing sound: " + soundName);
                 e.printStackTrace();
             }
         } else {
-            System.err.println("Sound not found or muted: " + soundName);
+            System.err.println("Sound not found: " + soundName);
         }
+    }
+
+
+    // Additional method to get the current mute status of sound effects
+    public boolean isSoundEffectsMuted() {
+        return soundEffectsMuted;
     }
 }

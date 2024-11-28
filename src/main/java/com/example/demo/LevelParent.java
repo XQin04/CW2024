@@ -75,7 +75,7 @@ public abstract class LevelParent extends Observable {
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
-		this.soundManager = new SoundManager();
+		this.soundManager = SoundManager.getInstance();
 		this.root.getChildren().add(menuLayer);
 		menuLayer.toFront();
 
@@ -138,9 +138,13 @@ public abstract class LevelParent extends Observable {
 		pause.setOnFinished(event -> {
 			root.getChildren().remove(levelInfo);
 			background.requestFocus();
-			if (gameBackgroundMediaPlayer != null && gameBackgroundMediaPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
+
+			// Check if the music is muted before playing
+			if (!SoundManager.getInstance().isMusicMuted() && gameBackgroundMediaPlayer != null
+					&& gameBackgroundMediaPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
 				gameBackgroundMediaPlayer.play(); // Play the game background music if it isn't already playing
 			}
+
 			timeline.play();
 		});
 		pause.play();
