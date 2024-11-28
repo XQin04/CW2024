@@ -554,6 +554,9 @@ public abstract class LevelParent extends Observable {
 	protected double getScreenWidth() {
 		return screenWidth;
 	}
+	protected double getScreenHeight() {
+		return screenHeight;
+	}
 
 	protected boolean userIsDestroyed() {
 		return user.isDestroyed();

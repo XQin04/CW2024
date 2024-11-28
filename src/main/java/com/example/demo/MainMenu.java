@@ -178,34 +178,40 @@ public class MainMenu {
 
 
     private VBox createHowToPlayLayout(StackPane root) {
-        // Label for instructions
+        // Title
         Label howToPlayTitle = new Label("How to Play");
-        howToPlayTitle.setFont(Font.font("Arial ", FontWeight.BOLD, 36));
-        howToPlayTitle.setTextFill(Color.web("#FF69B4")); // Pink color for a cute effect
+        howToPlayTitle.setFont(Font.font("Arial", FontWeight.BOLD, 36));
+        howToPlayTitle.setTextFill(Color.web("#FF69B4"));
 
+        // Load the instruction image
+        ImageView instructionImage = new ImageView(new Image(getClass().getResource("/com/example/demo/images/instruction.png").toExternalForm()));
+        instructionImage.setFitWidth(350); // Adjust width as needed
+        instructionImage.setPreserveRatio(true); // Preserve aspect ratio
+
+        // Instructions
         Label instructions = new Label(
-                "1. Use Arrow keys to move the plane.\n" +
-                        "2. Press SPACE to shoot projectiles.\n" +
-                        "3. Destroy all enemy planes to advance.\n" +
-                        "4. Collect power-ups to enhance abilities.\n" +
-                        "5. Defeat the boss to win the game.\n"
+                        "Destroy all enemy planes to advance.\n\n" +
+                        "Collect power-ups to enhance abilities.\n\n" +
+                        "Defeat the boss to WIN the game!\n"
         );
-        instructions.setFont(Font.font("Arial ", 20));
+        instructions.setFont(Font.font("Arial", 18));
         instructions.setTextFill(Color.DARKBLUE);
 
-        // Back button to return to the main menu
+        // Back button
         Button backButton = new Button("BACK");
         styleButton(backButton, "#87CEFA", "#4682B4");
         backButton.setOnAction(e -> switchToLayout(root, 0)); // Switch back to main menu
 
-        // How to Play layout
-        VBox howToPlayLayout = new VBox(20, howToPlayTitle, instructions, backButton);
+        // Layout
+        VBox howToPlayLayout = new VBox(20, howToPlayTitle, instructionImage, instructions, backButton);
         howToPlayLayout.setAlignment(Pos.CENTER);
-        howToPlayLayout.setStyle("-fx-padding: 20; -fx-background-color: #B0E0E6; -fx-border-color: #4682B4; -fx-border-radius: 15;");
+        howToPlayLayout.setStyle("-fx-padding: 20; -fx-background-color: rgba(255, 255, 255, 0.7); "
+                + "-fx-border-color: #FF69B4; -fx-border-radius: 15;");
         howToPlayLayout.setMaxWidth(400);
 
         return howToPlayLayout;
     }
+
 
 
 

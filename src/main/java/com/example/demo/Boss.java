@@ -11,10 +11,10 @@ public class Boss extends FighterPlane {
 	private static final double INITIAL_Y_POSITION = 400;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
 	private static final double BOSS_FIRE_RATE = .015;
-	private static final double BOSS_SHIELD_PROBABILITY = 0.05;
+	private static final double BOSS_SHIELD_PROBABILITY = 0.005;
 	private static final int IMAGE_HEIGHT = 200;
 	private static final int VERTICAL_VELOCITY = 8;
-	private static final int HEALTH = 3;
+	private static final int HEALTH = 30;
 	private static final int MOVE_FREQUENCY_PER_CYCLE = 5;
 	private static final int ZERO = 0;
 	private static final int MAX_FRAMES_WITH_SAME_MOVE = 10;
@@ -52,11 +52,26 @@ public class Boss extends FighterPlane {
 	public void updatePosition() {
 		double initialTranslateY = getTranslateY();
 		moveVertically(getNextMove());
-		double currentPosition = getLayoutY() + getTranslateY();
-		if (currentPosition < Y_POSITION_UPPER_BOUND || currentPosition > Y_POSITION_LOWER_BOUND) {
-			setTranslateY(initialTranslateY);
+
+		// Get the current position
+		double currentY = getLayoutY() + getTranslateY();
+		double currentX = getLayoutX() + getTranslateX();
+
+		// Check vertical bounds
+		if (currentY < 0) { // Top boundary
+			setTranslateY(-getLayoutY());
+		} else if (currentY + getBoundsInParent().getHeight() > levelParent.getScreenHeight()) { // Bottom boundary
+			setTranslateY(levelParent.getScreenHeight() - getLayoutY() - getBoundsInParent().getHeight());
+		}
+
+		// Check horizontal bounds (if needed)
+		if (currentX < 0) { // Left boundary
+			setTranslateX(-getLayoutX());
+		} else if (currentX + getBoundsInParent().getWidth() > levelParent.getScreenWidth()) { // Right boundary
+			setTranslateX(levelParent.getScreenWidth() - getLayoutX() - getBoundsInParent().getWidth());
 		}
 	}
+
 
 	@Override
 	public void updateActor() {
