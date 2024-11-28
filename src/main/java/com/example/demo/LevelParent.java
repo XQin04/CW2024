@@ -306,7 +306,9 @@ public abstract class LevelParent extends Observable {
 		endGameMenu = new EndGameMenu(
 				screenWidth,
 				screenHeight,
-				() -> goToMainMenu(stage)  // Main menu logic
+				() -> goToMainMenu(stage),  // Main menu logic
+				() -> System.exit(0)       // Exit logic
+
 		);
 		menuLayer.getChildren().add(endGameMenu); // Add to menuLayer
 	}

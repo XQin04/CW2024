@@ -5,6 +5,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -14,7 +16,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import com.example.demo.controller.Main;
-
 public class MainMenu {
 
     private static final int SCREEN_WIDTH = 1300;
@@ -31,6 +32,10 @@ public class MainMenu {
 
         // Root StackPane to manage switching between different menu screens
         StackPane root = new StackPane();
+
+        // **Add the Background Image**
+        ImageView backgroundImage = createBackgroundImage("/com/example/demo/images/menubackground.png");
+        root.getChildren().add(backgroundImage); // Add the background image to the root first
 
         // Main menu layout
         VBox mainMenuLayout = createMainMenuLayout(root, stage, main);
@@ -55,6 +60,19 @@ public class MainMenu {
         stage.setScene(menuScene);
         stage.setTitle("Sky Battle - Main Menu");
         stage.show();
+    }
+
+    private ImageView createBackgroundImage(String filePath) {
+        // Load the background image
+        Image image = new Image(getClass().getResource(filePath).toExternalForm());
+        ImageView imageView = new ImageView(image);
+
+        // Make the image fit the screen size
+        imageView.setFitWidth(SCREEN_WIDTH);
+        imageView.setFitHeight(SCREEN_HEIGHT);
+        imageView.setPreserveRatio(false); // Stretch the image to fit the screen
+
+        return imageView;
     }
 
     private void playBackgroundMusic(String filePath) {
