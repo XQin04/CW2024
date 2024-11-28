@@ -4,7 +4,7 @@ import javafx.stage.Stage;
 
 public class LevelThree extends LevelParent {
 
-    private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.jpg";
+    private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background3.jpg";
     private static final int PLAYER_INITIAL_HEALTH = 5;
     private static final int WAVES_BEFORE_BOSS = 3;
     private static final double POWER_UP_SPAWN_PROBABILITY = 0.02; // 2% chance to spawn power-up each frame
