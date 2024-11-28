@@ -1,4 +1,6 @@
-package com.example.demo;
+package com.example.demo.powerups;
+import com.example.demo.actors.ActiveActorDestructible;
+import com.example.demo.actors.UserPlane;
 
 public class PowerUp extends ActiveActorDestructible {
     private static final int IMAGE_HEIGHT = 40;
@@ -30,11 +32,7 @@ public class PowerUp extends ActiveActorDestructible {
     // Activate power-up effect when collected by the user
     public void activate(UserPlane user) {
         if (getImage().equals("spreadshot.png")) { // Replace with your spreadshot image name
-            System.out.println("Spreadshot Power-Up Activated!");
             user.activateOneTimeSpreadshot(); // Increment the spreadshot count
-        } else {
-            System.out.println("Power-Up Activated: Default");
-            // Add any other power-up behavior if necessary
         }
 
         destroy(); // Remove power-up after it's collected

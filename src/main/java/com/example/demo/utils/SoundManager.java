@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.utils;
 
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
@@ -86,7 +86,6 @@ public class SoundManager {
         for (MediaPlayer mediaPlayer : soundEffects.values()) {
             mediaPlayer.setVolume(soundEffectsMuted ? 0 : 1);
         }
-        System.out.println("Sound effects muted: " + soundEffectsMuted);
     }
 
     public void setMusicMuted(boolean muted) {
@@ -96,8 +95,6 @@ public class SoundManager {
             MediaPlayer backgroundMusic = soundEffects.get("backgroundMusic");
             backgroundMusic.setVolume(musicMuted ? 0 : 1);
         }
-
-        System.out.println("Background music muted: " + musicMuted);
     }
 
     public boolean isMusicMuted() {
@@ -106,23 +103,15 @@ public class SoundManager {
 
     public void playShootSound() {
         if (!soundEffectsMuted && shootClip != null) {
-            try {
-                System.out.println("Playing shoot sound.");
                 shootClip.play();
-            } catch (Exception e) {
-                System.err.println("Error playing shoot sound.");
-                e.printStackTrace();
-            }
         }
     }
 
     public void playPowerUpSound() {
         if (!soundEffectsMuted && powerUpClip != null) {
             try {
-                System.out.println("Playing power-up sound.");
                 powerUpClip.play();
             } catch (Exception e) {
-                System.err.println("Error playing power-up sound.");
                 e.printStackTrace();
             }
         }
@@ -130,19 +119,16 @@ public class SoundManager {
 
     public void playSound(String soundName) {
         if (soundEffectsMuted) {
-            System.out.println("Sound effects muted, not playing: " + soundName);
             return;
         }
 
         if (soundEffects.containsKey(soundName)) {
             try {
                 MediaPlayer player = soundEffects.get(soundName);
-                System.out.println("Playing sound: " + soundName);
                 player.stop();  // Stop the sound if it is already playing
                 player.seek(javafx.util.Duration.ZERO); // Reset to the start of the sound
                 player.play(); // Play the sound
             } catch (Exception e) {
-                System.err.println("Error playing sound: " + soundName);
                 e.printStackTrace();
             }
         } else {

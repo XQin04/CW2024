@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.gameplay;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,6 +19,19 @@ import javafx.scene.layout.VBox;
 import com.example.demo.controller.Main;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import com.example.demo.actors.UserPlane;
+import com.example.demo.actors.ActiveActorDestructible;
+import com.example.demo.ui.LevelView;
+import com.example.demo.ui.PauseMenu;
+import com.example.demo.ui.EndGameMenu;
+import com.example.demo.utils.SoundManager;
+import com.example.demo.actors.FighterPlane;
+import com.example.demo.actors.Boss;
+import com.example.demo.powerups.PowerUp;
+import com.example.demo.powerups.SpreadshotPowerUp;
+import com.example.demo.ui.MainMenu;
+import com.example.demo.actors.ActiveActorDestructible;
+
 
 
 public abstract class LevelParent extends Observable {
@@ -525,11 +538,11 @@ public abstract class LevelParent extends Observable {
 	}
 
 
-	protected UserPlane getUser() {
+	public UserPlane getUser() {
 		return user;
 	}
 
-	protected Group getRoot() {
+	public Group getRoot() {
 		return root;
 	}
 
@@ -551,10 +564,10 @@ public abstract class LevelParent extends Observable {
 		return enemyMaximumYPosition;
 	}
 
-	protected double getScreenWidth() {
+	public double getScreenWidth() {
 		return screenWidth;
 	}
-	protected double getScreenHeight() {
+	public double getScreenHeight() {
 		return screenHeight;
 	}
 

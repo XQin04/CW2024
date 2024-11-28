@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import com.example.demo.MainMenu;
+import com.example.demo.ui.MainMenu;
 
 public class Main extends Application {
 

@@ -1,12 +1,15 @@
-package com.example.demo;
+package com.example.demo.gameplay;
 
 import javafx.stage.Stage;
+import com.example.demo.actors.Boss;
+import com.example.demo.ui.LevelViewLevelTwo;
+import com.example.demo.ui.LevelView;
 
 public class LevelTwo extends LevelParent {
 
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png";
 	private static final int PLAYER_INITIAL_HEALTH = 5;
-	private static final String NEXT_LEVEL = "com.example.demo.LevelThree";
+	private static final String NEXT_LEVEL = "com.example.demo.gameplay.LevelThree";
 
 	private final Boss boss; // Reference to the boss
 	private LevelViewLevelTwo levelView; // Level-specific view

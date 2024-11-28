@@ -1,10 +1,16 @@
-package com.example.demo;
+package com.example.demo.gameplay;
+
 import javafx.stage.Stage;
+import com.example.demo.actors.EnemyPlane;
+import com.example.demo.actors.ActiveActorDestructible;
+import com.example.demo.ui.LevelView;
+
+
 
 public class LevelOne extends LevelParent {
 
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";
-	private static final String NEXT_LEVEL = "com.example.demo.LevelTwo";
+	private static final String NEXT_LEVEL = "com.example.demo.gameplay.LevelTwo";
 	private static final int TOTAL_ENEMIES_PER_CYCLE = 5; // 5 enemies per cycle
 	private static final int TOTAL_SPAWN_CYCLES = 3; // Spawn 3 times
 	private static final int PLAYER_INITIAL_HEALTH = 5;

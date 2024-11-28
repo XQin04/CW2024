@@ -1,8 +1,14 @@
-package com.example.demo;
+package com.example.demo.actors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.example.demo.gameplay.LevelParent;
+import com.example.demo.projectiles.BossProjectile;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+
 
 public class Boss extends FighterPlane {
 
@@ -11,7 +17,7 @@ public class Boss extends FighterPlane {
 	private static final double INITIAL_Y_POSITION = 400;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
 	private static final double BOSS_FIRE_RATE = .015;
-	private static final double BOSS_SHIELD_PROBABILITY = 0.005;
+	private static final double BOSS_SHIELD_PROBABILITY = 0.002;
 	private static final int IMAGE_HEIGHT = 200;
 	private static final int VERTICAL_VELOCITY = 8;
 	private static final int HEALTH = 30;
@@ -44,7 +50,6 @@ public class Boss extends FighterPlane {
 		// Initialize the glow effect
 		shieldGlowEffect = new DropShadow();
 		shieldGlowEffect.setColor(Color.YELLOW); // Blue glow for the shield
-		shieldGlowEffect.setRadius(30);       // Adjust the radius for the glow size
 		shieldGlowEffect.setSpread(0.5);      // Spread makes the glow more intense
 	}
 

@@ -1,4 +1,6 @@
-package com.example.demo;
+package com.example.demo.powerups;
+
+import com.example.demo.actors.UserPlane;
 
 public class SpreadshotPowerUp extends PowerUp {
     private static final String SPREADSHOT_IMAGE = "spreadshot.png";
@@ -9,7 +11,6 @@ public class SpreadshotPowerUp extends PowerUp {
 
     @Override
     public void activate(UserPlane user) {
-        System.out.println("Spreadshot Activated!");
         user.activateOneTimeSpreadshot(); // Enable spreadshot for the next shot
     }
 

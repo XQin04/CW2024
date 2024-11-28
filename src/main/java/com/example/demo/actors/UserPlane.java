@@ -1,8 +1,9 @@
-package com.example.demo;
+package com.example.demo.actors;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import com.example.demo.projectiles.UserProjectile;
+import com.example.demo.gameplay.LevelParent;
 public class UserPlane extends FighterPlane {
 
 	private static final String IMAGE_NAME = "user.png";

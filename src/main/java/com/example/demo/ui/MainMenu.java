@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.ui;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,6 +16,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import com.example.demo.controller.Main;
+import com.example.demo.utils.SoundManager;
+
 public class MainMenu {
 
     private static final int SCREEN_WIDTH = 1300;

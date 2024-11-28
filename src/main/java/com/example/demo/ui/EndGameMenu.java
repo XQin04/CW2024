@@ -1,16 +1,16 @@
-package com.example.demo;
+package com.example.demo.ui;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-public class PauseMenu extends VBox {
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
-    public PauseMenu(double screenWidth, double screenHeight, Runnable onResume, Runnable onMainMenu) {
-        this(screenWidth, screenHeight, onResume, onMainMenu, () -> System.exit(0));
-    }
+public class EndGameMenu extends VBox {
 
-    public PauseMenu(double screenWidth, double screenHeight, Runnable onResume, Runnable onMainMenu, Runnable onExit) {
-        // Set the size and position of the Pause Menu
+    public EndGameMenu(double screenWidth, double screenHeight, Runnable onMainMenu, Runnable onExit) {
+        // Set the size and position of the End Game Menu
         this.setPrefSize(screenWidth * 0.4, screenHeight * 0.4); // 40% width, 40% height
         this.setLayoutX((screenWidth - this.getPrefWidth()) / 2); // Center horizontally
         this.setLayoutY((screenHeight - this.getPrefHeight()) / 2); // Center vertically
@@ -20,35 +20,41 @@ public class PauseMenu extends VBox {
                 + "-fx-border-color: white; -fx-background-radius: 20;"); // Styled for transparency and rounded edges
         this.setVisible(false); // Initially hidden
 
+        // Title Text
+        Text resultMessage = new Text("Game Over");
+        resultMessage.setFont(Font.font("Arial", FontWeight.BOLD, 30)); // Bold and large text
+        resultMessage.setStyle("-fx-fill: white;"); // White color for visibility
+
         // Create Buttons with consistent styling
-        Button resumeButton = createStyledButton("Resume", "#FF6347", "#FF4500");
         Button mainMenuButton = createStyledButton("Main Menu", "#FFD700", "#FFA500");
-        Button exitButton = createStyledButton("Exit", "#A9A9A9", "#808080");
+        Button exitButton = createStyledButton("Exit", "#FF6347", "#FF4500");
 
         // Set Button Actions
-        resumeButton.setOnAction(e -> {
-            onResume.run(); // Call resume logic
-            this.setVisible(false); // Hide the pause menu
-        });
-
         mainMenuButton.setOnAction(e -> {
             onMainMenu.run(); // Call main menu logic
-            this.setVisible(false); // Hide the pause menu
+            this.setVisible(false); // Hide the endgame menu
         });
 
         exitButton.setOnAction(e -> {
             onExit.run(); // Call exit logic
-            this.setVisible(false); // Hide the pause menu
+            this.setVisible(false); // Hide the endgame menu
         });
 
-        // Add buttons to the VBox
-        this.getChildren().addAll(resumeButton, mainMenuButton, exitButton);
+        // Add components to the VBox
+        this.getChildren().addAll(resultMessage, mainMenuButton, exitButton);
+    }
+
+    // Method to update the title dynamically and show the menu
+    public void show(boolean isWin) {
+        Text resultMessage = (Text) this.getChildren().get(0);
+        resultMessage.setText(isWin ? "You Win!" : "Game Over"); // Update title based on result
+        this.setVisible(true); // Show the menu
     }
 
     // Method to style buttons consistently
     private Button createStyledButton(String text, String startColor, String endColor) {
         Button button = new Button(text);
-        button.setFont(javafx.scene.text.Font.font("Arial", javafx.scene.text.FontWeight.BOLD, 20)); // Bold font
+        button.setFont(Font.font("Arial", FontWeight.BOLD, 20)); // Bold font
         button.setTextFill(javafx.scene.paint.Color.WHITE); // Text color
         button.setPrefWidth(250); // Fixed button width
         button.setStyle("-fx-background-color: linear-gradient(to bottom, " + startColor + ", " + endColor + ");"
