@@ -90,7 +90,7 @@ public class MainMenu {
     private VBox createMainMenuLayout(StackPane root, Stage stage, Main main) {
         // Game title
         Label title = new Label("Sky Battle");
-        title.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 50));
+        title.setFont(Font.font("Arial ", FontWeight.BOLD, 50));
         title.setTextFill(Color.BLACK); // Set title color to black
 
         // Buttons
@@ -131,7 +131,7 @@ public class MainMenu {
     private VBox createSettingsLayout(StackPane root) {
         // Labels
         Label settingsTitle = new Label("Settings");
-        settingsTitle.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 36));
+        settingsTitle.setFont(Font.font("Arial ", FontWeight.BOLD, 36));
         settingsTitle.setTextFill(Color.web("#FF69B4")); // Pink color for a cute effect
 
         // Checkboxes for sound and music
@@ -171,7 +171,7 @@ public class MainMenu {
     private VBox createHowToPlayLayout(StackPane root) {
         // Label for instructions
         Label howToPlayTitle = new Label("How to Play");
-        howToPlayTitle.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 36));
+        howToPlayTitle.setFont(Font.font("Arial ", FontWeight.BOLD, 36));
         howToPlayTitle.setTextFill(Color.web("#FF69B4")); // Pink color for a cute effect
 
         Label instructions = new Label(
@@ -181,7 +181,7 @@ public class MainMenu {
                         "4. Collect power-ups to enhance abilities.\n" +
                         "5. Defeat the boss to win the game.\n"
         );
-        instructions.setFont(Font.font("Comic Sans MS", 20));
+        instructions.setFont(Font.font("Arial ", 20));
         instructions.setTextFill(Color.DARKBLUE);
 
         // Back button to return to the main menu
@@ -205,7 +205,7 @@ public class MainMenu {
     }
 
     private void styleButton(Button button, String startColor, String endColor) {
-        button.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        button.setFont(Font.font("Arial ", FontWeight.BOLD, 20));
         button.setTextFill(Color.WHITE);
         button.setPrefWidth(250); // Set the width of all buttons to the same size for consistency
         button.setStyle("-fx-background-color: linear-gradient(to bottom, " + startColor + ", " + endColor + ");"
