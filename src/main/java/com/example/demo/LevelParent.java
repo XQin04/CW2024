@@ -318,6 +318,9 @@ public abstract class LevelParent extends Observable {
 	protected void winGame() {
 		timeline.stop();
 		levelView.showWinImage();
+		if (pauseButton != null) {
+			pauseButton.setVisible(false);
+		}
 		soundManager.playSound("win");
 
 		javafx.animation.PauseTransition delay = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(3));
@@ -345,6 +348,9 @@ public abstract class LevelParent extends Observable {
 	protected void loseGame() {
 		timeline.stop();
 		levelView.showGameOverImage();
+		if (pauseButton != null) {
+			pauseButton.setVisible(false);
+		}
 		soundManager.playSound("gameOver");
 
 		javafx.animation.PauseTransition delay = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(3));
