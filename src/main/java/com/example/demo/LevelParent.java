@@ -122,6 +122,11 @@ public abstract class LevelParent extends Observable {
 
 
 	private void showLevelInfo(String levelName) {
+		// Temporarily disable the pause button
+		if (pauseButton != null) {
+			pauseButton.setDisable(true); // Disable the button
+		}
+
 		// Create a text label to show the level name
 		Text levelInfo = new Text(levelName);
 		levelInfo.setFont(Font.font("Arial", 30));
@@ -134,10 +139,16 @@ public abstract class LevelParent extends Observable {
 
 		root.getChildren().add(levelInfo);
 
-		PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+		PauseTransition pause = new PauseTransition(Duration.seconds(1));
 		pause.setOnFinished(event -> {
 			root.getChildren().remove(levelInfo);
 			background.requestFocus();
+
+			// Re-enable the pause button after level info disappears
+			if (pauseButton != null) {
+				pauseButton.setDisable(false); // Enable the button
+			}
+
 
 			// Check if the music is muted before playing
 			if (!SoundManager.getInstance().isMusicMuted() && gameBackgroundMediaPlayer != null
