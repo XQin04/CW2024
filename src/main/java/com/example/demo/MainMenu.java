@@ -129,10 +129,10 @@ public class MainMenu {
     }
 
     private VBox createSettingsLayout(StackPane root) {
-        // Labels
+        // Settings title
         Label settingsTitle = new Label("Settings");
-        settingsTitle.setFont(Font.font("Arial ", FontWeight.BOLD, 36));
-        settingsTitle.setTextFill(Color.web("#FF69B4")); // Pink color for a cute effect
+        settingsTitle.setFont(Font.font("Arial", FontWeight.BOLD, 36));
+        settingsTitle.setTextFill(Color.web("#FF69B4")); // Pink color
 
         // Checkboxes for sound and music
         CheckBox soundCheckBox = new CheckBox("Mute Sound Effects");
@@ -154,7 +154,7 @@ public class MainMenu {
             }
         });
 
-        // Back button to return to the main menu
+        // Back button
         Button backButton = new Button("BACK");
         styleButton(backButton, "#87CEFA", "#4682B4");
         backButton.setOnAction(e -> switchToLayout(root, 0)); // Switch back to main menu
@@ -162,11 +162,20 @@ public class MainMenu {
         // Settings layout
         VBox settingsLayout = new VBox(20, settingsTitle, soundCheckBox, musicCheckBox, backButton);
         settingsLayout.setAlignment(Pos.CENTER);
-        settingsLayout.setStyle("-fx-padding: 20; -fx-background-color: #FFE4E1; -fx-border-color: #FF69B4; -fx-border-radius: 15;");
+        settingsLayout.setStyle("-fx-padding: 20; -fx-background-color: rgba(255, 255, 255, 0.7); "
+                + "-fx-border-color: #FF69B4; -fx-border-radius: 15;");
         settingsLayout.setMaxWidth(400);
 
         return settingsLayout;
     }
+
+    private void switchToLayout(StackPane root, int layoutIndex) {
+        // Ensure the background image stays visible
+        for (int i = 1; i < root.getChildren().size(); i++) { // Start from index 1 to skip the background image
+            root.getChildren().get(i).setVisible(i == layoutIndex + 1); // Adjust index for background offset
+        }
+    }
+
 
     private VBox createHowToPlayLayout(StackPane root) {
         // Label for instructions
@@ -198,11 +207,7 @@ public class MainMenu {
         return howToPlayLayout;
     }
 
-    private void switchToLayout(StackPane root, int layoutIndex) {
-        for (int i = 0; i < root.getChildren().size(); i++) {
-            root.getChildren().get(i).setVisible(i == layoutIndex);
-        }
-    }
+
 
     private void styleButton(Button button, String startColor, String endColor) {
         button.setFont(Font.font("Arial ", FontWeight.BOLD, 20));
