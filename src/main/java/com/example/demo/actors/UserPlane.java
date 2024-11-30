@@ -16,8 +16,6 @@ public class UserPlane extends FighterPlane {
 	private static final int IMAGE_HEIGHT = 80;
 	private static final int VERTICAL_VELOCITY = 8;
 	private static final int HORIZONTAL_VELOCITY = 8; // Add horizontal velocity
-	private static final int PROJECTILE_X_POSITION_OFFSET = 110; // Offset from current position
-	private static final int PROJECTILE_Y_POSITION_OFFSET = 20; // Offset from current position
 	private int verticalVelocityMultiplier = 0;
 	private int horizontalVelocityMultiplier = 0; // Horizontal velocity multiplier
 	private int numberOfKills = 0;

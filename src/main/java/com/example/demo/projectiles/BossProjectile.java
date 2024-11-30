@@ -3,8 +3,6 @@ package com.example.demo.projectiles;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import com.example.demo.gameplay.LevelParent;
 

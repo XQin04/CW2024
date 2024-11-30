@@ -15,7 +15,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.stage.Stage;
-import javafx.scene.layout.VBox;
 import com.example.demo.controller.Main;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -30,7 +29,6 @@ import com.example.demo.actors.Boss;
 import com.example.demo.powerups.PowerUp;
 import com.example.demo.powerups.SpreadshotPowerUp;
 import com.example.demo.ui.MainMenu;
-import com.example.demo.actors.ActiveActorDestructible;
 
 
 
@@ -391,8 +389,14 @@ public abstract class LevelParent extends Observable {
 
 	private void resumeGame() {
 		timeline.play(); // Resume the game loop
+		// Resume the game background music if it's not muted
 		if (gameBackgroundMediaPlayer != null) {
-			gameBackgroundMediaPlayer.play(); // Resume the game background music
+			SoundManager soundManager = SoundManager.getInstance(); // Get the SoundManager instance
+			if (soundManager.isMusicMuted()) {
+				gameBackgroundMediaPlayer.pause(); // Ensure music remains paused if muted
+			} else {
+				gameBackgroundMediaPlayer.play(); // Resume music if not muted
+			}
 		}
 		isPaused = false; // Update pause state
 		pauseButton.setText("Pause"); // Update button text
