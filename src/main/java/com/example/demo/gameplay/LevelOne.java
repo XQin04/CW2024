@@ -1,9 +1,9 @@
 package com.example.demo.gameplay;
 
-import javafx.stage.Stage;
-import com.example.demo.actors.EnemyPlane;
 import com.example.demo.actors.ActiveActorDestructible;
+import com.example.demo.actors.EnemyPlane;
 import com.example.demo.ui.LevelView;
+import javafx.stage.Stage;
 
 
 

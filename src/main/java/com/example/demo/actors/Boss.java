@@ -1,13 +1,13 @@
 package com.example.demo.actors;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.example.demo.gameplay.LevelParent;
 import com.example.demo.projectiles.BossProjectile;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class Boss extends FighterPlane {

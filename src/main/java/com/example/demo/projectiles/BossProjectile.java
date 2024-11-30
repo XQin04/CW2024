@@ -1,10 +1,12 @@
 package com.example.demo.projectiles;
 
+import com.example.demo.gameplay.LevelParent;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.*;
-import javafx.util.Duration;
-import com.example.demo.gameplay.LevelParent;
 
 public class BossProjectile extends Projectile {
 

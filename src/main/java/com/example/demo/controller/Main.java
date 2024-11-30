@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
-import java.lang.reflect.InvocationTargetException;
-
+import com.example.demo.ui.MainMenu;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import com.example.demo.ui.MainMenu;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class Main extends Application {
 

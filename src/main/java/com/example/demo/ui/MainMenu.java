@@ -1,5 +1,7 @@
 package com.example.demo.ui;
 
+import com.example.demo.controller.Main;
+import com.example.demo.utils.SoundManager;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,8 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import com.example.demo.controller.Main;
-import com.example.demo.utils.SoundManager;
 
 public class MainMenu {
 

@@ -1,34 +1,40 @@
 package com.example.demo.gameplay;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javafx.animation.*;
+import com.example.demo.actors.ActiveActorDestructible;
+import com.example.demo.actors.Boss;
+import com.example.demo.actors.FighterPlane;
+import com.example.demo.actors.UserPlane;
+import com.example.demo.controller.Main;
+import com.example.demo.powerups.PowerUp;
+import com.example.demo.powerups.SpreadshotPowerUp;
+import com.example.demo.ui.EndGameMenu;
+import com.example.demo.ui.LevelView;
+import com.example.demo.ui.MainMenu;
+import com.example.demo.ui.PauseMenu;
+import com.example.demo.utils.SoundManager;
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.*;
-import javafx.scene.input.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import javafx.stage.Stage;
-import com.example.demo.controller.Main;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import com.example.demo.actors.UserPlane;
-import com.example.demo.actors.ActiveActorDestructible;
-import com.example.demo.ui.LevelView;
-import com.example.demo.ui.PauseMenu;
-import com.example.demo.ui.EndGameMenu;
-import com.example.demo.utils.SoundManager;
-import com.example.demo.actors.FighterPlane;
-import com.example.demo.actors.Boss;
-import com.example.demo.powerups.PowerUp;
-import com.example.demo.powerups.SpreadshotPowerUp;
-import com.example.demo.ui.MainMenu;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.stream.Collectors;
 
 
 

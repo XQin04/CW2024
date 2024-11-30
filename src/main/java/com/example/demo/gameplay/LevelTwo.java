@@ -1,9 +1,9 @@
 package com.example.demo.gameplay;
 
-import javafx.stage.Stage;
 import com.example.demo.actors.Boss;
-import com.example.demo.ui.LevelViewLevelTwo;
 import com.example.demo.ui.LevelView;
+import com.example.demo.ui.LevelViewLevelTwo;
+import javafx.stage.Stage;
 
 public class LevelTwo extends LevelParent {
 

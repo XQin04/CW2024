@@ -1,10 +1,10 @@
 package com.example.demo.gameplay;
 
-import javafx.stage.Stage;
-import com.example.demo.ui.LevelView;
 import com.example.demo.actors.Boss;
 import com.example.demo.actors.EnemyPlane;
 import com.example.demo.powerups.SpreadshotPowerUp;
+import com.example.demo.ui.LevelView;
+import javafx.stage.Stage;
 
 public class LevelThree extends LevelParent {
 
