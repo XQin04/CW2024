@@ -10,14 +10,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * Represents the Boss enemy in the game.
+ * Handles movement, firing projectiles, shield activation, and interactions with other entities.
+ */
 public class Boss extends FighterPlane {
 
+	// Constants for Boss properties
 	private static final String IMAGE_NAME = "enemyboss.png";
 	private static final double INITIAL_X_POSITION = 1000.0;
-	private static final double INITIAL_Y_POSITION = 400;
+	private static final double INITIAL_Y_POSITION = 400.0;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
-	private static final double BOSS_FIRE_RATE = .015;
+	private static final double BOSS_FIRE_RATE = 0.015;
 	private static final double BOSS_SHIELD_PROBABILITY = 0.003;
 	private static final int IMAGE_HEIGHT = 200;
 	private static final int VERTICAL_VELOCITY = 8;
@@ -27,70 +31,88 @@ public class Boss extends FighterPlane {
 	private static final int MAX_FRAMES_WITH_SAME_MOVE = 10;
 	private static final int MAX_FRAMES_WITH_SHIELD = 250;
 
-	private final List<Integer> movePattern;
+	// Movement and shield properties
+	private final List<Integer> movePattern = new ArrayList<>();
 	private boolean isShielded;
-	private int consecutiveMovesInSameDirection;
-	private int indexOfCurrentMove;
-	private int framesWithShieldActivated;
-	private DropShadow shieldGlowEffect; // Effect for glow
+	private int consecutiveMovesInSameDirection = 0;
+	private int indexOfCurrentMove = 0;
+	private int framesWithShieldActivated = 0;
 
-	private LevelParent levelParent; // Reference to the LevelParent
-	private final Label shieldAlert; // Alert Label for notifying the user
+	// Visual effects
+	private final DropShadow shieldGlowEffect;
 
+	// References
+	private final LevelParent levelParent;
+	private final Label shieldAlert;
 
+	/**
+	 * Constructs a Boss instance with the specified parent level and alert label.
+	 *
+	 * @param levelParent The parent level managing the Boss.
+	 * @param shieldAlert A label to display shield activation messages.
+	 */
 	public Boss(LevelParent levelParent, Label shieldAlert) {
 		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
-		this.levelParent = levelParent; // Assign LevelParent reference
-		this.shieldAlert = shieldAlert; // Assign the alert Label
-		movePattern = new ArrayList<>();
-		consecutiveMovesInSameDirection = 0;
-		indexOfCurrentMove = 0;
-		framesWithShieldActivated = 0;
-		isShielded = false;
+		this.levelParent = levelParent;
+		this.shieldAlert = shieldAlert;
+
 		initializeMovePattern();
 
-		// Initialize the glow effect
+		// Initialize the shield's visual glow effect
 		shieldGlowEffect = new DropShadow();
-		shieldGlowEffect.setColor(Color.YELLOW); // Blue glow for the shield
-		shieldGlowEffect.setSpread(0.5);      // Spread makes the glow more intense
+		shieldGlowEffect.setColor(Color.YELLOW);
+		shieldGlowEffect.setSpread(0.5); // Intense glow effect
 	}
 
+	/**
+	 * Updates the position of the Boss based on its movement pattern and boundaries.
+	 */
 	@Override
 	public void updatePosition() {
-		double initialTranslateY = getTranslateY();
 		moveVertically(getNextMove());
 
-		// Get the current position
+		// Ensure Boss stays within the vertical and horizontal screen bounds
 		double currentY = getLayoutY() + getTranslateY();
 		double currentX = getLayoutX() + getTranslateX();
 
-		// Check vertical bounds
-		if (currentY < 0) { // Top boundary
+		if (currentY < 0) {
 			setTranslateY(-getLayoutY());
-		} else if (currentY + getBoundsInParent().getHeight() > levelParent.getScreenHeight()) { // Bottom boundary
+		} else if (currentY + getBoundsInParent().getHeight() > levelParent.getScreenHeight()) {
 			setTranslateY(levelParent.getScreenHeight() - getLayoutY() - getBoundsInParent().getHeight());
 		}
 
-		// Check horizontal bounds (if needed)
-		if (currentX < 0) { // Left boundary
+		if (currentX < 0) {
 			setTranslateX(-getLayoutX());
-		} else if (currentX + getBoundsInParent().getWidth() > levelParent.getScreenWidth()) { // Right boundary
+		} else if (currentX + getBoundsInParent().getWidth() > levelParent.getScreenWidth()) {
 			setTranslateX(levelParent.getScreenWidth() - getLayoutX() - getBoundsInParent().getWidth());
 		}
 	}
 
-
+	/**
+	 * Updates the state of the Boss, including position and shield status.
+	 */
 	@Override
 	public void updateActor() {
 		updatePosition();
 		updateShield();
 	}
 
+	/**
+	 * Fires a projectile from the Boss with a predefined probability.
+	 *
+	 * @return A BossProjectile if fired, otherwise null.
+	 */
 	@Override
 	public ActiveActorDestructible fireProjectile() {
-		return bossFiresInCurrentFrame() ? new BossProjectile(getProjectileInitialPosition(), levelParent) : null;
+		if (bossFiresInCurrentFrame()) {
+			return new BossProjectile(getProjectileInitialPosition(), levelParent);
+		}
+		return null;
 	}
 
+	/**
+	 * Handles damage taken by the Boss. Damage is ignored if shielded.
+	 */
 	@Override
 	public void takeDamage() {
 		if (!isShielded) {
@@ -98,21 +120,26 @@ public class Boss extends FighterPlane {
 		}
 	}
 
+	/**
+	 * Creates a custom hitbox for the Boss to allow more precise collision detection.
+	 *
+	 * @return Adjusted hitbox bounds.
+	 */
 	public javafx.geometry.Bounds getCustomHitbox() {
-		// Get the default bounds of the Boss
 		javafx.geometry.Bounds originalBounds = super.getBoundsInParent();
-
-		// Adjust the bounds to make the hitbox more precise
-		double paddingX = 80; // Horizontal padding
-		double paddingY = 80; // Vertical padding
+		double paddingX = 80;
+		double paddingY = 80;
 		return new javafx.geometry.BoundingBox(
-				originalBounds.getMinX() + paddingX, // Adjust left boundary
-				originalBounds.getMinY() + paddingY, // Adjust top boundary
-				originalBounds.getWidth() - 2 * paddingX, // Adjust width
-				originalBounds.getHeight() - 2 * paddingY // Adjust height
+				originalBounds.getMinX() + paddingX,
+				originalBounds.getMinY() + paddingY,
+				originalBounds.getWidth() - 2 * paddingX,
+				originalBounds.getHeight() - 2 * paddingY
 		);
 	}
 
+	/**
+	 * Initializes the movement pattern for the Boss.
+	 */
 	private void initializeMovePattern() {
 		for (int i = 0; i < MOVE_FREQUENCY_PER_CYCLE; i++) {
 			movePattern.add(VERTICAL_VELOCITY);
@@ -122,6 +149,9 @@ public class Boss extends FighterPlane {
 		Collections.shuffle(movePattern);
 	}
 
+	/**
+	 * Updates the shield's activation status and visual effects.
+	 */
 	private void updateShield() {
 		if (isShielded) {
 			framesWithShieldActivated++;
@@ -133,60 +163,75 @@ public class Boss extends FighterPlane {
 		}
 	}
 
+	/**
+	 * Determines the next move in the movement pattern.
+	 *
+	 * @return The next vertical velocity.
+	 */
 	private int getNextMove() {
 		int currentMove = movePattern.get(indexOfCurrentMove);
 		consecutiveMovesInSameDirection++;
-		if (consecutiveMovesInSameDirection == MAX_FRAMES_WITH_SAME_MOVE) {
+		if (consecutiveMovesInSameDirection >= MAX_FRAMES_WITH_SAME_MOVE) {
 			Collections.shuffle(movePattern);
 			consecutiveMovesInSameDirection = 0;
 			indexOfCurrentMove++;
 		}
-		if (indexOfCurrentMove == movePattern.size()) {
+		if (indexOfCurrentMove >= movePattern.size()) {
 			indexOfCurrentMove = 0;
 		}
 		return currentMove;
 	}
 
+	/**
+	 * Checks if the Boss should fire a projectile in the current frame.
+	 *
+	 * @return True if the Boss fires, otherwise false.
+	 */
 	private boolean bossFiresInCurrentFrame() {
 		return Math.random() < BOSS_FIRE_RATE;
 	}
 
+	/**
+	 * Calculates the initial position for a projectile fired by the Boss.
+	 *
+	 * @return The Y-coordinate for the projectile.
+	 */
 	private double getProjectileInitialPosition() {
 		return getLayoutY() + getTranslateY() + PROJECTILE_Y_POSITION_OFFSET;
 	}
 
+	/**
+	 * Determines if the shield should be activated.
+	 *
+	 * @return True if the shield activates, otherwise false.
+	 */
 	private boolean shieldShouldBeActivated() {
 		return Math.random() < BOSS_SHIELD_PROBABILITY;
 	}
 
-	private boolean shieldExhausted() {
-		return framesWithShieldActivated == MAX_FRAMES_WITH_SHIELD;
-	}
-
+	/**
+	 * Activates the shield, applying visual effects and notifying the user.
+	 */
 	private void activateShield() {
 		isShielded = true;
 		framesWithShieldActivated = 0;
-
-		// Apply the shield glow effect
 		setEffect(shieldGlowEffect);
 
-		// Display the shield alert
 		if (shieldAlert != null) {
 			shieldAlert.setText("Boss is shielded!");
 			shieldAlert.setVisible(true);
 			shieldAlert.toFront();
-
 		}
 	}
 
+	/**
+	 * Deactivates the shield, removing visual effects and hiding the alert.
+	 */
 	private void deactivateShield() {
 		isShielded = false;
 		framesWithShieldActivated = 0;
-
-		// Remove the shield glow effect
 		setEffect(null);
 
-		// Hide the shield alert
 		if (shieldAlert != null) {
 			shieldAlert.setVisible(false);
 		}
