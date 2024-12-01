@@ -72,6 +72,6 @@ public class PowerUp extends ActiveActorDestructible {
      * @return True if the power-up is below the screen; otherwise, false.
      */
     private boolean isOutOfBounds() {
-        return getTranslateY() > 750;
+        return getTranslateY() > 650;
     }
 }
