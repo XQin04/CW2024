@@ -4,6 +4,9 @@ import com.example.demo.actors.Boss;
 import com.example.demo.actors.EnemyPlane;
 import com.example.demo.powerups.SpreadshotPowerUp;
 import com.example.demo.ui.LevelView;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class LevelThree extends LevelParent {
@@ -17,13 +20,19 @@ public class LevelThree extends LevelParent {
     private final Boss levelThreeBoss;
     private int waveCount = 0;
     private boolean bossSpawned = false;
+    private final Label shieldAlert; // Label for shield alerts
+
 
     // Constructor
     public LevelThree(double screenHeight, double screenWidth, Stage stage) {
         super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage, "Final Level");
 
+        // Initialize the shield alert label
+        shieldAlert = createShieldAlert();
+        getRoot().getChildren().add(shieldAlert); // Add shield alert to the root node
+
         // Initialize Boss with the LevelParent reference
-        levelThreeBoss = new Boss(this);
+        levelThreeBoss = new Boss(this, shieldAlert);
     }
 
     @Override
@@ -78,6 +87,16 @@ public class LevelThree extends LevelParent {
             // The player wins if the boss is destroyed and no other enemies are present.
             winGame();
         }
+    }
+
+    private Label createShieldAlert() {
+        Label label = new Label();
+        label.setFont(new Font("Arial", 24));
+        label.setTextFill(Color.RED);
+        label.setLayoutX(500); // Adjust position as needed
+        label.setLayoutY(50); // Adjust position as needed
+        label.setVisible(false); // Initially hidden
+        return label;
     }
 
 }

@@ -2,7 +2,9 @@ package com.example.demo.gameplay;
 
 import com.example.demo.actors.Boss;
 import com.example.demo.ui.LevelView;
-import com.example.demo.ui.LevelViewLevelTwo;
+import javafx.scene.control.Label;
+import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class LevelTwo extends LevelParent {
@@ -12,14 +14,18 @@ public class LevelTwo extends LevelParent {
 	private static final String NEXT_LEVEL = "com.example.demo.gameplay.LevelThree";
 
 	private final Boss boss; // Reference to the boss
-	private LevelViewLevelTwo levelView; // Level-specific view
+	private final Label shieldAlert; // Label for shield alerts
 
-	public LevelTwo(double screenHeight, double screenWidth,  Stage stage) {
+	public LevelTwo(double screenHeight, double screenWidth, Stage stage) {
 		// Call the parent constructor with background image, height, width, and initial player health
-		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage,"Level 2");
+		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage, "Level 2");
 
-		// Instantiate Boss with the current LevelParent reference
-		boss = new Boss(this);
+		// Initialize the shield alert label
+		shieldAlert = createShieldAlert();
+		getRoot().getChildren().add(shieldAlert); // Add shield alert to the root node
+
+		// Instantiate the boss with a reference to the current LevelParent and shield alert
+		boss = new Boss(this, shieldAlert);
 	}
 
 	@Override
@@ -48,8 +54,22 @@ public class LevelTwo extends LevelParent {
 
 	@Override
 	protected LevelView instantiateLevelView() {
-		// Instantiate and return the specific level view for Level 2
-		levelView = new LevelViewLevelTwo(getRoot(), PLAYER_INITIAL_HEALTH);
-		return levelView;
+		// Instantiate and return a generic LevelView (or create a custom one if necessary)
+		return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH);
+	}
+
+	/**
+	 * Creates a Label for displaying shield alerts.
+	 *
+	 * @return a configured Label object
+	 */
+	private Label createShieldAlert() {
+		Label label = new Label();
+		label.setFont(new Font("Arial", 24));
+		label.setTextFill(Color.RED);
+		label.setLayoutX(500); // Adjust position as needed
+		label.setLayoutY(50); // Adjust position as needed
+		label.setVisible(false); // Initially hidden
+		return label;
 	}
 }
