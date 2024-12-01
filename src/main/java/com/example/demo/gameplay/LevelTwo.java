@@ -3,72 +3,93 @@ package com.example.demo.gameplay;
 import com.example.demo.actors.Boss;
 import com.example.demo.ui.LevelView;
 import javafx.scene.control.Label;
-import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * Represents the second level of the game.
+ * Introduces a Boss enemy with shield mechanics and transitions to the next level upon completion.
+ */
 public class LevelTwo extends LevelParent {
 
+	// Constants for level configuration
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png";
 	private static final int PLAYER_INITIAL_HEALTH = 5;
 	private static final String NEXT_LEVEL = "com.example.demo.gameplay.LevelThree";
 
-	private final Boss boss; // Reference to the boss
-	private final Label shieldAlert; // Label for shield alerts
+	private final Boss boss; // Reference to the boss enemy
+	private final Label shieldAlert; // Label for displaying shield alerts
 
+	/**
+	 * Constructs the second level with the specified screen dimensions and stage.
+	 *
+	 * @param screenHeight The height of the game screen.
+	 * @param screenWidth  The width of the game screen.
+	 * @param stage        The primary stage for the game.
+	 */
 	public LevelTwo(double screenHeight, double screenWidth, Stage stage) {
-		// Call the parent constructor with background image, height, width, and initial player health
 		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage, "Level 2");
 
-		// Initialize the shield alert label
+		// Initialize the shield alert label and add it to the root node
 		shieldAlert = createShieldAlert();
-		getRoot().getChildren().add(shieldAlert); // Add shield alert to the root node
+		getRoot().getChildren().add(shieldAlert);
 
-		// Instantiate the boss with a reference to the current LevelParent and shield alert
+		// Initialize the boss with a reference to this level and the shield alert
 		boss = new Boss(this, shieldAlert);
 	}
 
+	/**
+	 * Adds the user's plane to the level.
+	 */
 	@Override
 	protected void initializeFriendlyUnits() {
-		// Add the player's user plane to the scene graph
 		getRoot().getChildren().add(getUser());
 	}
 
+	/**
+	 * Checks if the game is over based on the state of the player and boss.
+	 */
 	@Override
 	protected void checkIfGameOver() {
-		// Check if user is destroyed or if boss is destroyed
 		if (userIsDestroyed()) {
 			loseGame(); // Player loses
 		} else if (boss.isDestroyed()) {
-			goToNextLevel(NEXT_LEVEL); // Player wins and proceeds to Level 3
+			goToNextLevel(NEXT_LEVEL); // Player wins and proceeds to the next level
 		}
 	}
 
+	/**
+	 * Spawns enemy units for the level. Adds the boss if no enemies are currently present.
+	 */
 	@Override
 	protected void spawnEnemyUnits() {
-		// If no enemies currently exist, add the boss to the scene
 		if (getCurrentNumberOfEnemies() == 0) {
 			addEnemyUnit(boss);
 		}
 	}
 
+	/**
+	 * Instantiates the view for this level.
+	 *
+	 * @return A generic LevelView for Level Two.
+	 */
 	@Override
 	protected LevelView instantiateLevelView() {
-		// Instantiate and return a generic LevelView (or create a custom one if necessary)
 		return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH);
 	}
 
 	/**
-	 * Creates a Label for displaying shield alerts.
+	 * Creates and configures a Label for displaying shield alerts.
 	 *
-	 * @return a configured Label object
+	 * @return A configured Label object.
 	 */
 	private Label createShieldAlert() {
 		Label label = new Label();
 		label.setFont(new Font("Arial", 24));
 		label.setTextFill(Color.RED);
-		label.setLayoutX(500); // Adjust position as needed
-		label.setLayoutY(50); // Adjust position as needed
+		label.setLayoutX(500); // Adjust X position as needed
+		label.setLayoutY(50);  // Adjust Y position as needed
 		label.setVisible(false); // Initially hidden
 		return label;
 	}

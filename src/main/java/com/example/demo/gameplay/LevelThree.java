@@ -9,94 +9,136 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * Represents the third and final level of the game.
+ * Features waves of enemies, power-ups, and a boss battle.
+ */
 public class LevelThree extends LevelParent {
 
+    // Constants for level configuration
     private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background3.jpg";
     private static final int PLAYER_INITIAL_HEALTH = 5;
     private static final int WAVES_BEFORE_BOSS = 3;
-    private static final double POWER_UP_SPAWN_PROBABILITY = 0.02; // 2% chance to spawn power-up each frame
+    private static final double POWER_UP_SPAWN_PROBABILITY = 0.02; // 2% chance per frame
 
-    private LevelView levelView;
-    private final Boss levelThreeBoss;
-    private int waveCount = 0;
-    private boolean bossSpawned = false;
-    private final Label shieldAlert; // Label for shield alerts
+    private final Boss levelThreeBoss; // Reference to the boss enemy
+    private final Label shieldAlert;   // Label for displaying shield alerts
+    private int waveCount = 0;         // Tracks the number of waves completed
+    private boolean bossSpawned = false; // Indicates if the boss has been spawned
 
-
-    // Constructor
+    /**
+     * Constructs the final level with the specified screen dimensions and stage.
+     *
+     * @param screenHeight The height of the game screen.
+     * @param screenWidth  The width of the game screen.
+     * @param stage        The primary stage for the game.
+     */
     public LevelThree(double screenHeight, double screenWidth, Stage stage) {
         super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage, "Final Level");
 
-        // Initialize the shield alert label
+        // Initialize the shield alert label and add it to the scene graph
         shieldAlert = createShieldAlert();
-        getRoot().getChildren().add(shieldAlert); // Add shield alert to the root node
+        getRoot().getChildren().add(shieldAlert);
 
-        // Initialize Boss with the LevelParent reference
+        // Initialize the boss with a reference to this level and the shield alert
         levelThreeBoss = new Boss(this, shieldAlert);
     }
 
+    /**
+     * Adds the player's plane to the level.
+     */
     @Override
     protected void initializeFriendlyUnits() {
-        // Add user plane to the scene graph
         getRoot().getChildren().add(getUser());
     }
 
+    /**
+     * Spawns enemy units and power-ups for the level.
+     * Introduces the boss after a predefined number of waves.
+     */
     @Override
     protected void spawnEnemyUnits() {
-        // Regular enemy spawning logic
+        // Spawn regular enemies if the boss has not yet appeared
         if (getCurrentNumberOfEnemies() == 0 && !bossSpawned) {
             waveCount++;
-            for (int i = 0; i < 3 + waveCount; i++) {
-                double x = getScreenWidth() + 100;
-                double y = Math.random() * getEnemyMaximumYPosition();
-                addEnemyUnit(new EnemyPlane(x, y));
-            }
+            spawnEnemyWave(waveCount);
 
             if (waveCount >= WAVES_BEFORE_BOSS) {
                 spawnBoss();
             }
         }
 
-        // Randomly spawn spreadshot power-up
-        if (Math.random() < POWER_UP_SPAWN_PROBABILITY) { // 2% chance per frame
-            double screenWidthLimit = getScreenWidth() / 2; // Limit to the left half of the screen
-            double x = Math.random() * screenWidthLimit; // Generate an x-coordinate within the left half
-            addPowerUp(new SpreadshotPowerUp(x, 0)); // Create SpreadshotPowerUp class if necessary
-        }
-
+        // Randomly spawn spreadshot power-ups
+        spawnPowerUp();
     }
 
+    /**
+     * Instantiates the view for this level.
+     *
+     * @return The level view for Level Three.
+     */
     @Override
     protected LevelView instantiateLevelView() {
-        // Instantiate level view with root and player initial health
-        levelView = new LevelView(getRoot(), PLAYER_INITIAL_HEALTH);
-        return levelView;
+        return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH);
     }
 
+    /**
+     * Checks if the game is over based on the player's and boss's state.
+     */
+    @Override
+    protected void checkIfGameOver() {
+        if (userIsDestroyed()) {
+            loseGame(); // Player loses when their health reaches zero
+        } else if (levelThreeBoss.isDestroyed() && getCurrentNumberOfEnemies() == 0) {
+            winGame(); // Player wins when the boss is destroyed and no enemies remain
+        }
+    }
+
+    /**
+     * Spawns a wave of enemy planes.
+     *
+     * @param waveCount The current wave count to determine enemy difficulty.
+     */
+    private void spawnEnemyWave(int waveCount) {
+        for (int i = 0; i < 3 + waveCount; i++) {
+            double x = getScreenWidth() + 100;
+            double y = Math.random() * getEnemyMaximumYPosition();
+            addEnemyUnit(new EnemyPlane(x, y));
+        }
+    }
+
+    /**
+     * Spawns the boss enemy into the game.
+     */
     private void spawnBoss() {
-        // Add boss to the scene graph
         addEnemyUnit(levelThreeBoss);
         bossSpawned = true;
     }
 
-    @Override
-    protected void checkIfGameOver() {
-        if (userIsDestroyed()) {
-            loseGame(); // The player loses if their health reaches zero.
-        } else if (levelThreeBoss.isDestroyed() && getCurrentNumberOfEnemies() == 0) {
-            // The player wins if the boss is destroyed and no other enemies are present.
-            winGame();
+    /**
+     * Attempts to spawn a spreadshot power-up with a fixed probability.
+     */
+    private void spawnPowerUp() {
+        if (Math.random() < POWER_UP_SPAWN_PROBABILITY) {
+            double screenWidthLimit = getScreenWidth() / 2; // Limit to the left half of the screen
+            double x = Math.random() * screenWidthLimit;
+            addPowerUp(new SpreadshotPowerUp(x, 0)); // Add a new power-up to the scene
         }
     }
 
+
+    /**
+     * Creates and configures a label for displaying shield alerts.
+     *
+     * @return A configured Label object.
+     */
     private Label createShieldAlert() {
         Label label = new Label();
         label.setFont(new Font("Arial", 24));
         label.setTextFill(Color.RED);
-        label.setLayoutX(500); // Adjust position as needed
-        label.setLayoutY(50); // Adjust position as needed
+        label.setLayoutX(500); // Adjust X position as needed
+        label.setLayoutY(50);  // Adjust Y position as needed
         label.setVisible(false); // Initially hidden
         return label;
     }
-
 }
