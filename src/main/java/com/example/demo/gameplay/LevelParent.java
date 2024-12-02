@@ -723,6 +723,7 @@ public abstract class LevelParent extends Observable {
 	}
 
 
+
 	/**
 	 * Updates the kill count for enemies eliminated in the level.
 	 */
