@@ -3,8 +3,8 @@ package com.example.demo.gameplay;
 import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.actors.FighterSpider;
 import com.example.demo.actors.UserSuperman;
+import com.example.demo.actors.BossSpider;
 import com.example.demo.controller.Main;
-import com.example.demo.managers.CollisionManager;
 import com.example.demo.powerups.PowerUp;
 import com.example.demo.ui.EndGameMenu;
 import com.example.demo.ui.LevelView;
@@ -85,8 +85,6 @@ public abstract class LevelParent extends Observable {
 	private EndGameMenu endGameMenu;
 	private MediaPlayer gameBackgroundMediaPlayer;
 
-	private CollisionManager collisionManager;
-
 
 // ======================= Initialization Methods ==========================
 //Methods responsible for initializing the level and its components.
@@ -140,15 +138,6 @@ public abstract class LevelParent extends Observable {
 		initializePauseButton();
 		friendlyUnits.add(user);
 		initializeGameBackgroundMusic();
-
-		this.collisionManager = new CollisionManager(
-				friendlyUnits,
-				enemyUnits,
-				userProjectiles,
-				enemyProjectiles,
-				powerUps,
-				user
-		);
 
 	}
 
@@ -580,7 +569,7 @@ public abstract class LevelParent extends Observable {
 	 * Handles spawning enemies, updating actors, and managing collisions.
 	 */
 	private void updateScene() {
-		if (isPaused) return; // Skip updates if the game is paused
+		if (isPaused) return;
 
 		spawnEnemyUnits();
 		updateActors();
@@ -589,16 +578,17 @@ public abstract class LevelParent extends Observable {
 		handleEnemyPenetration(); // Keep this logic here for now
 		removeAllDestroyedActors();
 
-		// Delegating collision handling to CollisionManager
-		collisionManager.handleSpiderCollisions();
-		collisionManager.handleUserProjectileCollisions();
-		collisionManager.handleEnemyProjectileCollisions();
-		collisionManager.handlePowerUpCollisions();
+		// Replace CollisionManager calls with inline logic
+		handleSpiderCollisions();
+		handleUserProjectileCollisions();
+		handleEnemyProjectileCollisions();
+		handlePowerUpCollisions();
 
 		updateKillCount();
 		updateLevelView();
 		checkIfGameOver();
 	}
+
 
 
 
@@ -752,6 +742,61 @@ public abstract class LevelParent extends Observable {
 			enemyProjectiles.add(projectile);   // Track the projectile
 		}
 	}
+
+	private void handleSpiderCollisions() {
+		for (ActiveActorDestructible friendly : friendlyUnits) {
+			for (ActiveActorDestructible enemy : enemyUnits) {
+				if (enemy instanceof BossSpider boss) {
+					if (boss.getCustomHitbox().intersects(friendly.getBoundsInParent())) {
+						friendly.takeDamage();
+						boss.takeDamage();
+					}
+				} else if (enemy.getBoundsInParent().intersects(friendly.getBoundsInParent())) {
+					friendly.takeDamage();
+					enemy.takeDamage();
+				}
+			}
+		}
+	}
+
+	private void handleUserProjectileCollisions() {
+		for (ActiveActorDestructible projectile : userProjectiles) {
+			for (ActiveActorDestructible enemy : enemyUnits) {
+				if (enemy instanceof BossSpider boss) {
+					if (boss.getCustomHitbox().intersects(projectile.getBoundsInParent())) {
+						projectile.takeDamage();
+						boss.takeDamage();
+					}
+				} else if (enemy.getBoundsInParent().intersects(projectile.getBoundsInParent())) {
+					projectile.takeDamage();
+					enemy.takeDamage();
+				}
+			}
+		}
+	}
+
+	private void handleEnemyProjectileCollisions() {
+		for (ActiveActorDestructible projectile : enemyProjectiles) {
+			if (projectile.getBoundsInParent().intersects(user.getBoundsInParent())) {
+				projectile.takeDamage();
+				user.takeDamage();
+			}
+		}
+	}
+
+	private void handlePowerUpCollisions() {
+		for (int i = powerUps.size() - 1; i >= 0; i--) {
+			PowerUp powerUp = (PowerUp) powerUps.get(i);
+			if (powerUp.getBoundsInParent().intersects(user.getBoundsInParent())) {
+				powerUp.activate(user); // Activate the power-up
+				soundManager.playPowerUpSound(); // Play the power-up sound
+				powerUps.remove(powerUp); // Remove from the list
+				root.getChildren().remove(powerUp); // Remove from the scene
+			}
+		}
+	}
+
+
 
 
 
