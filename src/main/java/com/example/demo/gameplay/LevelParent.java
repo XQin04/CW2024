@@ -86,6 +86,7 @@ public abstract class LevelParent extends Observable {
 	private EndGameMenu endGameMenu;
 	private MediaPlayer gameBackgroundMediaPlayer;
 
+	private CollisionManager collisionManager;
 
 
 // ======================= Initialization Methods ==========================
@@ -140,6 +141,16 @@ public abstract class LevelParent extends Observable {
 		initializePauseButton();
 		friendlyUnits.add(user);
 		initializeGameBackgroundMusic();
+
+		this.collisionManager = new CollisionManager(
+				friendlyUnits,
+				enemyUnits,
+				userProjectiles,
+				enemyProjectiles,
+				powerUps,
+				user
+		);
+
 	}
 
 
@@ -576,16 +587,20 @@ public abstract class LevelParent extends Observable {
 		updateActors();
 		generateEnemyFire();
 		updateNumberOfEnemies();
-		handleEnemyPenetration();
+		handleEnemyPenetration(); // Keep this logic here for now
 		removeAllDestroyedActors();
-		handleUserProjectileCollisions();
-		handleEnemyProjectileCollisions();
-		handleSpiderCollisions();
-		handlePowerUpCollisions(); // Handle power-up collection
+
+		// Delegating collision handling to CollisionManager
+		collisionManager.handleSpiderCollisions();
+		collisionManager.handleUserProjectileCollisions();
+		collisionManager.handleEnemyProjectileCollisions();
+		collisionManager.handlePowerUpCollisions();
+
 		updateKillCount();
 		updateLevelView();
 		checkIfGameOver();
 	}
+
 
 
 	/**
@@ -628,58 +643,6 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Handles collisions between friendly and enemy spider.
-	 */
-	private void handleSpiderCollisions() {
-		handleCollisions(friendlyUnits, enemyUnits);
-	}
-
-
-	/**
-	 * Handles collisions between user projectiles and enemy units.
-	 */
-	private void handleUserProjectileCollisions() {
-		handleCollisions(userProjectiles, enemyUnits);
-	}
-
-
-	/**
-	 * Handles collisions between enemy projectiles and the user's spider.
-	 */
-	private void handleEnemyProjectileCollisions() {
-		for (ActiveActorDestructible projectile : enemyProjectiles) {
-			if (projectile.getBoundsInParent().intersects(user.getBoundsInParent())) {
-				projectile.takeDamage();
-				user.takeDamage();
-			}
-		}
-	}
-
-
-	/**
-	 * Handles collisions between projectiles and enemies, including custom logic for bosses.
-	 *
-	 * @param projectiles The list of projectiles.
-	 * @param enemies     The list of enemies.
-	 */
-	private void handleCollisions(List<ActiveActorDestructible> projectiles, List<ActiveActorDestructible> enemies) {
-		for (ActiveActorDestructible projectile : projectiles) {
-			for (ActiveActorDestructible enemy : enemies) {
-				if (enemy instanceof BossSpider boss) { // Enhanced readability with pattern matching
-					if (boss.getCustomHitbox().intersects(projectile.getBoundsInParent())) {
-						projectile.takeDamage();
-						boss.takeDamage();
-					}
-				} else if (enemy.getBoundsInParent().intersects(projectile.getBoundsInParent())) {
-					projectile.takeDamage();
-					enemy.takeDamage();
-				}
-			}
-		}
-	}
-
-
-	/**
 	 * Handles enemy penetration past the player's defenses.
 	 * Damages the user and destroys the enemy.
 	 */
@@ -688,26 +651,6 @@ public abstract class LevelParent extends Observable {
 			if (enemyHasPenetratedDefenses(enemy)) {
 				user.takeDamage();
 				enemy.destroy();
-			}
-		}
-	}
-
-
-	/**
-	 * Handles collisions between the user's superman and power-ups.
-	 * Activates the power-up and removes it from the game.
-	 */
-	private void handlePowerUpCollisions() {
-		for (ActiveActorDestructible powerUp : powerUps) {
-			if (powerUp.getBoundsInParent().intersects(user.getBoundsInParent())) {
-				if (powerUp instanceof SpreadshotPowerUp spreadshotPowerUp) {
-					spreadshotPowerUp.activate(user); // Activate spreadshot power-up
-				} else if (powerUp instanceof PowerUp genericPowerUp) {
-					genericPowerUp.activate(user); // Activate generic power-ups
-				}
-
-				soundManager.playPowerUpSound(); // Play collection sound
-				powerUp.destroy(); // Remove power-up after collection
 			}
 		}
 	}
