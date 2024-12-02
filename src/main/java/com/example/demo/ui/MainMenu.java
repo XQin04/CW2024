@@ -41,7 +41,7 @@ public class MainMenu {
      */
     public void start(Stage stage, Main main) {
         // Play background music
-        playBackgroundMusic("/com/example/demo/sounds/Menu.mp3");
+        playBackgroundMusic("/com/example/demo/sounds/Background.mp3");
 
         // Root StackPane to hold all menu layouts
         StackPane root = new StackPane();

@@ -263,7 +263,7 @@ public abstract class LevelParent extends Observable {
 	 */
 	private void initializeGameBackgroundMusic() {
 		try {
-			Media gameMusic = new Media(getClass().getResource("/com/example/demo/sounds/Menu.mp3").toExternalForm());
+			Media gameMusic = new Media(getClass().getResource("/com/example/demo/sounds/Background.mp3").toExternalForm());
 			gameBackgroundMediaPlayer = new MediaPlayer(gameMusic);
 			gameBackgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the game music
 			gameBackgroundMediaPlayer.setVolume(0.6); // Set an appropriate volume level
