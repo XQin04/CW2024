@@ -15,7 +15,6 @@ import com.example.demo.utils.SoundManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -35,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.stream.Collectors;
+
 
 
 
@@ -88,6 +88,9 @@ public abstract class LevelParent extends Observable {
 
 
 
+// ======================= Initialization Methods ==========================
+//Methods responsible for initializing the level and its components.
+
 	/**
 	 * Constructs a LevelParent object and initializes its core components.
 	 *
@@ -139,6 +142,7 @@ public abstract class LevelParent extends Observable {
 		initializeGameBackgroundMusic();
 	}
 
+
 	/**
 	 * Initializes the scene for the level by setting up the background, units, menus, and UI elements.
 	 *
@@ -160,13 +164,119 @@ public abstract class LevelParent extends Observable {
 
 	// Abstract methods to be implemented by subclasses
 	protected abstract void initializeFriendlyUnits();
-
+	protected abstract LevelView instantiateLevelView();
 	protected abstract void checkIfGameOver();
-
 	protected abstract void spawnEnemyUnits();
 
-	protected abstract LevelView instantiateLevelView();
 
+	/**
+	 * Initializes the game background and sets up keyboard controls.
+	 * Configures key press and release actions for the user.
+	 */
+	private void initializeBackground() {
+		// Configure background appearance
+		background.setFocusTraversable(true);
+		background.setFitHeight(screenHeight);
+		background.setFitWidth(screenWidth);
+
+		// Set up key press actions
+		background.setOnKeyPressed(event -> handleKeyPress(event));
+
+		// Set up key release actions
+		background.setOnKeyReleased(event -> handleKeyRelease(event));
+
+		// Add the background to the root group
+		root.getChildren().add(background);
+	}
+
+
+	/**
+	 * Initializes the game timeline for the game loop.
+	 * Sets up a repeating keyframe to call `updateScene`.
+	 */
+	private void initializeTimeline() {
+		timeline.setCycleCount(Timeline.INDEFINITE);
+		KeyFrame gameLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> updateScene());
+		timeline.getKeyFrames().add(gameLoop);
+	}
+
+
+	/**
+	 * Initializes the pause button.
+	 * Configures its styling, position, and behavior, then adds it to the scene graph.
+	 */
+	private void initializePauseButton() {
+		// Create and style the pause button
+		pauseButton = new Button("Pause");
+		pauseButton.setFont(Font.font("Arial", 14));
+		pauseButton.setStyle("-fx-background-color: orange; -fx-text-fill: white; -fx-background-radius: 10;");
+
+		// Set the action for toggling pause/resume
+		pauseButton.setOnAction(e -> togglePause());
+
+		// Position the button in the top-right corner
+		pauseButton.setLayoutX(screenWidth - 100);
+		pauseButton.setLayoutY(20);
+
+		// Add the pause button to the scene graph
+		root.getChildren().add(pauseButton);
+	}
+
+
+	/**
+	 * Initializes the pause menu.
+	 * Adds options to resume the game or navigate to the main menu.
+	 */
+	private void initializePauseMenu() {
+		pauseMenu = new PauseMenu(
+				screenWidth,
+				screenHeight,
+				this::resumeGame,        // Logic for resuming the game
+				() -> goToMainMenu(stage) // Logic for navigating to the main menu
+		);
+
+		// Add the pause menu to the menu layer
+		menuLayer.getChildren().add(pauseMenu);
+	}
+
+
+	/**
+	 * Initializes the end-game menu.
+	 * Adds options to navigate to the main menu or exit the application.
+	 */
+	private void initializeEndGameMenu() {
+		endGameMenu = new EndGameMenu(
+				screenWidth,
+				screenHeight,
+				() -> goToMainMenu(stage), // Logic for navigating to the main menu
+				() -> System.exit(0)       // Logic for exiting the application
+		);
+
+		// Add the end-game menu to the menu layer
+		menuLayer.getChildren().add(endGameMenu);
+	}
+
+
+	/**
+	 * Initializes the game background music.
+	 * Sets up a looping media player for the game.
+	 */
+	private void initializeGameBackgroundMusic() {
+		try {
+			Media gameMusic = new Media(getClass().getResource("/com/example/demo/sounds/Menu.mp3").toExternalForm());
+			gameBackgroundMediaPlayer = new MediaPlayer(gameMusic);
+			gameBackgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the game music
+			gameBackgroundMediaPlayer.setVolume(0.6); // Set an appropriate volume level
+		} catch (Exception e) {
+			System.err.println("Error loading game background music: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+
+
+// ===================== Game State Management ===========================
+//Methods responsible for managing the game's state (e.g., pause, resume, transitions).
 
 	/**
 	 * Starts the game by displaying the level info and initiating gameplay.
@@ -281,202 +391,6 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Initializes the game background music.
-	 * Sets up a looping media player for the game.
-	 */
-	private void initializeGameBackgroundMusic() {
-		try {
-			Media gameMusic = new Media(getClass().getResource("/com/example/demo/sounds/Menu.mp3").toExternalForm());
-			gameBackgroundMediaPlayer = new MediaPlayer(gameMusic);
-			gameBackgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the game music
-			gameBackgroundMediaPlayer.setVolume(0.6); // Set an appropriate volume level
-		} catch (Exception e) {
-			System.err.println("Error loading game background music: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Updates the game scene during each frame of the game loop.
-	 * Handles spawning enemies, updating actors, and managing collisions.
-	 */
-	private void updateScene() {
-		if (isPaused) return; // Skip updates if the game is paused
-
-		spawnEnemyUnits();
-		updateActors();
-		generateEnemyFire();
-		updateNumberOfEnemies();
-		handleEnemyPenetration();
-		removeAllDestroyedActors();
-		handleUserProjectileCollisions();
-		handleEnemyProjectileCollisions();
-		handlePlaneCollisions();
-		handlePowerUpCollisions(); // Handle power-up collection
-		updateKillCount();
-		updateLevelView();
-		checkIfGameOver();
-	}
-
-	/**
-	 * Initializes the game timeline for the game loop.
-	 * Sets up a repeating keyframe to call `updateScene`.
-	 */
-	private void initializeTimeline() {
-		timeline.setCycleCount(Timeline.INDEFINITE);
-		KeyFrame gameLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> updateScene());
-		timeline.getKeyFrames().add(gameLoop);
-	}
-
-	/**
-	 * Initializes the game background and sets up keyboard controls.
-	 * Configures key press and release actions for the user.
-	 */
-	private void initializeBackground() {
-		// Configure background appearance
-		background.setFocusTraversable(true);
-		background.setFitHeight(screenHeight);
-		background.setFitWidth(screenWidth);
-
-		// Set up key press actions
-		background.setOnKeyPressed(event -> handleKeyPress(event));
-
-		// Set up key release actions
-		background.setOnKeyReleased(event -> handleKeyRelease(event));
-
-		// Add the background to the root group
-		root.getChildren().add(background);
-	}
-
-	/**
-	 * Handles key press events to control the user's plane and actions.
-	 *
-	 * @param e The KeyEvent triggered by a key press.
-	 */
-	private void handleKeyPress(KeyEvent e) {
-		if (isPaused) return;
-
-		KeyCode keyCode = e.getCode();
-		switch (keyCode) {
-			case UP -> user.moveUp();
-			case DOWN -> user.moveDown();
-			case LEFT -> user.moveLeft();
-			case RIGHT -> user.moveRight();
-			case SPACE -> fireProjectile();
-			default -> {
-			}
-		}
-	}
-
-	/**
-	 * Handles key release events to stop the user's plane movements.
-	 *
-	 * @param e The KeyEvent triggered by a key release.
-	 */
-	private void handleKeyRelease(KeyEvent e) {
-		if (isPaused) return;
-
-		KeyCode keyCode = e.getCode();
-		switch (keyCode) {
-			case UP, DOWN -> user.stopVertical();
-			case LEFT, RIGHT -> user.stopHorizontal();
-			default -> {
-			}
-		}
-	}
-
-	/**
-	 * Fires a projectile from the user's plane and adds it to the list of user projectiles.
-	 */
-	private void fireProjectile() {
-		// Get the projectile from the user plane
-		ActiveActorDestructible projectile = getUser().fireProjectile();
-
-		// Add the projectile to the list for tracking
-		if (projectile != null) {
-			userProjectiles.add(projectile);
-		}
-	}
-
-	/**
-	 * Adds a projectile to the scene and tracks it in the appropriate list.
-	 *
-	 * @param projectile The projectile to be added to the scene.
-	 */
-	public void addProjectile(ActiveActorDestructible projectile) {
-		if (projectile != null && !userProjectiles.contains(projectile)) {
-			// Add the projectile to the scene graph
-			getRoot().getChildren().add(projectile);
-
-			// Track the projectile
-			userProjectiles.add(projectile);
-		}
-	}
-
-
-
-
-
-
-	/**
-	 * Initializes the pause button.
-	 * Configures its styling, position, and behavior, then adds it to the scene graph.
-	 */
-	private void initializePauseButton() {
-		// Create and style the pause button
-		pauseButton = new Button("Pause");
-		pauseButton.setFont(Font.font("Arial", 14));
-		pauseButton.setStyle("-fx-background-color: orange; -fx-text-fill: white; -fx-background-radius: 10;");
-
-		// Set the action for toggling pause/resume
-		pauseButton.setOnAction(e -> togglePause());
-
-		// Position the button in the top-right corner
-		pauseButton.setLayoutX(screenWidth - 100);
-		pauseButton.setLayoutY(20);
-
-		// Add the pause button to the scene graph
-		root.getChildren().add(pauseButton);
-	}
-
-	/**
-	 * Initializes the pause menu.
-	 * Adds options to resume the game or navigate to the main menu.
-	 */
-	private void initializePauseMenu() {
-		pauseMenu = new PauseMenu(
-				screenWidth,
-				screenHeight,
-				this::resumeGame,        // Logic for resuming the game
-				() -> goToMainMenu(stage) // Logic for navigating to the main menu
-		);
-
-		// Add the pause menu to the menu layer
-		menuLayer.getChildren().add(pauseMenu);
-	}
-
-	/**
-	 * Initializes the end-game menu.
-	 * Adds options to navigate to the main menu or exit the application.
-	 */
-	private void initializeEndGameMenu() {
-		endGameMenu = new EndGameMenu(
-				screenWidth,
-				screenHeight,
-				() -> goToMainMenu(stage), // Logic for navigating to the main menu
-				() -> System.exit(0)       // Logic for exiting the application
-		);
-
-		// Add the end-game menu to the menu layer
-		menuLayer.getChildren().add(endGameMenu);
-	}
-
-
-
-
-
-
-	/**
 	 * Toggles the pause state of the game.
 	 * If the game is paused, it resumes; otherwise, it pauses.
 	 */
@@ -487,6 +401,48 @@ public abstract class LevelParent extends Observable {
 			pauseGame();
 		}
 	}
+
+
+	/**
+	 * Pauses the game by stopping the game loop and displaying the pause menu.
+	 */
+	private void pauseGame() {
+		timeline.pause(); // Pause the game loop
+
+		if (gameBackgroundMediaPlayer != null) {
+			gameBackgroundMediaPlayer.pause(); // Pause the background music
+		}
+
+		isPaused = true; // Set the pause state
+		pauseButton.setText("Resume"); // Update the button text to "Resume"
+		pauseButton.setVisible(false); // Hide the pause button
+		pauseMenu.setVisible(true); // Show the pause menu
+		menuLayer.toFront(); // Bring the menu layer to the front
+	}
+
+
+	/**
+	 * Resumes the game by restarting the game loop and hiding the pause menu.
+	 */
+	private void resumeGame() {
+		timeline.play(); // Resume the game loop
+
+		if (gameBackgroundMediaPlayer != null) {
+			// Resume the background music if it's not muted
+			if (soundManager.isMusicMuted()) {
+				gameBackgroundMediaPlayer.pause(); // Keep music paused if muted
+			} else {
+				gameBackgroundMediaPlayer.play(); // Play music if not muted
+			}
+		}
+
+		isPaused = false; // Clear the pause state
+		pauseButton.setText("Pause"); // Update the button text to "Pause"
+		pauseButton.setVisible(true); // Make the pause button visible
+		pauseMenu.setVisible(false); // Hide the pause menu
+		background.requestFocus(); // Refocus on the game background
+	}
+
 
 	/**
 	 * Handles the logic for when the player wins the game.
@@ -512,22 +468,6 @@ public abstract class LevelParent extends Observable {
 		delay.play();
 	}
 
-	/**
-	 * Pauses the game by stopping the game loop and displaying the pause menu.
-	 */
-	private void pauseGame() {
-		timeline.pause(); // Pause the game loop
-
-		if (gameBackgroundMediaPlayer != null) {
-			gameBackgroundMediaPlayer.pause(); // Pause the background music
-		}
-
-		isPaused = true; // Set the pause state
-		pauseButton.setText("Resume"); // Update the button text to "Resume"
-		pauseButton.setVisible(false); // Hide the pause button
-		pauseMenu.setVisible(true); // Show the pause menu
-		menuLayer.toFront(); // Bring the menu layer to the front
-	}
 
 	/**
 	 * Handles the logic for when the player loses the game.
@@ -553,29 +493,6 @@ public abstract class LevelParent extends Observable {
 		delay.play();
 	}
 
-	/**
-	 * Resumes the game by restarting the game loop and hiding the pause menu.
-	 */
-	private void resumeGame() {
-		timeline.play(); // Resume the game loop
-
-		if (gameBackgroundMediaPlayer != null) {
-			// Resume the background music if it's not muted
-			if (soundManager.isMusicMuted()) {
-				gameBackgroundMediaPlayer.pause(); // Keep music paused if muted
-			} else {
-				gameBackgroundMediaPlayer.play(); // Play music if not muted
-			}
-		}
-
-		isPaused = false; // Clear the pause state
-		pauseButton.setText("Pause"); // Update the button text to "Pause"
-		pauseButton.setVisible(true); // Make the pause button visible
-		pauseMenu.setVisible(false); // Hide the pause menu
-		background.requestFocus(); // Refocus on the game background
-	}
-
-
 
 	/**
 	 * Transitions to the main menu, stopping all gameplay components and music.
@@ -593,6 +510,7 @@ public abstract class LevelParent extends Observable {
 		mainMenu.start(stage, new Main());
 	}
 
+
 	/**
 	 * Stops the game background music if it's currently playing.
 	 */
@@ -602,27 +520,73 @@ public abstract class LevelParent extends Observable {
 		}
 	}
 
-	/**
-	 * Generates enemy projectiles by allowing fighter planes to fire.
-	 */
-	private void generateEnemyFire() {
-		enemyUnits.stream()
-				.filter(enemy -> enemy instanceof FighterPlane)
-				.map(enemy -> ((FighterPlane) enemy).fireProjectile())
-				.forEach(this::spawnEnemyProjectile);
-	}
+
+
+// ==================== Game Loop & Updates ==============================
+//Methods responsible for the game's main loop and updating gameplay elements.
+
 
 	/**
-	 * Adds a projectile to the scene and tracks it in the enemy projectile list.
+	 * Handles key press events to control the user's plane and actions.
 	 *
-	 * @param projectile The projectile to be spawned.
+	 * @param e The KeyEvent triggered by a key press.
 	 */
-	private void spawnEnemyProjectile(ActiveActorDestructible projectile) {
-		if (projectile != null) {
-			root.getChildren().add(projectile); // Add projectile to the scene
-			enemyProjectiles.add(projectile);   // Track the projectile
+	private void handleKeyPress(KeyEvent e) {
+		if (isPaused) return;
+
+		KeyCode keyCode = e.getCode();
+		switch (keyCode) {
+			case UP -> user.moveUp();
+			case DOWN -> user.moveDown();
+			case LEFT -> user.moveLeft();
+			case RIGHT -> user.moveRight();
+			case SPACE -> fireProjectile();
+			default -> {
+			}
 		}
 	}
+
+
+	/**
+	 * Handles key release events to stop the user's plane movements.
+	 *
+	 * @param e The KeyEvent triggered by a key release.
+	 */
+	private void handleKeyRelease(KeyEvent e) {
+		if (isPaused) return;
+
+		KeyCode keyCode = e.getCode();
+		switch (keyCode) {
+			case UP, DOWN -> user.stopVertical();
+			case LEFT, RIGHT -> user.stopHorizontal();
+			default -> {
+			}
+		}
+	}
+
+
+	/**
+	 * Updates the game scene during each frame of the game loop.
+	 * Handles spawning enemies, updating actors, and managing collisions.
+	 */
+	private void updateScene() {
+		if (isPaused) return; // Skip updates if the game is paused
+
+		spawnEnemyUnits();
+		updateActors();
+		generateEnemyFire();
+		updateNumberOfEnemies();
+		handleEnemyPenetration();
+		removeAllDestroyedActors();
+		handleUserProjectileCollisions();
+		handleEnemyProjectileCollisions();
+		handlePlaneCollisions();
+		handlePowerUpCollisions(); // Handle power-up collection
+		updateKillCount();
+		updateLevelView();
+		checkIfGameOver();
+	}
+
 
 	/**
 	 * Updates all game actors, including friendly units, enemies, projectiles, and power-ups.
@@ -635,6 +599,7 @@ public abstract class LevelParent extends Observable {
 		powerUps.forEach(ActiveActorDestructible::updateActor);
 	}
 
+
 	/**
 	 * Removes all destroyed actors from the scene and their respective lists.
 	 */
@@ -645,6 +610,7 @@ public abstract class LevelParent extends Observable {
 		removeDestroyedActors(enemyProjectiles);
 		removeDestroyedActors(powerUps);
 	}
+
 
 	/**
 	 * Removes actors marked as destroyed from the specified list and the scene graph.
@@ -668,12 +634,14 @@ public abstract class LevelParent extends Observable {
 		handleCollisions(friendlyUnits, enemyUnits);
 	}
 
+
 	/**
 	 * Handles collisions between user projectiles and enemy units.
 	 */
 	private void handleUserProjectileCollisions() {
 		handleCollisions(userProjectiles, enemyUnits);
 	}
+
 
 	/**
 	 * Handles collisions between enemy projectiles and the user's plane.
@@ -686,6 +654,7 @@ public abstract class LevelParent extends Observable {
 			}
 		}
 	}
+
 
 	/**
 	 * Handles collisions between projectiles and enemies, including custom logic for bosses.
@@ -709,6 +678,7 @@ public abstract class LevelParent extends Observable {
 		}
 	}
 
+
 	/**
 	 * Handles enemy penetration past the player's defenses.
 	 * Damages the user and destroys the enemy.
@@ -721,6 +691,7 @@ public abstract class LevelParent extends Observable {
 			}
 		}
 	}
+
 
 	/**
 	 * Handles collisions between the user's plane and power-ups.
@@ -741,12 +712,14 @@ public abstract class LevelParent extends Observable {
 		}
 	}
 
+
 	/**
 	 * Updates the level view based on the user's current health.
 	 */
 	private void updateLevelView() {
 		levelView.removeHearts(user.getHealth());
 	}
+
 
 	/**
 	 * Updates the kill count for enemies eliminated in the level.
@@ -759,51 +732,39 @@ public abstract class LevelParent extends Observable {
 	}
 
 
-	/**
-	 * Checks if an enemy has penetrated the player's defenses.
-	 *
-	 * @param enemy The enemy actor to check.
-	 * @return True if the enemy's position exceeds the screen width, false otherwise.
-	 */
-	private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {
-		return Math.abs(enemy.getTranslateX()) > screenWidth;
-	}
+
+// ================= Actor & Projectile Management =====================
+//Methods responsible for adding, removing, or interacting with actors and projectiles.
 
 	/**
-	 * Retrieves the SoundManager instance for the game.
-	 *
-	 * @return The SoundManager instance.
+	 * Fires a projectile from the user's plane and adds it to the list of user projectiles.
 	 */
-	public SoundManager getSoundManager() {
-		return soundManager;
+	private void fireProjectile() {
+		// Get the projectile from the user plane
+		ActiveActorDestructible projectile = getUser().fireProjectile();
+
+		// Add the projectile to the list for tracking
+		if (projectile != null) {
+			userProjectiles.add(projectile);
+		}
 	}
 
-	/**
-	 * Retrieves the player's UserPlane instance.
-	 *
-	 * @return The user's plane.
-	 */
-	public UserPlane getUser() {
-		return user;
-	}
 
 	/**
-	 * Retrieves the root group of the scene.
+	 * Adds a projectile to the scene and tracks it in the appropriate list.
 	 *
-	 * @return The root group.
+	 * @param projectile The projectile to be added to the scene.
 	 */
-	public Group getRoot() {
-		return root;
+	public void addProjectile(ActiveActorDestructible projectile) {
+		if (projectile != null && !userProjectiles.contains(projectile)) {
+			// Add the projectile to the scene graph
+			getRoot().getChildren().add(projectile);
+
+			// Track the projectile
+			userProjectiles.add(projectile);
+		}
 	}
 
-	/**
-	 * Gets the current number of enemy units in the level.
-	 *
-	 * @return The number of enemy units.
-	 */
-	protected int getCurrentNumberOfEnemies() {
-		return enemyUnits.size();
-	}
 
 	/**
 	 * Adds a new enemy unit to the level and scene graph.
@@ -815,6 +776,7 @@ public abstract class LevelParent extends Observable {
 		root.getChildren().add(enemy);
 	}
 
+
 	/**
 	 * Adds a new power-up to the level and scene graph.
 	 *
@@ -825,6 +787,86 @@ public abstract class LevelParent extends Observable {
 		root.getChildren().add(powerUp);
 	}
 
+
+	/**
+	 * Generates enemy projectiles by allowing fighter planes to fire.
+	 */
+	private void generateEnemyFire() {
+		enemyUnits.stream()
+				.filter(enemy -> enemy instanceof FighterPlane)
+				.map(enemy -> ((FighterPlane) enemy).fireProjectile())
+				.forEach(this::spawnEnemyProjectile);
+	}
+
+
+	/**
+	 * Adds a projectile to the scene and tracks it in the enemy projectile list.
+	 *
+	 * @param projectile The projectile to be spawned.
+	 */
+	private void spawnEnemyProjectile(ActiveActorDestructible projectile) {
+		if (projectile != null) {
+			root.getChildren().add(projectile); // Add projectile to the scene
+			enemyProjectiles.add(projectile);   // Track the projectile
+		}
+	}
+
+
+
+// ====================== Utility Methods ==============================
+//Utility methods for gameplay logic and data retrieval.
+
+	/**
+	 * Checks if an enemy has penetrated the player's defenses.
+	 *
+	 * @param enemy The enemy actor to check.
+	 * @return True if the enemy's position exceeds the screen width, false otherwise.
+	 */
+	private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {
+		return Math.abs(enemy.getTranslateX()) > screenWidth;
+	}
+
+
+	/**
+	 * Retrieves the SoundManager instance for the game.
+	 *
+	 * @return The SoundManager instance.
+	 */
+	public SoundManager getSoundManager() {
+		return soundManager;
+	}
+
+
+	/**
+	 * Retrieves the player's UserPlane instance.
+	 *
+	 * @return The user's plane.
+	 */
+	public UserPlane getUser() {
+		return user;
+	}
+
+
+	/**
+	 * Retrieves the root group of the scene.
+	 *
+	 * @return The root group.
+	 */
+	public Group getRoot() {
+		return root;
+	}
+
+
+	/**
+	 * Gets the current number of enemy units in the level.
+	 *
+	 * @return The number of enemy units.
+	 */
+	protected int getCurrentNumberOfEnemies() {
+		return enemyUnits.size();
+	}
+
+
 	/**
 	 * Retrieves the maximum Y position for enemy units.
 	 *
@@ -833,6 +875,7 @@ public abstract class LevelParent extends Observable {
 	protected double getEnemyMaximumYPosition() {
 		return enemyMaximumYPosition;
 	}
+
 
 	/**
 	 * Retrieves the width of the game screen.
@@ -843,6 +886,7 @@ public abstract class LevelParent extends Observable {
 		return screenWidth;
 	}
 
+
 	/**
 	 * Retrieves the height of the game screen.
 	 *
@@ -852,6 +896,7 @@ public abstract class LevelParent extends Observable {
 		return screenHeight;
 	}
 
+
 	/**
 	 * Checks if the user's plane is destroyed.
 	 *
@@ -860,6 +905,7 @@ public abstract class LevelParent extends Observable {
 	protected boolean userIsDestroyed() {
 		return user.isDestroyed();
 	}
+
 
 	/**
 	 * Updates the number of enemies in the level.
