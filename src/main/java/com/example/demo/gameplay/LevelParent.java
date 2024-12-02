@@ -1,12 +1,11 @@
 package com.example.demo.gameplay;
 
 import com.example.demo.actors.ActiveActorDestructible;
-import com.example.demo.actors.BossSpider;
 import com.example.demo.actors.FighterSpider;
 import com.example.demo.actors.UserSuperman;
 import com.example.demo.controller.Main;
+import com.example.demo.managers.CollisionManager;
 import com.example.demo.powerups.PowerUp;
-import com.example.demo.powerups.SpreadshotPowerUp;
 import com.example.demo.ui.EndGameMenu;
 import com.example.demo.ui.LevelView;
 import com.example.demo.ui.MainMenu;

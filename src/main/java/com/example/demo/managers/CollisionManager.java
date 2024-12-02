@@ -1,4 +1,4 @@
-package com.example.demo.gameplay;
+package com.example.demo.managers;
 
 import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.actors.BossSpider;

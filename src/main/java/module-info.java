@@ -15,4 +15,5 @@ module com.example.demo {
     exports com.example.demo.ui;
     exports com.example.demo.utils;
     exports com.example.demo.gameplay;
+    exports com.example.demo.managers;
 }
