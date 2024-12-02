@@ -6,7 +6,7 @@ package com.example.demo.projectiles;
  */
 public class EnemyProjectile extends Projectile {
 
-	private static final String IMAGE_NAME = "shoot.png"; // Image for the projectile
+	private static final String IMAGE_NAME = "enemyweb.png"; // Image for the projectile
 	private static final int IMAGE_HEIGHT = 50;          // Height of the projectile image
 	private static final int HORIZONTAL_VELOCITY = -10;  // Speed at which the projectile moves
 

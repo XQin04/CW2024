@@ -119,7 +119,7 @@ public class BossProjectile extends Projectile {
 	 */
 	private class Fragment extends Projectile {
 
-		private static final String FRAGMENT_IMAGE_NAME = "shoot.png"; // Image for the fragment
+		private static final String FRAGMENT_IMAGE_NAME = "enemyweb.png"; // Image for the fragment
 		private final double horizontalVelocity;
 		private final double verticalVelocity;
 
