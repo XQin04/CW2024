@@ -6,6 +6,7 @@ import com.example.demo.actors.UserSuperman;
 import com.example.demo.actors.BossSpider;
 import com.example.demo.controller.Main;
 import com.example.demo.powerups.PowerUp;
+import com.example.demo.powerups.SpreadshotPowerUp;
 import com.example.demo.ui.EndGameMenu;
 import com.example.demo.ui.LevelView;
 import com.example.demo.ui.MainMenu;
@@ -644,6 +645,75 @@ public abstract class LevelParent extends Observable {
 		}
 	}
 
+	/**
+	 * Handles collisions between friendly and enemy spider.
+	 */
+	private void handleSpiderCollisions() {
+		handleCollisions(friendlyUnits, enemyUnits);
+	}
+
+
+	/**
+	 * Handles collisions between user projectiles and enemy units.
+	 */
+	private void handleUserProjectileCollisions() {
+		handleCollisions(userProjectiles, enemyUnits);
+	}
+
+	/**
+	 * Handles collisions between enemy projectiles and the user's spider.
+	 */
+	private void handleEnemyProjectileCollisions() {
+		for (ActiveActorDestructible projectile : enemyProjectiles) {
+			if (projectile.getBoundsInParent().intersects(user.getBoundsInParent())) {
+				projectile.takeDamage();
+				user.takeDamage();
+			}
+		}
+	}
+
+	/**
+	 * Handles collisions between projectiles and enemies, including custom logic for bosses.
+	 *
+	 * @param projectiles The list of projectiles.
+	 * @param enemies     The list of enemies.
+	 */
+	private void handleCollisions(List<ActiveActorDestructible> projectiles, List<ActiveActorDestructible> enemies) {
+		for (ActiveActorDestructible projectile : projectiles) {
+			for (ActiveActorDestructible enemy : enemies) {
+				if (enemy instanceof BossSpider boss) { // Enhanced readability with pattern matching
+					if (boss.getCustomHitbox().intersects(projectile.getBoundsInParent())) {
+						projectile.takeDamage();
+						boss.takeDamage();
+					}
+				} else if (enemy.getBoundsInParent().intersects(projectile.getBoundsInParent())) {
+					projectile.takeDamage();
+					enemy.takeDamage();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Handles collisions between the user's superman and power-ups.
+	 * Activates the power-up and removes it from the game.
+	 */
+	private void handlePowerUpCollisions() {
+		for (ActiveActorDestructible powerUp : powerUps) {
+			if (powerUp.getBoundsInParent().intersects(user.getBoundsInParent())) {
+				if (powerUp instanceof SpreadshotPowerUp spreadshotPowerUp) {
+					spreadshotPowerUp.activate(user); // Activate spreadshot power-up
+				} else if (powerUp instanceof PowerUp genericPowerUp) {
+					genericPowerUp.activate(user); // Activate generic power-ups
+				}
+
+				soundManager.playPowerUpSound(); // Play collection sound
+				powerUp.destroy(); // Remove power-up after collection
+			}
+		}
+	}
+
+
 
 	/**
 	 * Updates the level view based on the user's current health.
@@ -743,58 +813,7 @@ public abstract class LevelParent extends Observable {
 		}
 	}
 
-	private void handleSpiderCollisions() {
-		for (ActiveActorDestructible friendly : friendlyUnits) {
-			for (ActiveActorDestructible enemy : enemyUnits) {
-				if (enemy instanceof BossSpider boss) {
-					if (boss.getCustomHitbox().intersects(friendly.getBoundsInParent())) {
-						friendly.takeDamage();
-						boss.takeDamage();
-					}
-				} else if (enemy.getBoundsInParent().intersects(friendly.getBoundsInParent())) {
-					friendly.takeDamage();
-					enemy.takeDamage();
-				}
-			}
-		}
-	}
 
-	private void handleUserProjectileCollisions() {
-		for (ActiveActorDestructible projectile : userProjectiles) {
-			for (ActiveActorDestructible enemy : enemyUnits) {
-				if (enemy instanceof BossSpider boss) {
-					if (boss.getCustomHitbox().intersects(projectile.getBoundsInParent())) {
-						projectile.takeDamage();
-						boss.takeDamage();
-					}
-				} else if (enemy.getBoundsInParent().intersects(projectile.getBoundsInParent())) {
-					projectile.takeDamage();
-					enemy.takeDamage();
-				}
-			}
-		}
-	}
-
-	private void handleEnemyProjectileCollisions() {
-		for (ActiveActorDestructible projectile : enemyProjectiles) {
-			if (projectile.getBoundsInParent().intersects(user.getBoundsInParent())) {
-				projectile.takeDamage();
-				user.takeDamage();
-			}
-		}
-	}
-
-	private void handlePowerUpCollisions() {
-		for (int i = powerUps.size() - 1; i >= 0; i--) {
-			PowerUp powerUp = (PowerUp) powerUps.get(i);
-			if (powerUp.getBoundsInParent().intersects(user.getBoundsInParent())) {
-				powerUp.activate(user); // Activate the power-up
-				soundManager.playPowerUpSound(); // Play the power-up sound
-				powerUps.remove(powerUp); // Remove from the list
-				root.getChildren().remove(powerUp); // Remove from the scene
-			}
-		}
-	}
 
 
 
