@@ -1,7 +1,7 @@
 package com.example.demo.projectiles;
 
 /**
- * Represents a projectile fired by the user plane.
+ * Represents a projectile fired by the user superman.
  * Moves horizontally to the right at a constant velocity.
  */
 public class UserProjectile extends Projectile {

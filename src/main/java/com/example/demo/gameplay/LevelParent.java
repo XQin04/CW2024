@@ -1,9 +1,9 @@
 package com.example.demo.gameplay;
 
 import com.example.demo.actors.ActiveActorDestructible;
-import com.example.demo.actors.Boss;
-import com.example.demo.actors.FighterPlane;
-import com.example.demo.actors.UserPlane;
+import com.example.demo.actors.BossSpider;
+import com.example.demo.actors.FighterSpider;
+import com.example.demo.actors.UserSuperman;
 import com.example.demo.controller.Main;
 import com.example.demo.powerups.PowerUp;
 import com.example.demo.powerups.SpreadshotPowerUp;
@@ -62,7 +62,7 @@ public abstract class LevelParent extends Observable {
 	private final Scene scene;
 
 	// Game elements and actors
-	private final UserPlane user;
+	private final UserSuperman user;
 	private final ImageView background;
 	private final List<ActiveActorDestructible> friendlyUnits;
 	private final List<ActiveActorDestructible> enemyUnits;
@@ -97,7 +97,7 @@ public abstract class LevelParent extends Observable {
 	 * @param backgroundImageName Path to the background image for the level.
 	 * @param screenHeight        Height of the game screen.
 	 * @param screenWidth         Width of the game screen.
-	 * @param playerInitialHealth Initial health of the player's plane.
+	 * @param playerInitialHealth Initial health of the player's superman.
 	 * @param stage               The game stage.
 	 * @param levelName           Name of the current level.
 	 */
@@ -108,7 +108,7 @@ public abstract class LevelParent extends Observable {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
-		this.user = new UserPlane(this, playerInitialHealth);
+		this.user = new UserSuperman(this, playerInitialHealth);
 
 		// Initialize lists for actors and game elements
 		this.friendlyUnits = new ArrayList<>();
@@ -527,7 +527,7 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Handles key press events to control the user's plane and actions.
+	 * Handles key press events to control the user's superman and actions.
 	 *
 	 * @param e The KeyEvent triggered by a key press.
 	 */
@@ -548,7 +548,7 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Handles key release events to stop the user's plane movements.
+	 * Handles key release events to stop the user's superman movements.
 	 *
 	 * @param e The KeyEvent triggered by a key release.
 	 */
@@ -580,7 +580,7 @@ public abstract class LevelParent extends Observable {
 		removeAllDestroyedActors();
 		handleUserProjectileCollisions();
 		handleEnemyProjectileCollisions();
-		handlePlaneCollisions();
+		handleSpiderCollisions();
 		handlePowerUpCollisions(); // Handle power-up collection
 		updateKillCount();
 		updateLevelView();
@@ -628,9 +628,9 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Handles collisions between friendly and enemy planes.
+	 * Handles collisions between friendly and enemy spider.
 	 */
-	private void handlePlaneCollisions() {
+	private void handleSpiderCollisions() {
 		handleCollisions(friendlyUnits, enemyUnits);
 	}
 
@@ -644,7 +644,7 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Handles collisions between enemy projectiles and the user's plane.
+	 * Handles collisions between enemy projectiles and the user's spider.
 	 */
 	private void handleEnemyProjectileCollisions() {
 		for (ActiveActorDestructible projectile : enemyProjectiles) {
@@ -665,7 +665,7 @@ public abstract class LevelParent extends Observable {
 	private void handleCollisions(List<ActiveActorDestructible> projectiles, List<ActiveActorDestructible> enemies) {
 		for (ActiveActorDestructible projectile : projectiles) {
 			for (ActiveActorDestructible enemy : enemies) {
-				if (enemy instanceof Boss boss) { // Enhanced readability with pattern matching
+				if (enemy instanceof BossSpider boss) { // Enhanced readability with pattern matching
 					if (boss.getCustomHitbox().intersects(projectile.getBoundsInParent())) {
 						projectile.takeDamage();
 						boss.takeDamage();
@@ -694,7 +694,7 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Handles collisions between the user's plane and power-ups.
+	 * Handles collisions between the user's superman and power-ups.
 	 * Activates the power-up and removes it from the game.
 	 */
 	private void handlePowerUpCollisions() {
@@ -737,10 +737,10 @@ public abstract class LevelParent extends Observable {
 //Methods responsible for adding, removing, or interacting with actors and projectiles.
 
 	/**
-	 * Fires a projectile from the user's plane and adds it to the list of user projectiles.
+	 * Fires a projectile from the user's superman and adds it to the list of user projectiles.
 	 */
 	private void fireProjectile() {
-		// Get the projectile from the user plane
+		// Get the projectile from the user superman
 		ActiveActorDestructible projectile = getUser().fireProjectile();
 
 		// Add the projectile to the list for tracking
@@ -789,12 +789,12 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Generates enemy projectiles by allowing fighter planes to fire.
+	 * Generates enemy projectiles by allowing fighter spiders to fire.
 	 */
 	private void generateEnemyFire() {
 		enemyUnits.stream()
-				.filter(enemy -> enemy instanceof FighterPlane)
-				.map(enemy -> ((FighterPlane) enemy).fireProjectile())
+				.filter(enemy -> enemy instanceof FighterSpider)
+				.map(enemy -> ((FighterSpider) enemy).fireProjectile())
 				.forEach(this::spawnEnemyProjectile);
 	}
 
@@ -838,11 +838,11 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Retrieves the player's UserPlane instance.
+	 * Retrieves the player's UserSuperman instance.
 	 *
-	 * @return The user's plane.
+	 * @return The user's superman.
 	 */
-	public UserPlane getUser() {
+	public UserSuperman getUser() {
 		return user;
 	}
 
@@ -898,9 +898,9 @@ public abstract class LevelParent extends Observable {
 
 
 	/**
-	 * Checks if the user's plane is destroyed.
+	 * Checks if the user's superman is destroyed.
 	 *
-	 * @return True if the user's plane is destroyed, false otherwise.
+	 * @return True if the user's superman is destroyed, false otherwise.
 	 */
 	protected boolean userIsDestroyed() {
 		return user.isDestroyed();

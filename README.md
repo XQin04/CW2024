@@ -45,7 +45,7 @@ Added the following code in `goToNextLevel` method to allow the boss to appear s
 #### Code Example:
 ```java
 public javafx.geometry.Bounds getCustomHitbox() {
-    // Get the default bounds of the Boss
+    // Get the default bounds of the BossSpider
     javafx.geometry.Bounds originalBounds = super.getBoundsInParent();
 
     // Adjust the bounds to make the hitbox more precise

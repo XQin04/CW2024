@@ -242,7 +242,7 @@ public class MainMenu {
 
         // Instruction text
         Label instructions = new Label(
-                "Destroy all enemy planes to advance.\n\n" +
+                "Destroy all enemy spiders to advance.\n\n" +
                         "Collect power-ups to enhance abilities.\n\n" +
                         "Defeat the boss to WIN the game!\n"
         );

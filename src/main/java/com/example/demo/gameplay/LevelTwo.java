@@ -1,6 +1,6 @@
 package com.example.demo.gameplay;
 
-import com.example.demo.actors.Boss;
+import com.example.demo.actors.BossSpider;
 import com.example.demo.ui.LevelView;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 /**
  * Represents the second level of the game.
- * Introduces a Boss enemy with shield mechanics and transitions to the next level upon completion.
+ * Introduces a BossSpider enemy with shield mechanics and transitions to the next level upon completion.
  */
 public class LevelTwo extends LevelParent {
 
@@ -18,7 +18,7 @@ public class LevelTwo extends LevelParent {
 	private static final int PLAYER_INITIAL_HEALTH = 5;
 	private static final String NEXT_LEVEL = "com.example.demo.gameplay.LevelThree";
 
-	private final Boss boss; // Reference to the boss enemy
+	private final BossSpider boss; // Reference to the boss enemy
 	private final Label shieldAlert; // Label for displaying shield alerts
 
 	/**
@@ -36,11 +36,11 @@ public class LevelTwo extends LevelParent {
 		getRoot().getChildren().add(shieldAlert);
 
 		// Initialize the boss with a reference to this level and the shield alert
-		boss = new Boss(this, shieldAlert);
+		boss = new BossSpider(this, shieldAlert);
 	}
 
 	/**
-	 * Adds the user's plane to the level.
+	 * Adds the user's superman to the level.
 	 */
 	@Override
 	protected void initializeFriendlyUnits() {

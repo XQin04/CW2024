@@ -1,7 +1,7 @@
 package com.example.demo.powerups;
 
 import com.example.demo.actors.ActiveActorDestructible;
-import com.example.demo.actors.UserPlane;
+import com.example.demo.actors.UserSuperman;
 
 /**
  * Represents a power-up item in the game.
@@ -55,9 +55,9 @@ public class PowerUp extends ActiveActorDestructible {
     /**
      * Activates the effect of the power-up when collected by the user.
      *
-     * @param user The user plane that collects the power-up.
+     * @param user The user superman that collects the power-up.
      */
-    public void activate(UserPlane user) {
+    public void activate(UserSuperman user) {
         // Check if the power-up is a spreadshot and apply its effect
         if ("spreadshot.png".equals(getImage().getUrl())) { // Replace with your spreadshot image path
             user.activateOneTimeSpreadshot(); // Activate the spreadshot power-up

@@ -1,7 +1,7 @@
 package com.example.demo.gameplay;
 
-import com.example.demo.actors.Boss;
-import com.example.demo.actors.EnemyPlane;
+import com.example.demo.actors.BossSpider;
+import com.example.demo.actors.EnemySpider;
 import com.example.demo.powerups.SpreadshotPowerUp;
 import com.example.demo.ui.LevelView;
 import javafx.scene.control.Label;
@@ -21,7 +21,7 @@ public class LevelThree extends LevelParent {
     private static final int WAVES_BEFORE_BOSS = 3;
     private static final double POWER_UP_SPAWN_PROBABILITY = 0.02; // 2% chance per frame
 
-    private final Boss levelThreeBoss; // Reference to the boss enemy
+    private final BossSpider levelThreeBoss; // Reference to the boss enemy
     private final Label shieldAlert;   // Label for displaying shield alerts
     private int waveCount = 0;         // Tracks the number of waves completed
     private boolean bossSpawned = false; // Indicates if the boss has been spawned
@@ -41,11 +41,11 @@ public class LevelThree extends LevelParent {
         getRoot().getChildren().add(shieldAlert);
 
         // Initialize the boss with a reference to this level and the shield alert
-        levelThreeBoss = new Boss(this, shieldAlert);
+        levelThreeBoss = new BossSpider(this, shieldAlert);
     }
 
     /**
-     * Adds the player's plane to the level.
+     * Adds the player's superman to the level.
      */
     @Override
     protected void initializeFriendlyUnits() {
@@ -95,7 +95,7 @@ public class LevelThree extends LevelParent {
     }
 
     /**
-     * Spawns a wave of enemy planes.
+     * Spawns a wave of enemy spiders.
      *
      * @param waveCount The current wave count to determine enemy difficulty.
      */
@@ -103,7 +103,7 @@ public class LevelThree extends LevelParent {
         for (int i = 0; i < 3 + waveCount; i++) {
             double x = getScreenWidth() + 100;
             double y = Math.random() * getEnemyMaximumYPosition();
-            addEnemyUnit(new EnemyPlane(x, y));
+            addEnemyUnit(new EnemySpider(x, y));
         }
     }
 

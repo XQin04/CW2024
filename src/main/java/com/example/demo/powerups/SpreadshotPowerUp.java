@@ -1,6 +1,6 @@
 package com.example.demo.powerups;
 
-import com.example.demo.actors.UserPlane;
+import com.example.demo.actors.UserSuperman;
 
 /**
  * Represents a spreadshot power-up in the game.
@@ -23,10 +23,10 @@ public class SpreadshotPowerUp extends PowerUp {
     /**
      * Activates the spreadshot effect when collected by the user.
      *
-     * @param user The user plane that collects the power-up.
+     * @param user The user superman that collects the power-up.
      */
     @Override
-    public void activate(UserPlane user) {
+    public void activate(UserSuperman user) {
         user.activateOneTimeSpreadshot(); // Activates spreadshot for the user
     }
 }

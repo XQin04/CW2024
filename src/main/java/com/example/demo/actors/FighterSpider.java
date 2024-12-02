@@ -1,29 +1,29 @@
 package com.example.demo.actors;
 
 /**
- * Represents a fighter plane in the game, capable of firing projectiles and taking damage.
- * This class serves as a base for both player and enemy planes.
+ * Represents a fighter spider in the game, capable of firing projectiles and taking damage.
+ * This class serves as a base for both player and enemy spider.
  */
-public abstract class FighterPlane extends ActiveActorDestructible {
+public abstract class FighterSpider extends ActiveActorDestructible {
 
-	private int health; // Current health of the fighter plane
+	private int health; // Current health of the fighter spider
 
 	/**
-	 * Constructs a FighterPlane with the specified image, size, position, and health.
+	 * Constructs a FighterSpider with the specified image, size, position, and health.
 	 *
-	 * @param imageName   Name of the image file for the fighter plane.
+	 * @param imageName   Name of the image file for the fighter spider.
 	 * @param imageHeight Height of the image to be displayed.
-	 * @param initialXPos Initial X position of the fighter plane.
-	 * @param initialYPos Initial Y position of the fighter plane.
-	 * @param health      Initial health of the fighter plane.
+	 * @param initialXPos Initial X position of the fighter spider.
+	 * @param initialYPos Initial Y position of the fighter spider.
+	 * @param health      Initial health of the fighter spider.
 	 */
-	public FighterPlane(String imageName, int imageHeight, double initialXPos, double initialYPos, int health) {
+	public FighterSpider(String imageName, int imageHeight, double initialXPos, double initialYPos, int health) {
 		super(imageName, imageHeight, initialXPos, initialYPos);
 		this.health = health;
 	}
 
 	/**
-	 * Fires a projectile from the fighter plane.
+	 * Fires a projectile from the fighter spider.
 	 * Subclasses must implement the specific behavior for firing projectiles.
 	 *
 	 * @return A new projectile if fired, otherwise null.
@@ -31,7 +31,7 @@ public abstract class FighterPlane extends ActiveActorDestructible {
 	public abstract ActiveActorDestructible fireProjectile();
 
 	/**
-	 * Reduces the health of the fighter plane by one. If health reaches zero, the plane is destroyed.
+	 * Reduces the health of the fighter spider by one. If health reaches zero, the spider is destroyed.
 	 */
 	@Override
 	public void takeDamage() {
@@ -62,7 +62,7 @@ public abstract class FighterPlane extends ActiveActorDestructible {
 	}
 
 	/**
-	 * Checks if the fighter plane's health is zero.
+	 * Checks if the fighter spider's health is zero.
 	 *
 	 * @return True if health is zero, otherwise false.
 	 */
@@ -71,7 +71,7 @@ public abstract class FighterPlane extends ActiveActorDestructible {
 	}
 
 	/**
-	 * Gets the current health of the fighter plane.
+	 * Gets the current health of the fighter spider.
 	 *
 	 * @return The current health value.
 	 */

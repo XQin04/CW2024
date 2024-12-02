@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the user's plane in the game, capable of moving,
+ * Represents the user's superman in the game, capable of moving,
  * firing projectiles, and collecting power-ups like spreadshot.
  */
-public class UserPlane extends FighterPlane {
+public class UserSuperman extends FighterSpider {
 
-	// Constants for the user's plane properties
+	// Constants for the user's superman properties
 	private static final String IMAGE_NAME = "user.png";
 	private static final double Y_UPPER_BOUND = 0;
 	private static final double Y_LOWER_BOUND = 630.0;
@@ -35,18 +35,18 @@ public class UserPlane extends FighterPlane {
 	private final LevelParent levelParent; // Reference to the LevelParent for scene interactions
 
 	/**
-	 * Constructs a UserPlane with the specified level parent and initial health.
+	 * Constructs a UserSuperman with the specified level parent and initial health.
 	 *
-	 * @param levelParent   The parent level managing this plane.
-	 * @param initialHealth Initial health of the user's plane.
+	 * @param levelParent   The parent level managing this superman.
+	 * @param initialHealth Initial health of the user's superman.
 	 */
-	public UserPlane(LevelParent levelParent, int initialHealth) {
+	public UserSuperman(LevelParent levelParent, int initialHealth) {
 		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, initialHealth);
 		this.levelParent = levelParent;
 	}
 
 	/**
-	 * Updates the position of the user's plane based on velocity and boundaries.
+	 * Updates the position of the user's superman based on velocity and boundaries.
 	 */
 	@Override
 	public void updatePosition() {
@@ -68,7 +68,7 @@ public class UserPlane extends FighterPlane {
 	}
 
 	/**
-	 * Updates the state of the user's plane, including position and interactions.
+	 * Updates the state of the user's superman, including position and interactions.
 	 */
 	@Override
 	public void updateActor() {
@@ -133,7 +133,7 @@ public class UserPlane extends FighterPlane {
 	}
 
 	/**
-	 * Checks if the user's plane is moving vertically.
+	 * Checks if the user's superman is moving vertically.
 	 *
 	 * @return True if moving vertically, otherwise false.
 	 */
@@ -142,7 +142,7 @@ public class UserPlane extends FighterPlane {
 	}
 
 	/**
-	 * Checks if the user's plane is moving horizontally.
+	 * Checks if the user's superman is moving horizontally.
 	 *
 	 * @return True if moving horizontally, otherwise false.
 	 */

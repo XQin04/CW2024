@@ -11,12 +11,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents the Boss enemy in the game.
+ * Represents the BossSpider enemy in the game.
  * Handles movement, firing projectiles, shield activation, and interactions with other entities.
  */
-public class Boss extends FighterPlane {
+public class BossSpider extends FighterSpider {
 
-	// Constants for Boss properties
+	// Constants for BossSpider properties
 	private static final String IMAGE_NAME = "enemyboss.png";
 	private static final double INITIAL_X_POSITION = 1000.0;
 	private static final double INITIAL_Y_POSITION = 400.0;
@@ -46,12 +46,12 @@ public class Boss extends FighterPlane {
 	private final Label shieldAlert;
 
 	/**
-	 * Constructs a Boss instance with the specified parent level and alert label.
+	 * Constructs a BossSpider instance with the specified parent level and alert label.
 	 *
-	 * @param levelParent The parent level managing the Boss.
+	 * @param levelParent The parent level managing the BossSpider.
 	 * @param shieldAlert A label to display shield activation messages.
 	 */
-	public Boss(LevelParent levelParent, Label shieldAlert) {
+	public BossSpider(LevelParent levelParent, Label shieldAlert) {
 		super(IMAGE_NAME, IMAGE_HEIGHT, INITIAL_X_POSITION, INITIAL_Y_POSITION, HEALTH);
 		this.levelParent = levelParent;
 		this.shieldAlert = shieldAlert;
@@ -65,13 +65,13 @@ public class Boss extends FighterPlane {
 	}
 
 	/**
-	 * Updates the position of the Boss based on its movement pattern and boundaries.
+	 * Updates the position of the BossSpider based on its movement pattern and boundaries.
 	 */
 	@Override
 	public void updatePosition() {
 		moveVertically(getNextMove());
 
-		// Ensure Boss stays within the vertical and horizontal screen bounds
+		// Ensure BossSpider stays within the vertical and horizontal screen bounds
 		double currentY = getLayoutY() + getTranslateY();
 		double currentX = getLayoutX() + getTranslateX();
 
@@ -89,7 +89,7 @@ public class Boss extends FighterPlane {
 	}
 
 	/**
-	 * Updates the state of the Boss, including position and shield status.
+	 * Updates the state of the BossSpider, including position and shield status.
 	 */
 	@Override
 	public void updateActor() {
@@ -98,7 +98,7 @@ public class Boss extends FighterPlane {
 	}
 
 	/**
-	 * Fires a projectile from the Boss with a predefined probability.
+	 * Fires a projectile from the BossSpider with a predefined probability.
 	 *
 	 * @return A BossProjectile if fired, otherwise null.
 	 */
@@ -111,7 +111,7 @@ public class Boss extends FighterPlane {
 	}
 
 	/**
-	 * Handles damage taken by the Boss. Damage is ignored if shielded.
+	 * Handles damage taken by the BossSpider. Damage is ignored if shielded.
 	 */
 	@Override
 	public void takeDamage() {
@@ -121,7 +121,7 @@ public class Boss extends FighterPlane {
 	}
 
 	/**
-	 * Creates a custom hitbox for the Boss to allow more precise collision detection.
+	 * Creates a custom hitbox for the BossSpider to allow more precise collision detection.
 	 *
 	 * @return Adjusted hitbox bounds.
 	 */
@@ -138,7 +138,7 @@ public class Boss extends FighterPlane {
 	}
 
 	/**
-	 * Initializes the movement pattern for the Boss.
+	 * Initializes the movement pattern for the BossSpider.
 	 */
 	private void initializeMovePattern() {
 		for (int i = 0; i < MOVE_FREQUENCY_PER_CYCLE; i++) {
@@ -183,16 +183,16 @@ public class Boss extends FighterPlane {
 	}
 
 	/**
-	 * Checks if the Boss should fire a projectile in the current frame.
+	 * Checks if the BossSpider should fire a projectile in the current frame.
 	 *
-	 * @return True if the Boss fires, otherwise false.
+	 * @return True if the BossSpider fires, otherwise false.
 	 */
 	private boolean bossFiresInCurrentFrame() {
 		return Math.random() < BOSS_FIRE_RATE;
 	}
 
 	/**
-	 * Calculates the initial position for a projectile fired by the Boss.
+	 * Calculates the initial position for a projectile fired by the BossSpider.
 	 *
 	 * @return The Y-coordinate for the projectile.
 	 */
@@ -218,7 +218,7 @@ public class Boss extends FighterPlane {
 		setEffect(shieldGlowEffect);
 
 		if (shieldAlert != null) {
-			shieldAlert.setText("Boss is shielded!");
+			shieldAlert.setText("BossSpider is shielded!");
 			shieldAlert.setVisible(true);
 			shieldAlert.toFront();
 		}

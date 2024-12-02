@@ -1,7 +1,7 @@
 package com.example.demo.projectiles;
 
 /**
- * Represents a projectile fired by enemy planes.
+ * Represents a projectile fired by enemy spiders.
  * Moves horizontally at a constant velocity towards the user.
  */
 public class EnemyProjectile extends Projectile {

@@ -3,12 +3,12 @@ package com.example.demo.actors;
 import com.example.demo.projectiles.EnemyProjectile;
 
 /**
- * Represents an enemy plane in the game.
+ * Represents an enemy spider in the game.
  * Handles movement, projectile firing, and interactions with other game entities.
  */
-public class EnemyPlane extends FighterPlane {
+public class EnemySpider extends FighterSpider {
 
-	// Constants for enemy plane properties
+	// Constants for enemy spider properties
 	private static final String IMAGE_NAME = "enemy.png";
 	private static final int IMAGE_HEIGHT = 65;
 	private static final int HORIZONTAL_VELOCITY = -6;
@@ -18,17 +18,17 @@ public class EnemyPlane extends FighterPlane {
 	private static final double FIRE_RATE = 0.01; // Probability of firing a projectile each frame
 
 	/**
-	 * Constructs an EnemyPlane with the specified initial position.
+	 * Constructs an EnemySpider with the specified initial position.
 	 *
-	 * @param initialXPos The initial X position of the enemy plane.
-	 * @param initialYPos The initial Y position of the enemy plane.
+	 * @param initialXPos The initial X position of the enemy spider.
+	 * @param initialYPos The initial Y position of the enemy spider.
 	 */
-	public EnemyPlane(double initialXPos, double initialYPos) {
+	public EnemySpider(double initialXPos, double initialYPos) {
 		super(IMAGE_NAME, IMAGE_HEIGHT, initialXPos, initialYPos, INITIAL_HEALTH);
 	}
 
 	/**
-	 * Updates the position of the enemy plane by moving it horizontally.
+	 * Updates the position of the enemy spider by moving it horizontally.
 	 */
 	@Override
 	public void updatePosition() {
@@ -36,7 +36,7 @@ public class EnemyPlane extends FighterPlane {
 	}
 
 	/**
-	 * Fires a projectile from the enemy plane, with a small probability defined by FIRE_RATE.
+	 * Fires a projectile from the enemy spider, with a small probability defined by FIRE_RATE.
 	 *
 	 * @return An EnemyProjectile if fired, otherwise null.
 	 */
@@ -51,7 +51,7 @@ public class EnemyPlane extends FighterPlane {
 	}
 
 	/**
-	 * Updates the state of the enemy plane, including its position and interactions.
+	 * Updates the state of the enemy spider, including its position and interactions.
 	 */
 	@Override
 	public void updateActor() {

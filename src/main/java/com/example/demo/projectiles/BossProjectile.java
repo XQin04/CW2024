@@ -149,13 +149,13 @@ public class BossProjectile extends Projectile {
 
 		/**
 		 * Updates the behavior of the fragment each frame.
-		 * Handles collisions with the user plane.
+		 * Handles collisions with the user superman.
 		 */
 		@Override
 		public void updateActor() {
 			updatePosition();
 
-			// Check for collisions with the user plane
+			// Check for collisions with the user superman
 			if (getBoundsInParent().intersects(levelParent.getUser().getBoundsInParent())) {
 				levelParent.getUser().takeDamage(); // Inflict damage to the user
 				destroy(); // Destroy the fragment after collision

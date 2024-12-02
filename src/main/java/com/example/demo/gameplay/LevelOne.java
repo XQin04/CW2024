@@ -1,7 +1,7 @@
 package com.example.demo.gameplay;
 
 import com.example.demo.actors.ActiveActorDestructible;
-import com.example.demo.actors.EnemyPlane;
+import com.example.demo.actors.EnemySpider;
 import com.example.demo.ui.LevelView;
 import javafx.stage.Stage;
 
@@ -54,7 +54,7 @@ public class LevelOne extends LevelParent {
 	}
 
 	/**
-	 * Initializes friendly units (e.g., player's plane) at the start of the level.
+	 * Initializes friendly units (e.g., player's superman) at the start of the level.
 	 */
 	@Override
 	protected void initializeFriendlyUnits() {
@@ -69,7 +69,7 @@ public class LevelOne extends LevelParent {
 		if (spawnCyclesCompleted < TOTAL_SPAWN_CYCLES && getCurrentNumberOfEnemies() == 0) {
 			for (int i = 0; i < TOTAL_ENEMIES_PER_CYCLE; i++) {
 				double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition();
-				ActiveActorDestructible newEnemy = new EnemyPlane(getScreenWidth(), newEnemyInitialYPosition);
+				ActiveActorDestructible newEnemy = new EnemySpider(getScreenWidth(), newEnemyInitialYPosition);
 				addEnemyUnit(newEnemy);
 			}
 			spawnCyclesCompleted++;
