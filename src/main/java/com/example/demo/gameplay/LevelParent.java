@@ -143,9 +143,24 @@ public abstract class LevelParent extends Observable {
 		if (pauseButton != null) {
 			pauseButton.setDisable(true); // Disable the button
 		}
+		// Determine the level-specific message
+		String levelMessage;
+		switch (levelName) {
+			case "Level 1":
+				levelMessage = "Level 1: Kill all the enemies!";
+				break;
+			case "Level 2":
+				levelMessage = "Level 2: Kill the boss!";
+				break;
+			case "Final Level":
+				levelMessage = "Level 3: Kill all the enemies and the boss!";
+				break;
+			default:
+				levelMessage =levelName;
+		}
 
 		// Create a text label to show the level name
-		Text levelInfo = new Text(levelName);
+		Text levelInfo = new Text(levelMessage);
 		levelInfo.setFont(Font.font("Arial", 30));
 		levelInfo.setFill(Color.WHITE);
 		levelInfo.setStroke(Color.BLACK);
