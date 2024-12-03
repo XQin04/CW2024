@@ -32,6 +32,7 @@ public abstract class GameImage extends ImageView {
         this.setVisible(false);
     }
 
+
     /**
      * Makes the image visible.
      */
