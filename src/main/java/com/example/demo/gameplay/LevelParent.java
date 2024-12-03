@@ -7,6 +7,7 @@ import com.example.demo.actors.BossSpider;
 import com.example.demo.controller.Main;
 import com.example.demo.powerups.PowerUp;
 import com.example.demo.powerups.SpreadshotPowerUp;
+import com.example.demo.gameplay.GameStateManager;
 import com.example.demo.ui.EndGameMenu;
 import com.example.demo.ui.LevelView;
 import com.example.demo.ui.MainMenu;
@@ -89,6 +90,8 @@ public abstract class LevelParent extends Observable {
 	private MediaPlayer gameBackgroundMediaPlayer;
 	private final CollisionManager collisionManager;
 	private final UIManager uiManager;
+	private final GameStateManager gameStateManager;
+
 
 
 
@@ -117,6 +120,7 @@ public abstract class LevelParent extends Observable {
 		this.soundManager = SoundManager.getInstance();
 		this.collisionManager = new CollisionManager(user, soundManager);
 		this.uiManager = new UIManager(this, menuLayer, screenWidth, screenHeight, stage);
+		this.gameStateManager = new GameStateManager();
 
 		// Initialize screen dimensions and background
 		this.screenHeight = screenHeight;
@@ -234,8 +238,19 @@ public abstract class LevelParent extends Observable {
 	 * @param levelName The name of the level to start.
 	 */
 	public void startGame(String levelName) {
+		gameStateManager.setCurrentState(GameStateManager.GameState.INITIALIZING); // Set state to initializing
 		showLevelInfo(currentLevel);
+
+		// Transition to PLAYING state after level info is shown
+		PauseTransition pause = new PauseTransition(Duration.seconds(1));
+		pause.setOnFinished(event -> {
+			gameStateManager.setCurrentState(GameStateManager.GameState.PLAYING);
+			timeline.play(); // Start the game loop
+			background.requestFocus(); // Ensure the game is focused
+		});
+		pause.play();
 	}
+
 
 
 	/**
@@ -329,6 +344,7 @@ public abstract class LevelParent extends Observable {
 	 * @param levelName The name of the next level.
 	 */
 	public void goToNextLevel(String levelName) {
+		gameStateManager.setCurrentState(GameStateManager.GameState.LOADING); // Set state to loading
 		currentLevel = levelName; // Update the current level name
 		stopGameBackgroundMusic(); // Stop background music
 		timeline.stop(); // Stop the game loop
@@ -337,7 +353,11 @@ public abstract class LevelParent extends Observable {
 		// Notify observers to switch to the next level
 		setChanged();
 		notifyObservers(levelName);
+
+		// Transition to PLAYING state after loading the new level
+		gameStateManager.setCurrentState(GameStateManager.GameState.PLAYING);
 	}
+
 
 
 	/**
@@ -357,6 +377,7 @@ public abstract class LevelParent extends Observable {
 	 * Pauses the game by stopping the game loop and displaying the pause menu.
 	 */
 	private void pauseGame() {
+		gameStateManager.setCurrentState(GameStateManager.GameState.PAUSED); // Update state
 		timeline.pause();
 		if (gameBackgroundMediaPlayer != null) {
 			gameBackgroundMediaPlayer.pause();
@@ -373,6 +394,7 @@ public abstract class LevelParent extends Observable {
 	 * Resumes the game by restarting the game loop and hiding the pause menu.
 	 */
 	public void resumeGame() {
+		gameStateManager.setCurrentState(GameStateManager.GameState.PLAYING); // Update state
 		timeline.play();
 		if (gameBackgroundMediaPlayer != null && !soundManager.isMusicMuted()) {
 			gameBackgroundMediaPlayer.play();
@@ -390,6 +412,7 @@ public abstract class LevelParent extends Observable {
 	 * Displays a win message and transitions to the end-game menu.
 	 */
 	protected void winGame() {
+		gameStateManager.setCurrentState(GameStateManager.GameState.WIN); // Update state
 		timeline.stop(); // Stop the game loop
 		levelView.showWinImage(); // Show the win image
 
@@ -416,6 +439,7 @@ public abstract class LevelParent extends Observable {
 	 * Displays a game-over message and transitions to the end-game menu.
 	 */
 	protected void loseGame() {
+		gameStateManager.setCurrentState(GameStateManager.GameState.GAME_OVER); // Update state
 		timeline.stop(); // Stop the game loop
 		levelView.showGameOverImage(); // Show the game-over image
 
@@ -475,7 +499,7 @@ public abstract class LevelParent extends Observable {
 	 * @param e The KeyEvent triggered by a key press.
 	 */
 	private void handleKeyPress(KeyEvent e) {
-		if (isPaused) return;
+		if (!gameStateManager.isPlaying()) return; // Skip input handling if not in PLAYING state
 
 		KeyCode keyCode = e.getCode();
 		switch (keyCode) {
@@ -496,7 +520,7 @@ public abstract class LevelParent extends Observable {
 	 * @param e The KeyEvent triggered by a key release.
 	 */
 	private void handleKeyRelease(KeyEvent e) {
-		if (isPaused) return;
+		if (!gameStateManager.isPlaying()) return; // Skip input handling if not in PLAYING state
 
 		KeyCode keyCode = e.getCode();
 		switch (keyCode) {
@@ -513,7 +537,7 @@ public abstract class LevelParent extends Observable {
 	 * Handles spawning enemies, updating actors, and managing collisions.
 	 */
 	private void updateScene() {
-		if (isPaused) return;
+		if (!gameStateManager.isPlaying()) return; // Skip updates if not in PLAYING state
 
 		spawnEnemyUnits();
 		updateActors();
