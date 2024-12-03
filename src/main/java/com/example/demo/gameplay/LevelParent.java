@@ -11,6 +11,7 @@ import com.example.demo.ui.EndGameMenu;
 import com.example.demo.ui.LevelView;
 import com.example.demo.ui.MainMenu;
 import com.example.demo.ui.PauseMenu;
+import com.example.demo.ui.UIManager;
 import com.example.demo.utils.SoundManager;
 import com.example.demo.utils.CollisionManager;
 import javafx.animation.KeyFrame;
@@ -87,6 +88,7 @@ public abstract class LevelParent extends Observable {
 	private EndGameMenu endGameMenu;
 	private MediaPlayer gameBackgroundMediaPlayer;
 	private final CollisionManager collisionManager;
+	private final UIManager uiManager;
 
 
 
@@ -114,7 +116,24 @@ public abstract class LevelParent extends Observable {
 		this.user = new UserSuperman(this, playerInitialHealth);
 		this.soundManager = SoundManager.getInstance();
 		this.collisionManager = new CollisionManager(user, soundManager);
+		this.uiManager = new UIManager(this, menuLayer, screenWidth, screenHeight, stage);
 
+		// Initialize screen dimensions and background
+		this.screenHeight = screenHeight;
+		this.screenWidth = screenWidth;
+		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
+
+		this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
+		this.stage = stage;
+		this.currentLevel = levelName; // Initialize with the provided level name
+		this.levelView = instantiateLevelView();
+
+		this.currentNumberOfEnemies = 0;
+		this.isPaused = false;
+
+		// Add background and initialize UI components
+		this.root.getChildren().add(menuLayer);  // Add menu layer after UI is initialized
+		menuLayer.toBack();                 // Move menu layer to the back
 
 		// Initialize lists for actors and game elements
 		this.friendlyUnits = new ArrayList<>();
@@ -123,30 +142,12 @@ public abstract class LevelParent extends Observable {
 		this.enemyProjectiles = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
 
-		// Initialize screen dimensions and background
-		this.screenHeight = screenHeight;
-		this.screenWidth = screenWidth;
-		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
-		this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
-
-		// Game state variables
-		this.stage = stage;
-		this.currentLevel = levelName; // Initialize with the provided level name
-		this.levelView = instantiateLevelView();
-		this.currentNumberOfEnemies = 0;
-		this.isPaused = false;
-
-		// Add menu layer to the root and initialize components
-		this.root.getChildren().add(menuLayer);
-		menuLayer.toFront();
-
 		// Initialize game elements
 		initializeTimeline();
-		initializePauseButton();
 		friendlyUnits.add(user);
 		initializeGameBackgroundMusic();
-
 	}
+
 
 
 	/**
@@ -157,10 +158,8 @@ public abstract class LevelParent extends Observable {
 	 */
 	public Scene initializeScene(Stage stage) {
 		initializeBackground();
+		uiManager.initializeUI();           // Initialize UI (pause button and menus)
 		initializeFriendlyUnits();
-		initializePauseButton();
-		initializePauseMenu();
-		initializeEndGameMenu();
 		initializeGameBackgroundMusic();
 
 		// Display the player's heart display (health UI)
@@ -206,61 +205,6 @@ public abstract class LevelParent extends Observable {
 		timeline.getKeyFrames().add(gameLoop);
 	}
 
-
-	/**
-	 * Initializes the pause button.
-	 * Configures its styling, position, and behavior, then adds it to the scene graph.
-	 */
-	private void initializePauseButton() {
-		// Create and style the pause button
-		pauseButton = new Button("Pause");
-		pauseButton.setFont(Font.font("Arial", 14));
-		pauseButton.setStyle("-fx-background-color: orange; -fx-text-fill: white; -fx-background-radius: 10;");
-
-		// Set the action for toggling pause/resume
-		pauseButton.setOnAction(e -> togglePause());
-
-		// Position the button in the top-right corner
-		pauseButton.setLayoutX(screenWidth - 100);
-		pauseButton.setLayoutY(20);
-
-		// Add the pause button to the scene graph
-		root.getChildren().add(pauseButton);
-	}
-
-
-	/**
-	 * Initializes the pause menu.
-	 * Adds options to resume the game or navigate to the main menu.
-	 */
-	private void initializePauseMenu() {
-		pauseMenu = new PauseMenu(
-				screenWidth,
-				screenHeight,
-				this::resumeGame,        // Logic for resuming the game
-				() -> goToMainMenu(stage) // Logic for navigating to the main menu
-		);
-
-		// Add the pause menu to the menu layer
-		menuLayer.getChildren().add(pauseMenu);
-	}
-
-
-	/**
-	 * Initializes the end-game menu.
-	 * Adds options to navigate to the main menu or exit the application.
-	 */
-	private void initializeEndGameMenu() {
-		endGameMenu = new EndGameMenu(
-				screenWidth,
-				screenHeight,
-				() -> goToMainMenu(stage), // Logic for navigating to the main menu
-				() -> System.exit(0)       // Logic for exiting the application
-		);
-
-		// Add the end-game menu to the menu layer
-		menuLayer.getChildren().add(endGameMenu);
-	}
 
 
 	/**
@@ -400,7 +344,7 @@ public abstract class LevelParent extends Observable {
 	 * Toggles the pause state of the game.
 	 * If the game is paused, it resumes; otherwise, it pauses.
 	 */
-	private void togglePause() {
+	public void togglePause() {
 		if (isPaused) {
 			resumeGame();
 		} else {
@@ -413,41 +357,32 @@ public abstract class LevelParent extends Observable {
 	 * Pauses the game by stopping the game loop and displaying the pause menu.
 	 */
 	private void pauseGame() {
-		timeline.pause(); // Pause the game loop
-
+		timeline.pause();
 		if (gameBackgroundMediaPlayer != null) {
-			gameBackgroundMediaPlayer.pause(); // Pause the background music
+			gameBackgroundMediaPlayer.pause();
 		}
-
-		isPaused = true; // Set the pause state
-		pauseButton.setText("Resume"); // Update the button text to "Resume"
-		pauseButton.setVisible(false); // Hide the pause button
-		pauseMenu.setVisible(true); // Show the pause menu
-		menuLayer.toFront(); // Bring the menu layer to the front
+		isPaused = true;
+		uiManager.getPauseButton().setVisible(false);
+		uiManager.getPauseMenu().setVisible(true);
+		menuLayer.toFront();
 	}
+
 
 
 	/**
 	 * Resumes the game by restarting the game loop and hiding the pause menu.
 	 */
-	private void resumeGame() {
-		timeline.play(); // Resume the game loop
-
-		if (gameBackgroundMediaPlayer != null) {
-			// Resume the background music if it's not muted
-			if (soundManager.isMusicMuted()) {
-				gameBackgroundMediaPlayer.pause(); // Keep music paused if muted
-			} else {
-				gameBackgroundMediaPlayer.play(); // Play music if not muted
-			}
+	public void resumeGame() {
+		timeline.play();
+		if (gameBackgroundMediaPlayer != null && !soundManager.isMusicMuted()) {
+			gameBackgroundMediaPlayer.play();
 		}
-
-		isPaused = false; // Clear the pause state
-		pauseButton.setText("Pause"); // Update the button text to "Pause"
-		pauseButton.setVisible(true); // Make the pause button visible
-		pauseMenu.setVisible(false); // Hide the pause menu
-		background.requestFocus(); // Refocus on the game background
+		isPaused = false;
+		uiManager.getPauseButton().setVisible(true);
+		uiManager.getPauseMenu().setVisible(false);
+		background.requestFocus();
 	}
+
 
 
 	/**
@@ -458,8 +393,8 @@ public abstract class LevelParent extends Observable {
 		timeline.stop(); // Stop the game loop
 		levelView.showWinImage(); // Show the win image
 
-		if (pauseButton != null) {
-			pauseButton.setVisible(false); // Hide the pause button
+		if (uiManager.getPauseButton() != null) {
+			uiManager.getPauseButton().setVisible(false); // Hide the pause button
 		}
 
 		soundManager.playSound("win"); // Play the win sound
@@ -468,11 +403,12 @@ public abstract class LevelParent extends Observable {
 		PauseTransition delay = new PauseTransition(Duration.seconds(3));
 		delay.setOnFinished(e -> {
 			levelView.removeWinImage(); // Remove the win image
-			endGameMenu.show(true); // Show the end-game menu with "You Win!"
+			uiManager.getEndGameMenu().show(true); // Show the end-game menu with "You Win!"
 			menuLayer.toFront(); // Bring the menu layer to the front
 		});
 		delay.play();
 	}
+
 
 
 	/**
@@ -483,8 +419,8 @@ public abstract class LevelParent extends Observable {
 		timeline.stop(); // Stop the game loop
 		levelView.showGameOverImage(); // Show the game-over image
 
-		if (pauseButton != null) {
-			pauseButton.setVisible(false); // Hide the pause button
+		if (uiManager.getPauseButton() != null) {
+			uiManager.getPauseButton().setVisible(false); // Hide the pause button
 		}
 
 		soundManager.playSound("gameOver"); // Play the game-over sound
@@ -493,11 +429,12 @@ public abstract class LevelParent extends Observable {
 		PauseTransition delay = new PauseTransition(Duration.seconds(3));
 		delay.setOnFinished(e -> {
 			levelView.removeGameOverImage(); // Remove the game-over image
-			endGameMenu.show(false); // Show the end-game menu with "Game Over"
+			uiManager.getEndGameMenu().show(false); // Show the end-game menu with "Game Over"
 			menuLayer.toFront(); // Bring the menu layer to the front
 		});
 		delay.play();
 	}
+
 
 
 	/**
@@ -505,7 +442,7 @@ public abstract class LevelParent extends Observable {
 	 *
 	 * @param stage The game stage.
 	 */
-	private void goToMainMenu(Stage stage) {
+	public void goToMainMenu(Stage stage) {
 		// Stop game-related processes
 		timeline.stop();
 		stopGameBackgroundMusic();
