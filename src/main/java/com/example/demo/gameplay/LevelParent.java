@@ -12,6 +12,7 @@ import com.example.demo.ui.PauseMenu;
 import com.example.demo.ui.UIManager;
 import com.example.demo.utils.SoundManager;
 import com.example.demo.utils.CollisionManager;
+import com.example.demo.utils.InputHandler;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -20,8 +21,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -89,6 +88,7 @@ public abstract class LevelParent extends Observable {
 	private final UIManager uiManager;
 	private final GameStateManager gameStateManager;
 	private final PowerUpManager powerUpManager;
+	private InputHandler inputHandler;
 
 
 
@@ -121,6 +121,7 @@ public abstract class LevelParent extends Observable {
 		this.uiManager = new UIManager(this, menuLayer, screenWidth, screenHeight, stage);
 		this.gameStateManager = new GameStateManager();
 		this.powerUpManager = new PowerUpManager(root);
+		this.inputHandler = new InputHandler(user); // Pass the user object to InputHandler.
 
 		// Initialize screen dimensions and background
 		this.screenHeight = screenHeight;
@@ -188,11 +189,9 @@ public abstract class LevelParent extends Observable {
 		background.setFitHeight(screenHeight);
 		background.setFitWidth(screenWidth);
 
-		// Set up key press actions
-		background.setOnKeyPressed(event -> handleKeyPress(event));
-
-		// Set up key release actions
-		background.setOnKeyReleased(event -> handleKeyRelease(event));
+		// Delegate key handling to InputHandler
+		background.setOnKeyPressed(event -> inputHandler.handleKeyPress(event));
+		background.setOnKeyReleased(event -> inputHandler.handleKeyRelease(event));
 
 		// Add the background to the root group
 		root.getChildren().add(background);
@@ -492,46 +491,6 @@ public abstract class LevelParent extends Observable {
 // ==================== Game Loop & Updates ==============================
 //Methods responsible for the game's main loop and updating gameplay elements.
 
-
-	/**
-	 * Handles key press events to control the user's superman and actions.
-	 *
-	 * @param e The KeyEvent triggered by a key press.
-	 */
-	private void handleKeyPress(KeyEvent e) {
-		if (!gameStateManager.isPlaying()) return; // Skip input handling if not in PLAYING state
-
-		KeyCode keyCode = e.getCode();
-		switch (keyCode) {
-			case UP -> user.moveUp();
-			case DOWN -> user.moveDown();
-			case LEFT -> user.moveLeft();
-			case RIGHT -> user.moveRight();
-			case SPACE -> fireProjectile();
-			default -> {
-			}
-		}
-	}
-
-
-	/**
-	 * Handles key release events to stop the user's superman movements.
-	 *
-	 * @param e The KeyEvent triggered by a key release.
-	 */
-	private void handleKeyRelease(KeyEvent e) {
-		if (!gameStateManager.isPlaying()) return; // Skip input handling if not in PLAYING state
-
-		KeyCode keyCode = e.getCode();
-		switch (keyCode) {
-			case UP, DOWN -> user.stopVertical();
-			case LEFT, RIGHT -> user.stopHorizontal();
-			default -> {
-			}
-		}
-	}
-
-
 	/**
 	 * Updates the game scene during each frame of the game loop.
 	 * Handles spawning enemies, updating actors, and managing collisions.
@@ -636,20 +595,6 @@ public abstract class LevelParent extends Observable {
 
 // ================= Actor & Projectile Management =====================
 //Methods responsible for adding, removing, or interacting with actors and projectiles.
-
-	/**
-	 * Fires a projectile from the user's superman and adds it to the list of user projectiles.
-	 */
-	private void fireProjectile() {
-		// Get the projectile from the user superman
-		ActiveActorDestructible projectile = getUser().fireProjectile();
-
-		// Add the projectile to the list for tracking
-		if (projectile != null) {
-			userProjectiles.add(projectile);
-		}
-	}
-
 
 	/**
 	 * Adds a projectile to the scene and tracks it in the appropriate list.
