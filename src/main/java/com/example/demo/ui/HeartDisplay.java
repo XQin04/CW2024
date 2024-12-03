@@ -1,5 +1,6 @@
 package com.example.demo.ui;
 
+import com.example.demo.utils.UIPositionHelper;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -10,79 +11,76 @@ import javafx.scene.layout.HBox;
  */
 public class HeartDisplay {
 
-	// Path to the heart image resource
 	private static final String HEART_IMAGE_NAME = "/com/example/demo/images/heart.png";
-
-	// Default height for each heart image
 	private static final int HEART_HEIGHT = 50;
-
-	// Index of the first item in the HBox container, used for removing hearts
 	private static final int INDEX_OF_FIRST_ITEM = 0;
 
-	private HBox container; // HBox to hold the heart icons
-	private double containerXPosition; // X position of the heart display
-	private double containerYPosition; // Y position of the heart display
-	private int numberOfHeartsToDisplay; // Number of hearts to display initially
+	private final HBox container;
+	private final int initialHeartCount;
 
 	/**
-	 * Constructs a HeartDisplay at the specified position with the given number of hearts.
+	 * Constructs a HeartDisplay with the specified position and number of hearts.
 	 *
-	 * @param xPosition       the X coordinate of the heart display
-	 * @param yPosition       the Y coordinate of the heart display
-	 * @param heartsToDisplay the initial number of hearts to display
+	 * @param xPosition       X-coordinate for the heart display.
+	 * @param yPosition       Y-coordinate for the heart display.
+	 * @param heartsToDisplay Initial number of hearts to display.
 	 */
 	public HeartDisplay(double xPosition, double yPosition, int heartsToDisplay) {
-		this.containerXPosition = xPosition;
-		this.containerYPosition = yPosition;
-		this.numberOfHeartsToDisplay = heartsToDisplay;
+		this.initialHeartCount = heartsToDisplay;
+		this.container = new HBox();
 
-		initializeContainer(); // Initialize the container (HBox)
-		initializeHearts();    // Populate the container with hearts
+		// Set the position of the heart container
+		UIPositionHelper.setPosition(container, xPosition, yPosition);
+
+		// Initialize hearts
+		initializeHearts(heartsToDisplay);
 	}
 
 	/**
-	 * Initializes the HBox container for the heart display.
-	 * Sets the position of the container on the screen.
+	 * Initializes the container with the specified number of heart icons.
+	 *
+	 * @param count Number of hearts to display initially.
 	 */
-	private void initializeContainer() {
-		container = new HBox();
-		container.setLayoutX(containerXPosition); // Set horizontal position
-		container.setLayoutY(containerYPosition); // Set vertical position
-	}
-
-	/**
-	 * Populates the HBox container with heart images.
-	 * Each heart is loaded from the specified image resource and resized.
-	 */
-	private void initializeHearts() {
-		for (int i = 0; i < numberOfHeartsToDisplay; i++) {
-			// Create a new ImageView for each heart
-			ImageView heart = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
-
-			// Set the height and maintain the aspect ratio
-			heart.setFitHeight(HEART_HEIGHT);
-			heart.setPreserveRatio(true);
-
-			// Add the heart to the container
-			container.getChildren().add(heart);
+	private void initializeHearts(int count) {
+		for (int i = 0; i < count; i++) {
+			container.getChildren().add(createHeartIcon());
 		}
+	}
+
+	/**
+	 * Creates a heart icon as an ImageView.
+	 *
+	 * @return A configured ImageView representing a heart.
+	 */
+	private ImageView createHeartIcon() {
+		ImageView heart = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
+		heart.setFitHeight(HEART_HEIGHT);
+		heart.setPreserveRatio(true);
+		return heart;
 	}
 
 	/**
 	 * Removes one heart from the display.
-	 * If the container is empty, this method does nothing.
+	 * If no hearts are left, the method does nothing.
 	 */
 	public void removeHeart() {
 		if (!container.getChildren().isEmpty()) {
-			container.getChildren().remove(INDEX_OF_FIRST_ITEM); // Remove the first heart
+			container.getChildren().remove(INDEX_OF_FIRST_ITEM);
 		}
 	}
 
 	/**
+	 * Resets the heart display to its initial state.
+	 */
+	public void resetHearts() {
+		container.getChildren().clear();
+		initializeHearts(initialHeartCount);
+	}
+
+	/**
 	 * Returns the HBox container holding the hearts.
-	 * This allows external components to add the heart display to their layout.
 	 *
-	 * @return the HBox container with the heart icons
+	 * @return The container with heart icons.
 	 */
 	public HBox getContainer() {
 		return container;

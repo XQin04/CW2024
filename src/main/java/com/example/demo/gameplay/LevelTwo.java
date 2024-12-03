@@ -76,8 +76,10 @@ public class LevelTwo extends LevelParent {
 	 */
 	@Override
 	protected LevelView instantiateLevelView() {
-		return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH);
+		// Assuming getScreenWidth() and getScreenHeight() are available in the current class
+		return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH, getScreenWidth(), getScreenHeight());
 	}
+
 
 	/**
 	 * Creates and configures a Label for displaying shield alerts.
