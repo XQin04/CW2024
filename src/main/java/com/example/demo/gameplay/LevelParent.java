@@ -13,6 +13,7 @@ import com.example.demo.ui.UIManager;
 import com.example.demo.utils.SoundManager;
 import com.example.demo.utils.CollisionManager;
 import com.example.demo.utils.InputHandler;
+import com.example.demo.utils.ProjectileManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -65,8 +66,6 @@ public abstract class LevelParent extends Observable {
 	private final ImageView background;
 	private final List<ActiveActorDestructible> friendlyUnits;
 	private final List<ActiveActorDestructible> enemyUnits;
-	private final List<ActiveActorDestructible> userProjectiles;
-	private final List<ActiveActorDestructible> enemyProjectiles;
 	private final List<ActiveActorDestructible> powerUps;
 
 	// Game state and controls
@@ -89,6 +88,7 @@ public abstract class LevelParent extends Observable {
 	private final GameStateManager gameStateManager;
 	private final PowerUpManager powerUpManager;
 	private InputHandler inputHandler;
+	private final ProjectileManager projectileManager;
 
 
 
@@ -122,6 +122,7 @@ public abstract class LevelParent extends Observable {
 		this.gameStateManager = new GameStateManager();
 		this.powerUpManager = new PowerUpManager(root);
 		this.inputHandler = new InputHandler(user); // Pass the user object to InputHandler.
+		this.projectileManager = new ProjectileManager(root);
 
 		// Initialize screen dimensions and background
 		this.screenHeight = screenHeight;
@@ -143,8 +144,6 @@ public abstract class LevelParent extends Observable {
 		// Initialize lists for actors and game elements
 		this.friendlyUnits = new ArrayList<>();
 		this.enemyUnits = new ArrayList<>();
-		this.userProjectiles = new ArrayList<>();
-		this.enemyProjectiles = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
 
 		// Initialize game elements
@@ -343,19 +342,19 @@ public abstract class LevelParent extends Observable {
 	 * @param levelName The name of the next level.
 	 */
 	public void goToNextLevel(String levelName) {
-		gameStateManager.setCurrentState(GameStateManager.GameState.LOADING); // Set state to loading
-		currentLevel = levelName; // Update the current level name
-		stopGameBackgroundMusic(); // Stop background music
-		timeline.stop(); // Stop the game loop
-		root.getChildren().clear(); // Clear all nodes from the scene
+		gameStateManager.setCurrentState(GameStateManager.GameState.LOADING);
+		currentLevel = levelName;
+		projectileManager.clearAllProjectiles(); // Ensure cleanup
+		stopGameBackgroundMusic();
+		timeline.stop();
+		root.getChildren().clear();
 
-		// Notify observers to switch to the next level
 		setChanged();
 		notifyObservers(levelName);
 
-		// Transition to PLAYING state after loading the new level
 		gameStateManager.setCurrentState(GameStateManager.GameState.PLAYING);
 	}
+
 
 
 
@@ -496,21 +495,19 @@ public abstract class LevelParent extends Observable {
 	 * Handles spawning enemies, updating actors, and managing collisions.
 	 */
 	private void updateScene() {
-		if (!gameStateManager.isPlaying()) return; // Skip updates if not in PLAYING state
+		if (!gameStateManager.isPlaying()) return;
 
 		spawnEnemyUnits();
 		updateActors();
-		generateEnemyFire();
+		generateEnemyFire(); // Now delegated to ProjectileManager
 		updateNumberOfEnemies();
-		handleEnemyPenetration(); // Keep this logic here for now
+		handleEnemyPenetration();
 		removeAllDestroyedActors();
 
-		// Replace CollisionManager calls with inline logic
-		collisionManager.handleSpiderCollisions(friendlyUnits, enemyUnits);
-		collisionManager.handleUserProjectileCollisions(userProjectiles, enemyUnits);
-		collisionManager.handleEnemyProjectileCollisions(enemyProjectiles);
-		powerUpManager.handlePowerUpCollisions(collisionManager);
+		// Delegate collision handling to ProjectileManager
+		projectileManager.handleCollisions(collisionManager, enemyUnits);
 
+		powerUpManager.handlePowerUpCollisions(collisionManager);
 
 		updateKillCount();
 		updateLevelView();
@@ -526,8 +523,7 @@ public abstract class LevelParent extends Observable {
 	private void updateActors() {
 		friendlyUnits.forEach(ActiveActorDestructible::updateActor);
 		enemyUnits.forEach(ActiveActorDestructible::updateActor);
-		userProjectiles.forEach(ActiveActorDestructible::updateActor);
-		enemyProjectiles.forEach(ActiveActorDestructible::updateActor);
+		projectileManager.updateProjectiles();
 		powerUpManager.updatePowerUps();
 	}
 
@@ -538,8 +534,7 @@ public abstract class LevelParent extends Observable {
 	private void removeAllDestroyedActors() {
 		removeDestroyedActors(friendlyUnits);
 		removeDestroyedActors(enemyUnits);
-		removeDestroyedActors(userProjectiles);
-		removeDestroyedActors(enemyProjectiles);
+		projectileManager.removeDestroyedProjectiles();
 		powerUpManager.removeDestroyedPowerUps();
 	}
 
@@ -602,13 +597,7 @@ public abstract class LevelParent extends Observable {
 	 * @param projectile The projectile to be added to the scene.
 	 */
 	public void addProjectile(ActiveActorDestructible projectile) {
-		if (projectile != null && !userProjectiles.contains(projectile)) {
-			// Add the projectile to the scene graph
-			getRoot().getChildren().add(projectile);
-
-			// Track the projectile
-			userProjectiles.add(projectile);
-		}
+		projectileManager.addUserProjectile(projectile);
 	}
 
 
@@ -637,10 +626,7 @@ public abstract class LevelParent extends Observable {
 	 * Generates enemy projectiles by allowing fighter spiders to fire.
 	 */
 	private void generateEnemyFire() {
-		enemyUnits.stream()
-				.filter(enemy -> enemy instanceof FighterSpider)
-				.map(enemy -> ((FighterSpider) enemy).fireProjectile())
-				.forEach(this::spawnEnemyProjectile);
+		projectileManager.generateEnemyProjectiles(enemyUnits);
 	}
 
 
@@ -650,10 +636,8 @@ public abstract class LevelParent extends Observable {
 	 * @param projectile The projectile to be spawned.
 	 */
 	private void spawnEnemyProjectile(ActiveActorDestructible projectile) {
-		if (projectile != null) {
-			root.getChildren().add(projectile); // Add projectile to the scene
-			enemyProjectiles.add(projectile);   // Track the projectile
-		}
+		projectileManager.addEnemyProjectile(projectile);
+
 	}
 
 
