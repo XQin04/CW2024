@@ -12,6 +12,7 @@ import com.example.demo.ui.LevelView;
 import com.example.demo.ui.MainMenu;
 import com.example.demo.ui.PauseMenu;
 import com.example.demo.utils.SoundManager;
+import com.example.demo.utils.CollisionManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -85,6 +86,9 @@ public abstract class LevelParent extends Observable {
 	private PauseMenu pauseMenu;
 	private EndGameMenu endGameMenu;
 	private MediaPlayer gameBackgroundMediaPlayer;
+	private final CollisionManager collisionManager;
+
+
 
 
 // ======================= Initialization Methods ==========================
@@ -108,6 +112,9 @@ public abstract class LevelParent extends Observable {
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
 		this.user = new UserSuperman(this, playerInitialHealth);
+		this.soundManager = SoundManager.getInstance();
+		this.collisionManager = new CollisionManager(user, soundManager);
+
 
 		// Initialize lists for actors and game elements
 		this.friendlyUnits = new ArrayList<>();
@@ -124,7 +131,6 @@ public abstract class LevelParent extends Observable {
 
 		// Game state variables
 		this.stage = stage;
-		this.soundManager = SoundManager.getInstance();
 		this.currentLevel = levelName; // Initialize with the provided level name
 		this.levelView = instantiateLevelView();
 		this.currentNumberOfEnemies = 0;
@@ -580,10 +586,11 @@ public abstract class LevelParent extends Observable {
 		removeAllDestroyedActors();
 
 		// Replace CollisionManager calls with inline logic
-		handleSpiderCollisions();
-		handleUserProjectileCollisions();
-		handleEnemyProjectileCollisions();
-		handlePowerUpCollisions();
+		collisionManager.handleSpiderCollisions(friendlyUnits, enemyUnits);
+		collisionManager.handleUserProjectileCollisions(userProjectiles, enemyUnits);
+		collisionManager.handleEnemyProjectileCollisions(enemyProjectiles);
+		collisionManager.handlePowerUpCollisions(powerUps);
+
 
 		updateKillCount();
 		updateLevelView();
@@ -644,76 +651,6 @@ public abstract class LevelParent extends Observable {
 			}
 		}
 	}
-
-	/**
-	 * Handles collisions between friendly and enemy spider.
-	 */
-	private void handleSpiderCollisions() {
-		handleCollisions(friendlyUnits, enemyUnits);
-	}
-
-
-	/**
-	 * Handles collisions between user projectiles and enemy units.
-	 */
-	private void handleUserProjectileCollisions() {
-		handleCollisions(userProjectiles, enemyUnits);
-	}
-
-	/**
-	 * Handles collisions between enemy projectiles and the user's spider.
-	 */
-	private void handleEnemyProjectileCollisions() {
-		for (ActiveActorDestructible projectile : enemyProjectiles) {
-			if (projectile.getBoundsInParent().intersects(user.getBoundsInParent())) {
-				projectile.takeDamage();
-				user.takeDamage();
-			}
-		}
-	}
-
-	/**
-	 * Handles collisions between projectiles and enemies, including custom logic for bosses.
-	 *
-	 * @param projectiles The list of projectiles.
-	 * @param enemies     The list of enemies.
-	 */
-	private void handleCollisions(List<ActiveActorDestructible> projectiles, List<ActiveActorDestructible> enemies) {
-		for (ActiveActorDestructible projectile : projectiles) {
-			for (ActiveActorDestructible enemy : enemies) {
-				if (enemy instanceof BossSpider boss) { // Enhanced readability with pattern matching
-					if (boss.getCustomHitbox().intersects(projectile.getBoundsInParent())) {
-						projectile.takeDamage();
-						boss.takeDamage();
-					}
-				} else if (enemy.getBoundsInParent().intersects(projectile.getBoundsInParent())) {
-					projectile.takeDamage();
-					enemy.takeDamage();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Handles collisions between the user's superman and power-ups.
-	 * Activates the power-up and removes it from the game.
-	 */
-	private void handlePowerUpCollisions() {
-		for (ActiveActorDestructible powerUp : powerUps) {
-			if (powerUp.getBoundsInParent().intersects(user.getBoundsInParent())) {
-				if (powerUp instanceof SpreadshotPowerUp spreadshotPowerUp) {
-					spreadshotPowerUp.activate(user); // Activate spreadshot power-up
-				} else if (powerUp instanceof PowerUp genericPowerUp) {
-					genericPowerUp.activate(user); // Activate generic power-ups
-				}
-
-				soundManager.playPowerUpSound(); // Play collection sound
-				powerUp.destroy(); // Remove power-up after collection
-			}
-		}
-	}
-
-
 
 	/**
 	 * Updates the level view based on the user's current health.
