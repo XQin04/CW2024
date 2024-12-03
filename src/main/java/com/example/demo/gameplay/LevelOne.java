@@ -83,8 +83,6 @@ public class LevelOne extends LevelParent {
 	 */
 	@Override
 	protected LevelView instantiateLevelView() {
-		// Assuming getScreenWidth() and getScreenHeight() are available in the current class
-		return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH, getScreenWidth(), getScreenHeight());
+		return new LevelView(getRoot(), PLAYER_INITIAL_HEALTH);
 	}
-
 }
