@@ -8,7 +8,7 @@ public class UserProjectile extends Projectile {
 
 	private static final String IMAGE_NAME = "userfire.png"; // Image for the projectile
 	private static final int IMAGE_HEIGHT = 125;            // Height of the projectile image
-	private static final int HORIZONTAL_VELOCITY = 15;      // Speed of the projectile
+	private static final int HORIZONTAL_VELOCITY = 18;      // Speed of the projectile
 
 	/**
 	 * Constructor for creating a user projectile.
