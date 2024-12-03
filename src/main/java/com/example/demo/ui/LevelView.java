@@ -1,5 +1,7 @@
 package com.example.demo.ui;
 
+import com.example.demo.managers.HeartManager;
+import com.example.demo.managers.ImageDisplayManager;
 import javafx.scene.Group;
 
 public class LevelView {

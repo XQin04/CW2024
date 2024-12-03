@@ -1,5 +1,7 @@
-package com.example.demo.ui;
+package com.example.demo.managers;
 
+import com.example.demo.ui.GameOverImage;
+import com.example.demo.ui.WinImage;
 import javafx.scene.Group;
 
 public class ImageDisplayManager {

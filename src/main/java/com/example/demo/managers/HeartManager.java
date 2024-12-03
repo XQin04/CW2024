@@ -1,5 +1,6 @@
-package com.example.demo.ui;
+package com.example.demo.managers;
 
+import com.example.demo.ui.HeartDisplay;
 import javafx.scene.Group;
 
 public class HeartManager {
