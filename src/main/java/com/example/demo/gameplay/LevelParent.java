@@ -3,11 +3,8 @@ package com.example.demo.gameplay;
 import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.actors.FighterSpider;
 import com.example.demo.actors.UserSuperman;
-import com.example.demo.actors.BossSpider;
 import com.example.demo.controller.Main;
 import com.example.demo.powerups.PowerUp;
-import com.example.demo.powerups.SpreadshotPowerUp;
-import com.example.demo.gameplay.GameStateManager;
 import com.example.demo.ui.EndGameMenu;
 import com.example.demo.ui.LevelView;
 import com.example.demo.ui.MainMenu;
@@ -91,6 +88,8 @@ public abstract class LevelParent extends Observable {
 	private final CollisionManager collisionManager;
 	private final UIManager uiManager;
 	private final GameStateManager gameStateManager;
+	private final PowerUpManager powerUpManager;
+
 
 
 
@@ -121,6 +120,7 @@ public abstract class LevelParent extends Observable {
 		this.collisionManager = new CollisionManager(user, soundManager);
 		this.uiManager = new UIManager(this, menuLayer, screenWidth, screenHeight, stage);
 		this.gameStateManager = new GameStateManager();
+		this.powerUpManager = new PowerUpManager(root);
 
 		// Initialize screen dimensions and background
 		this.screenHeight = screenHeight;
@@ -550,7 +550,7 @@ public abstract class LevelParent extends Observable {
 		collisionManager.handleSpiderCollisions(friendlyUnits, enemyUnits);
 		collisionManager.handleUserProjectileCollisions(userProjectiles, enemyUnits);
 		collisionManager.handleEnemyProjectileCollisions(enemyProjectiles);
-		collisionManager.handlePowerUpCollisions(powerUps);
+		powerUpManager.handlePowerUpCollisions(collisionManager);
 
 
 		updateKillCount();
@@ -569,7 +569,7 @@ public abstract class LevelParent extends Observable {
 		enemyUnits.forEach(ActiveActorDestructible::updateActor);
 		userProjectiles.forEach(ActiveActorDestructible::updateActor);
 		enemyProjectiles.forEach(ActiveActorDestructible::updateActor);
-		powerUps.forEach(ActiveActorDestructible::updateActor);
+		powerUpManager.updatePowerUps();
 	}
 
 
@@ -581,7 +581,7 @@ public abstract class LevelParent extends Observable {
 		removeDestroyedActors(enemyUnits);
 		removeDestroyedActors(userProjectiles);
 		removeDestroyedActors(enemyProjectiles);
-		removeDestroyedActors(powerUps);
+		powerUpManager.removeDestroyedPowerUps();
 	}
 
 
@@ -684,8 +684,7 @@ public abstract class LevelParent extends Observable {
 	 * @param powerUp The power-up to add.
 	 */
 	protected void addPowerUp(PowerUp powerUp) {
-		powerUps.add(powerUp);
-		root.getChildren().add(powerUp);
+		powerUpManager.addPowerUp(powerUp);
 	}
 
 
