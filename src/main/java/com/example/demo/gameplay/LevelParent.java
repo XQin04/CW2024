@@ -439,10 +439,6 @@ public abstract class LevelParent extends Observable {
 		projectileManager.generateEnemyProjectiles(enemyManager.getEnemies());
 	}
 
-	private void spawnEnemyProjectile(ActiveActorDestructible projectile) {
-		projectileManager.addEnemyProjectile(projectile);
-
-	}
 
 	private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {
 		return Math.abs(enemy.getTranslateX()) > screenWidth;
