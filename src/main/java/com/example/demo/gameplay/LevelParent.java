@@ -370,6 +370,8 @@ public abstract class LevelParent extends Observable {
 		handleEnemyPenetration();
 		removeAllDestroyedActors();
 
+		// Handle collisions
+		collisionManager.handleSpiderCollisions(List.of(user), enemyManager.getEnemies());
 		projectileManager.handleCollisions(collisionManager, enemyManager.getEnemies());
 		powerUpManager.handlePowerUpCollisions(collisionManager);
 
