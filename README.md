@@ -495,3 +495,13 @@ The boss projectile has been modified from a normal projectile to a spread web p
 ## EndGameMenu.java
 - EndGameMenu.java created
 - initialised end game menu in levelparrent
+- ---
+## Single responsibility
+- levelparent split into 7 classes:
+1. Power-Up Management
+2. UI manager
+3. Game State manager 
+4. Collision manager 
+5. Enemy manager 
+6. Input Handler 
+7. Projectile Manager
