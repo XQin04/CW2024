@@ -25,7 +25,7 @@ public class BossSpider extends FighterSpider {
 	private static final double BOSS_SHIELD_PROBABILITY = 0.003;
 	private static final int IMAGE_HEIGHT = 200;
 	private static final int VERTICAL_VELOCITY = 8;
-	private static final int HEALTH = 60;
+	private static final int HEALTH = 25;
 	private static final int MOVE_FREQUENCY_PER_CYCLE = 5;
 	private static final int ZERO = 0;
 	private static final int MAX_FRAMES_WITH_SAME_MOVE = 10;
