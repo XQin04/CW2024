@@ -1,26 +1,25 @@
 package com.example.demo.utils;
 
 import com.example.demo.actors.UserSuperman;
+import com.example.demo.gameplay.GameStateManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-/**
- * Handles user input (key presses and releases) during the game.
- */
 public class InputHandler {
 
     private final UserSuperman player;
+    private final GameStateManager gameStateManager;
 
-    public InputHandler(UserSuperman player) {
+    public InputHandler(UserSuperman player, GameStateManager gameStateManager) {
         this.player = player;
+        this.gameStateManager = gameStateManager;
     }
 
-    /**
-     * Handles key press events.
-     *
-     * @param event The KeyEvent triggered by the user.
-     */
     public void handleKeyPress(KeyEvent event) {
+        if (!gameStateManager.isPlaying()) {
+            return; // Ignore input if the game is not in the PLAYING state
+        }
+
         KeyCode keyCode = event.getCode();
 
         switch (keyCode) {
@@ -35,12 +34,11 @@ public class InputHandler {
         }
     }
 
-    /**
-     * Handles key release events.
-     *
-     * @param event The KeyEvent triggered by the user.
-     */
     public void handleKeyRelease(KeyEvent event) {
+        if (!gameStateManager.isPlaying()) {
+            return; // Ignore input if the game is not in the PLAYING state
+        }
+
         KeyCode keyCode = event.getCode();
 
         switch (keyCode) {
