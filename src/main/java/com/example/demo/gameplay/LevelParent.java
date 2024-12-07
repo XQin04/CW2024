@@ -160,6 +160,9 @@ public abstract class LevelParent extends Observable {
 		KeyFrame gameLoop = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> updateScene());
 		timeline.getKeyFrames().add(gameLoop);
 	}
+	public ProjectileManager getProjectileManager() {
+		return projectileManager;
+	}
 
 	private void initializeGameBackgroundMusic() {
 		try {
@@ -481,4 +484,5 @@ public abstract class LevelParent extends Observable {
 	private void updateNumberOfEnemies() {
 		currentNumberOfEnemies = enemyManager.getEnemyCount();
 	}
+
 }
