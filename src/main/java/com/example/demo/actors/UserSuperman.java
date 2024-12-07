@@ -124,15 +124,16 @@ public class UserSuperman extends FighterSpider {
 		double currentX = getLayoutX() + getTranslateX();
 		double currentY = getLayoutY() + getTranslateY();
 
-		// Create spreadshot projectiles
-		projectiles.add(new UserProjectile(currentX + 100, currentY - 30)); // Left
-		projectiles.add(new UserProjectile(currentX + 100, currentY - 15)); // Left-mid
-		projectiles.add(new UserProjectile(currentX + 100, currentY));      // Center
-		projectiles.add(new UserProjectile(currentX + 100, currentY + 15)); // Right-mid
-		projectiles.add(new UserProjectile(currentX + 100, currentY + 30)); // Right
+		// Create spreadshot projectiles in an arrow-like pattern
+		projectiles.add(new UserProjectile(currentX + 75, currentY - 30)); // Left (Upwards)
+		projectiles.add(new UserProjectile(currentX + 85, currentY - 15)); // Slightly Left (Upwards)
+		projectiles.add(new UserProjectile(currentX + 100, currentY));      // Center (Straight)
+		projectiles.add(new UserProjectile(currentX + 85, currentY + 15)); // Slightly Right (Downwards)
+		projectiles.add(new UserProjectile(currentX + 75, currentY + 30)); // Right (Downwards)
 
 		return projectiles;
 	}
+
 
 	/**
 	 * Checks if the user's superman is moving vertically.
