@@ -76,13 +76,13 @@ public abstract class LevelParent extends Observable {
 	private PauseMenu pauseMenu;
 	private EndGameMenu endGameMenu;
 	private MediaPlayer gameBackgroundMediaPlayer;
-	private final CollisionManager collisionManager;
+	protected final CollisionManager collisionManager;
 	private final UIManager uiManager;
 	private final GameStateManager gameStateManager;
-	private final PowerUpManager powerUpManager;
+	protected final PowerUpManager powerUpManager;
 	private InputHandler inputHandler;
-	private final ProjectileManager projectileManager;
-	private final EnemyManager enemyManager;
+	protected final ProjectileManager projectileManager;
+	protected final EnemyManager enemyManager;
 
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth,
