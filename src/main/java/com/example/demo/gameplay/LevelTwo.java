@@ -64,8 +64,8 @@ public class LevelTwo extends LevelParent {
 	 */
 	@Override
 	protected void spawnEnemyUnits() {
-		if (getCurrentNumberOfEnemies() == 0) {
-			addEnemyUnit(boss);
+		if (enemyManager.getEnemyCount() == 0) {
+			enemyManager.addEnemy(boss); // Use EnemyManager to ensure the boss is managed properly
 		}
 	}
 

@@ -1,6 +1,5 @@
 package com.example.demo.gameplay;
 
-import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.actors.EnemySpider;
 import com.example.demo.ui.LevelView;
 import javafx.stage.Stage;
@@ -39,18 +38,9 @@ public class LevelOne extends LevelParent {
 	protected void checkIfGameOver() {
 		if (userIsDestroyed()) {
 			loseGame();
-		} else if (allEnemiesKilled() && spawnCyclesCompleted >= TOTAL_SPAWN_CYCLES) {
+		} else if (enemyManager.getEnemyCount() == 0 && spawnCyclesCompleted >= TOTAL_SPAWN_CYCLES) {
 			goToNextLevel(NEXT_LEVEL);
 		}
-	}
-
-	/**
-	 * Determines if all enemies have been killed.
-	 *
-	 * @return True if all enemies are destroyed, otherwise false.
-	 */
-	private boolean allEnemiesKilled() {
-		return getCurrentNumberOfEnemies() == 0;
 	}
 
 	/**
@@ -66,11 +56,11 @@ public class LevelOne extends LevelParent {
 	 */
 	@Override
 	protected void spawnEnemyUnits() {
-		if (spawnCyclesCompleted < TOTAL_SPAWN_CYCLES && getCurrentNumberOfEnemies() == 0) {
+		if (spawnCyclesCompleted < TOTAL_SPAWN_CYCLES && enemyManager.getEnemyCount() == 0) {
 			for (int i = 0; i < TOTAL_ENEMIES_PER_CYCLE; i++) {
 				double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition();
-				ActiveActorDestructible newEnemy = new EnemySpider(getScreenWidth(), newEnemyInitialYPosition);
-				addEnemyUnit(newEnemy);
+				EnemySpider newEnemy = new EnemySpider(getScreenWidth(), newEnemyInitialYPosition);
+				enemyManager.addEnemy(newEnemy); // Delegate enemy addition to EnemyManager
 			}
 			spawnCyclesCompleted++;
 		}

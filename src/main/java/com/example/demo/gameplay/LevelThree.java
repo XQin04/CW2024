@@ -59,7 +59,7 @@ public class LevelThree extends LevelParent {
     @Override
     protected void spawnEnemyUnits() {
         // Spawn regular enemies if the boss has not yet appeared
-        if (getCurrentNumberOfEnemies() == 0 && !bossSpawned) {
+        if (enemyManager.getEnemyCount() == 0 && !bossSpawned) {
             waveCount++;
             spawnEnemyWave(waveCount);
 
@@ -89,7 +89,7 @@ public class LevelThree extends LevelParent {
     protected void checkIfGameOver() {
         if (userIsDestroyed()) {
             loseGame(); // Player loses when their health reaches zero
-        } else if (levelThreeBoss.isDestroyed() && getCurrentNumberOfEnemies() == 0) {
+        } else if (levelThreeBoss.isDestroyed() && enemyManager.getEnemyCount() == 0) {
             winGame(); // Player wins when the boss is destroyed and no enemies remain
         }
     }
@@ -103,7 +103,7 @@ public class LevelThree extends LevelParent {
         for (int i = 0; i < 3 + waveCount; i++) {
             double x = getScreenWidth() + 100;
             double y = Math.random() * getEnemyMaximumYPosition();
-            addEnemyUnit(new EnemySpider(x, y));
+            enemyManager.addEnemy(new EnemySpider(x, y)); // Delegate enemy addition to EnemyManager
         }
     }
 
@@ -111,7 +111,7 @@ public class LevelThree extends LevelParent {
      * Spawns the boss enemy into the game.
      */
     private void spawnBoss() {
-        addEnemyUnit(levelThreeBoss);
+        enemyManager.addEnemy(levelThreeBoss); // Use EnemyManager for boss addition
         bossSpawned = true;
     }
 
@@ -122,10 +122,9 @@ public class LevelThree extends LevelParent {
         if (Math.random() < POWER_UP_SPAWN_PROBABILITY) {
             double screenWidthLimit = getScreenWidth() / 2; // Limit to the left half of the screen
             double x = Math.random() * screenWidthLimit;
-            addPowerUp(new SpreadshotPowerUp(x, 0)); // Add a new power-up to the scene
+            powerUpManager.addPowerUp(new SpreadshotPowerUp(x, 0)); // Use PowerUpManager for power-ups
         }
     }
-
 
     /**
      * Creates and configures a label for displaying shield alerts.
