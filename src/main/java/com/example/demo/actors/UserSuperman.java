@@ -2,6 +2,7 @@ package com.example.demo.actors;
 
 import com.example.demo.gameplay.LevelParent;
 import com.example.demo.projectiles.UserProjectile;
+import com.example.demo.utils.ProjectileManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,18 +88,20 @@ public class UserSuperman extends FighterSpider {
 		double currentX = getLayoutX() + getTranslateX();
 		double currentY = getLayoutY() + getTranslateY();
 
+		ProjectileManager projectileManager = levelParent.getProjectileManager(); // Access ProjectileManager
+
 		if (spreadshotCount > 0) {
 			// Create and add spreadshot projectiles
 			List<ActiveActorDestructible> spreadshotProjectiles = getSpreadshotProjectiles();
 			for (ActiveActorDestructible projectile : spreadshotProjectiles) {
-				levelParent.addProjectile(projectile);
+				projectileManager.addUserProjectile(projectile); // Use ProjectileManager
 			}
 			spreadshotCount--; // Decrease the spreadshot count
 			return spreadshotProjectiles.get(spreadshotProjectiles.size() / 2); // Return center projectile
 		} else {
 			// Create and add a single projectile
 			ActiveActorDestructible projectile = new UserProjectile(currentX + 100, currentY);
-			levelParent.addProjectile(projectile);
+			projectileManager.addUserProjectile(projectile); // Use ProjectileManager
 			return projectile;
 		}
 	}
@@ -109,7 +112,6 @@ public class UserSuperman extends FighterSpider {
 	public void activateOneTimeSpreadshot() {
 		spreadshotCount++;
 	}
-
 
 	/**
 	 * Creates and returns a list of spreadshot projectiles.
