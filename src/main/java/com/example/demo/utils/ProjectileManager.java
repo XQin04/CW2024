@@ -81,14 +81,4 @@ public class ProjectileManager {
         userProjectiles.clear();
         enemyProjectiles.clear();
     }
-
-    // Exposes user projectiles for external access
-    public List<ActiveActorDestructible> getUserProjectiles() {
-        return userProjectiles;
-    }
-
-    // Exposes enemy projectiles for external access
-    public List<ActiveActorDestructible> getEnemyProjectiles() {
-        return enemyProjectiles;
-    }
 }
