@@ -34,7 +34,6 @@ public class GameStateManager {
      */
     public void setCurrentState(GameState newState) {
         this.currentState = newState;
-        System.out.println("Game State changed to: " + newState); // Debug log
     }
 
     /**
