@@ -1,7 +1,7 @@
 package com.example.demo.ui;
 
 import com.example.demo.controller.Main;
-import com.example.demo.utils.SoundManager;
+import com.example.demo.managers.SoundManager;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

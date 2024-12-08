@@ -1,4 +1,4 @@
-package com.example.demo.gameplay;
+package com.example.demo.gameplay.levels;
 
 import com.example.demo.actors.BossSpider;
 import com.example.demo.actors.EnemySpider;

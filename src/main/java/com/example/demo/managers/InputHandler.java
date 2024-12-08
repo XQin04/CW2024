@@ -1,4 +1,4 @@
-package com.example.demo.utils;
+package com.example.demo.managers;
 
 import com.example.demo.actors.UserSuperman;
 import com.example.demo.gameplay.GameStateManager;

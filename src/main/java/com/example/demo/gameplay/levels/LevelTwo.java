@@ -1,4 +1,4 @@
-package com.example.demo.gameplay;
+package com.example.demo.gameplay.levels;
 
 import com.example.demo.actors.BossSpider;
 import com.example.demo.ui.LevelView;
@@ -16,7 +16,7 @@ public class LevelTwo extends LevelParent {
 	// Constants for level configuration
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png";
 	private static final int PLAYER_INITIAL_HEALTH = 5;
-	private static final String NEXT_LEVEL = "com.example.demo.gameplay.LevelThree";
+	private static final String NEXT_LEVEL = "com.example.demo.gameplay.levels.LevelThree";
 
 	private final BossSpider boss; // Reference to the boss enemy
 	private final Label shieldAlert; // Label for displaying shield alerts

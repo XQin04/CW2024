@@ -1,19 +1,21 @@
-package com.example.demo.gameplay;
+package com.example.demo.gameplay.levels;
 
 import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.actors.UserSuperman;
 import com.example.demo.controller.Main;
+import com.example.demo.gameplay.GameStateManager;
+import com.example.demo.gameplay.managers.PowerUpManager;
 import com.example.demo.powerups.PowerUp;
 import com.example.demo.ui.EndGameMenu;
 import com.example.demo.ui.LevelView;
 import com.example.demo.ui.MainMenu;
 import com.example.demo.ui.PauseMenu;
 import com.example.demo.ui.UIManager;
-import com.example.demo.utils.SoundManager;
-import com.example.demo.utils.CollisionManager;
-import com.example.demo.utils.InputHandler;
-import com.example.demo.utils.ProjectileManager;
-import com.example.demo.utils.EnemyManager;
+import com.example.demo.managers.SoundManager;
+import com.example.demo.managers.CollisionManager;
+import com.example.demo.managers.InputHandler;
+import com.example.demo.managers.ProjectileManager;
+import com.example.demo.managers.EnemyManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;

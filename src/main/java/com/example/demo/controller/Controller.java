@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.gameplay.LevelParent;
+import com.example.demo.gameplay.levels.LevelParent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -15,7 +15,7 @@ import java.util.Observer;
  */
 public class Controller implements Observer {
 
-	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.gameplay.LevelOne";
+	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.gameplay.levels.LevelOne";
 	private final Stage stage;
 
 	/**

@@ -13,6 +13,6 @@ module com.example.demo {
     exports com.example.demo.projectiles;
     exports com.example.demo.powerups;
     exports com.example.demo.ui;
-    exports com.example.demo.utils;
+    exports com.example.demo.managers;
     exports com.example.demo.gameplay;
 }

@@ -1,8 +1,8 @@
-package com.example.demo.gameplay;
+package com.example.demo.gameplay.managers;
 
 import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.powerups.PowerUp;
-import com.example.demo.utils.CollisionManager;
+import com.example.demo.managers.CollisionManager;
 import javafx.scene.Group;
 
 import java.util.ArrayList;

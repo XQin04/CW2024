@@ -1,4 +1,5 @@
-package com.example.demo.utils;
+package com.example.demo.managers;
+
 
 import com.example.demo.actors.ActiveActorDestructible;
 import javafx.scene.Group;

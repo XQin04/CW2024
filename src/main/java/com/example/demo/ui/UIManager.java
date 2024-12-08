@@ -1,6 +1,6 @@
 package com.example.demo.ui;
 
-import com.example.demo.gameplay.LevelParent;
+import com.example.demo.gameplay.levels.LevelParent;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
