@@ -43,8 +43,4 @@ public class PowerUpManager {
     public void handlePowerUpCollisions(CollisionManager collisionManager) {
         collisionManager.handlePowerUpCollisions(powerUps);
     }
-
-    public List<ActiveActorDestructible> getPowerUps() {
-        return powerUps;
-    }
 }
