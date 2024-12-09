@@ -96,7 +96,6 @@ public abstract class LevelParent extends Observable {
 		this.user = new UserSuperman(this, playerInitialHealth);
 		this.soundManager = SoundManager.getInstance();
 		this.collisionManager = new CollisionManager(user, soundManager);
-		this.uiManager = new UIManager(this, menuLayer, screenWidth, screenHeight, stage);
 		this.gameStateManager = GameStateManager.getInstance();
 		this.powerUpManager = new PowerUpManager(root);
 		this.inputHandler = new InputHandler(user, gameStateManager);
@@ -120,6 +119,7 @@ public abstract class LevelParent extends Observable {
 
 		this.friendlyUnits = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
+		this.uiManager = UIManager.getInstance(this, menuLayer, screenWidth, screenHeight, stage);
 
 		initializeTimeline();
 		friendlyUnits.add(user);
@@ -268,10 +268,14 @@ public abstract class LevelParent extends Observable {
 		timeline.stop();
 		root.getChildren().clear();
 
+		// Reset and reinitialize UIManager
+		UIManager.resetInstance();
+		uiManager.initializeUI();
+
 		setChanged();
 		notifyObservers(levelName);
 
-		gameStateManager.setCurrentState(GameStateManager.GameState.PLAYING);
+		gameStateManager.setCurrentState(GameStateManager.GameState.INITIALIZING);
 	}
 
 	public void togglePause() {
@@ -353,6 +357,9 @@ public abstract class LevelParent extends Observable {
 		timeline.stop();
 		stopGameBackgroundMusic();
 		root.getChildren().clear(); // Clear all game components from the scene
+
+		// Reset UIManager to prepare for new game
+		UIManager.resetInstance();
 
 		// Initialize and display the main menu
 		MainMenu mainMenu = new MainMenu();
