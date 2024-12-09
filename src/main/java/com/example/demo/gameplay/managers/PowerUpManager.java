@@ -14,17 +14,43 @@ import java.util.stream.Collectors;
  */
 public class PowerUpManager {
 
-    private final List<ActiveActorDestructible> powerUps;
-    private final Group root;
+    private static PowerUpManager instance; // Singleton instance
+    private List<ActiveActorDestructible> powerUps;
+    private Group root;
 
-    public PowerUpManager(Group root) {
+    /**
+     * Private constructor to enforce Singleton pattern.
+     */
+    private PowerUpManager() {
         this.powerUps = new ArrayList<>();
+    }
+
+    /**
+     * Returns the Singleton instance of the PowerUpManager.
+     */
+    public static PowerUpManager getInstance() {
+        if (instance == null) {
+            instance = new PowerUpManager();
+        }
+        return instance;
+    }
+
+    /**
+     * Initializes the PowerUpManager with the root group.
+     * Should be called once when the level is initialized.
+     *
+     * @param root The root group to which power-ups will be added.
+     */
+    public void initialize(Group root) {
         this.root = root;
+        this.powerUps = new ArrayList<>();
     }
 
     public void addPowerUp(PowerUp powerUp) {
         powerUps.add(powerUp);
-        root.getChildren().add(powerUp);
+        if (root != null) {
+            root.getChildren().add(powerUp);
+        }
     }
 
     public void updatePowerUps() {
@@ -36,11 +62,23 @@ public class PowerUpManager {
                 .filter(ActiveActorDestructible::isDestroyed)
                 .collect(Collectors.toList());
 
-        root.getChildren().removeAll(destroyedPowerUps);
+        if (root != null) {
+            root.getChildren().removeAll(destroyedPowerUps);
+        }
         powerUps.removeAll(destroyedPowerUps);
     }
 
     public void handlePowerUpCollisions(CollisionManager collisionManager) {
         collisionManager.handlePowerUpCollisions(powerUps);
+    }
+
+    /**
+     * Clears all power-ups from the game.
+     */
+    public void clearAllPowerUps() {
+        if (root != null) {
+            root.getChildren().removeAll(powerUps);
+        }
+        powerUps.clear();
     }
 }

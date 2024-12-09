@@ -97,7 +97,8 @@ public abstract class LevelParent extends Observable {
 		this.soundManager = SoundManager.getInstance();
 		this.collisionManager = new CollisionManager(user, soundManager);
 		this.gameStateManager = GameStateManager.getInstance();
-		this.powerUpManager = new PowerUpManager(root);
+		this.powerUpManager = PowerUpManager.getInstance();
+		this.powerUpManager.initialize(root); // Pass the root for initialization
 		this.inputHandler = new InputHandler(user, gameStateManager);
 		this.projectileManager = new ProjectileManager(root);
 		this.enemyManager = EnemyManager.getInstance();
@@ -266,6 +267,7 @@ public abstract class LevelParent extends Observable {
 
 		projectileManager.clearAllProjectiles();
 		EnemyManager.getInstance().clearAllEnemies(); // Clear enemies for the next level
+		PowerUpManager.getInstance().clearAllPowerUps(); // Clear power-ups for the next level
 		stopGameBackgroundMusic();
 		timeline.stop();
 		root.getChildren().clear();
@@ -359,6 +361,9 @@ public abstract class LevelParent extends Observable {
 		timeline.stop();
 		stopGameBackgroundMusic();
 		root.getChildren().clear(); // Clear all game components from the scene
+
+		// Clear power-ups
+		PowerUpManager.getInstance().clearAllPowerUps();
 
 		// Reset UIManager to prepare for new game
 		UIManager.resetInstance();
