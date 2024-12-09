@@ -64,8 +64,8 @@ public class UIManager {
      * Initializes the UI elements by adding them to the appropriate layers.
      */
     public void initializeUI() {
-        menuLayer.getChildren().clear(); // Clear to avoid duplicates
         levelParent.getRoot().getChildren().remove(pauseButton); // Remove existing button if present
+        menuLayer.getChildren().clear(); // Clear to avoid duplicates
 
         // Add menus and buttons
         menuLayer.getChildren().addAll(pauseMenu, endGameMenu);
