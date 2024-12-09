@@ -2,6 +2,7 @@ package com.example.demo.gameplay;
 
 /**
  * Manages the current state of the game.
+ * Implements the Singleton pattern to ensure a single instance.
  * Provides methods to transition between states and check the current state.
  */
 public class GameStateManager {
@@ -18,13 +19,28 @@ public class GameStateManager {
         LOADING       // When transitioning between levels
     }
 
+    // Singleton instance
+    private static GameStateManager instance;
+
     private GameState currentState;
 
     /**
-     * Constructor to initialize the game state manager with a default state.
+     * Private constructor to prevent direct instantiation (Singleton pattern).
      */
-    public GameStateManager() {
+    private GameStateManager() {
         this.currentState = GameState.INITIALIZING; // Default state is INITIALIZING
+    }
+
+    /**
+     * Provides access to the single instance of GameStateManager.
+     *
+     * @return The Singleton instance of GameStateManager.
+     */
+    public static GameStateManager getInstance() {
+        if (instance == null) {
+            instance = new GameStateManager();
+        }
+        return instance;
     }
 
     /**

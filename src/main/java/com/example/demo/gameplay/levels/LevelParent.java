@@ -97,7 +97,7 @@ public abstract class LevelParent extends Observable {
 		this.soundManager = SoundManager.getInstance();
 		this.collisionManager = new CollisionManager(user, soundManager);
 		this.uiManager = new UIManager(this, menuLayer, screenWidth, screenHeight, stage);
-		this.gameStateManager = new GameStateManager();
+		this.gameStateManager = GameStateManager.getInstance();
 		this.powerUpManager = new PowerUpManager(root);
 		this.inputHandler = new InputHandler(user, gameStateManager);
 		this.projectileManager = new ProjectileManager(root);
