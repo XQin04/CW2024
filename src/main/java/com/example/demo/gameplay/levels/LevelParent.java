@@ -100,7 +100,9 @@ public abstract class LevelParent extends Observable {
 		this.powerUpManager = new PowerUpManager(root);
 		this.inputHandler = new InputHandler(user, gameStateManager);
 		this.projectileManager = new ProjectileManager(root);
-		this.enemyManager = new EnemyManager(root);
+		this.enemyManager = EnemyManager.getInstance();
+		this.enemyManager.initialize(root); // Set the root for the current level
+
 
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
@@ -263,7 +265,7 @@ public abstract class LevelParent extends Observable {
 		currentLevel = levelName;
 
 		projectileManager.clearAllProjectiles();
-		enemyManager.clearAllEnemies();
+		EnemyManager.getInstance().clearAllEnemies(); // Clear enemies for the next level
 		stopGameBackgroundMusic();
 		timeline.stop();
 		root.getChildren().clear();
