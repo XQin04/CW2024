@@ -100,7 +100,8 @@ public abstract class LevelParent extends Observable {
 		this.powerUpManager = PowerUpManager.getInstance();
 		this.powerUpManager.initialize(root); // Pass the root for initialization
 		this.inputHandler = new InputHandler(user, gameStateManager);
-		this.projectileManager = new ProjectileManager(root);
+		this.projectileManager = ProjectileManager.getInstance();
+		this.projectileManager.initialize(root); // Initialize with the current level's root
 		this.enemyManager = EnemyManager.getInstance();
 		this.enemyManager.initialize(root); // Set the root for the current level
 
@@ -265,7 +266,7 @@ public abstract class LevelParent extends Observable {
 		gameStateManager.setCurrentState(GameStateManager.GameState.LOADING);
 		currentLevel = levelName;
 
-		projectileManager.clearAllProjectiles();
+		ProjectileManager.getInstance().clearAllProjectiles();
 		EnemyManager.getInstance().clearAllEnemies(); // Clear enemies for the next level
 		PowerUpManager.getInstance().clearAllPowerUps(); // Clear power-ups for the next level
 		stopGameBackgroundMusic();
@@ -364,6 +365,7 @@ public abstract class LevelParent extends Observable {
 
 		// Clear power-ups
 		PowerUpManager.getInstance().clearAllPowerUps();
+		ProjectileManager.getInstance().clearAllProjectiles();
 
 		// Reset UIManager to prepare for new game
 		UIManager.resetInstance();

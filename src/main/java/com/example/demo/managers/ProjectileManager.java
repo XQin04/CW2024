@@ -13,19 +13,35 @@ import java.util.stream.Collectors;
  */
 public class ProjectileManager {
 
-    private final List<ActiveActorDestructible> userProjectiles;
-    private final List<ActiveActorDestructible> enemyProjectiles;
-    private final Group root;
+    // Singleton instance
+    private static ProjectileManager instance;
 
-    public ProjectileManager(Group root) {
-        this.root = root;
+    private List<ActiveActorDestructible> userProjectiles;
+    private List<ActiveActorDestructible> enemyProjectiles;
+    private Group root;
+
+    // Private constructor for Singleton pattern
+    private ProjectileManager() {
         this.userProjectiles = new ArrayList<>();
         this.enemyProjectiles = new ArrayList<>();
     }
 
+    // Public method to get the Singleton instance
+    public static ProjectileManager getInstance() {
+        if (instance == null) {
+            instance = new ProjectileManager();
+        }
+        return instance;
+    }
+
+    // Initialize the root (must be called before usage)
+    public void initialize(Group root) {
+        this.root = root;
+    }
+
     // Adds a user projectile to the scene and tracks it
     public void addUserProjectile(ActiveActorDestructible projectile) {
-        if (projectile != null) {
+        if (projectile != null && root != null) {
             userProjectiles.add(projectile);
             root.getChildren().add(projectile);
         }
@@ -33,7 +49,7 @@ public class ProjectileManager {
 
     // Adds an enemy projectile to the scene and tracks it
     public void addEnemyProjectile(ActiveActorDestructible projectile) {
-        if (projectile != null) {
+        if (projectile != null && root != null) {
             enemyProjectiles.add(projectile);
             root.getChildren().add(projectile);
         }
@@ -56,7 +72,9 @@ public class ProjectileManager {
         List<ActiveActorDestructible> destroyed = projectiles.stream()
                 .filter(ActiveActorDestructible::isDestroyed)
                 .collect(Collectors.toList());
-        root.getChildren().removeAll(destroyed);
+        if (root != null) {
+            root.getChildren().removeAll(destroyed);
+        }
         projectiles.removeAll(destroyed);
     }
 
@@ -76,8 +94,10 @@ public class ProjectileManager {
 
     // Clears all projectiles from the scene and lists
     public void clearAllProjectiles() {
-        root.getChildren().removeAll(userProjectiles);
-        root.getChildren().removeAll(enemyProjectiles);
+        if (root != null) {
+            root.getChildren().removeAll(userProjectiles);
+            root.getChildren().removeAll(enemyProjectiles);
+        }
         userProjectiles.clear();
         enemyProjectiles.clear();
     }
