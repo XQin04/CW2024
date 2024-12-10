@@ -6,19 +6,15 @@ import com.example.demo.controller.Main;
 import com.example.demo.managers.*;
 import com.example.demo.observer.Observable;
 import com.example.demo.observer.Observer;
-import com.example.demo.powerups.PowerUp;
 import com.example.demo.ui.gameplayUI.LevelView;
 import com.example.demo.ui.UIManager;
-import com.example.demo.ui.menus.EndGameMenu;
 import com.example.demo.ui.menus.MainMenu;
-import com.example.demo.ui.menus.PauseMenu;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -27,10 +23,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.image.Image;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.net.URL;
 
 /**
  * Abstract base class for game levels.
@@ -56,15 +56,13 @@ public abstract class LevelParent extends Observable implements Observer {
 	private final Group root;
 	private final Group menuLayer;
 
-	// Game stage and scene
-	private final Stage stage;
+	// Gamescene
 	private final Scene scene;
 
 	// Game elements and actors
 	private final UserSuperman user;
 	private final ImageView background;
 	private final List<ActiveActorDestructible> friendlyUnits;
-	private final List<ActiveActorDestructible> powerUps;
 
 	// Game state and controls
 	private final Timeline timeline;
@@ -73,13 +71,11 @@ public abstract class LevelParent extends Observable implements Observer {
 	private int currentNumberOfEnemies;
 
 	// Level-related views and settings
-	private LevelView levelView;
+	private final LevelView levelView;
 	private String currentLevel;
 
-	// Audio and menus
+	// Audios
 	private final SoundManager soundManager;
-	private PauseMenu pauseMenu;
-	private EndGameMenu endGameMenu;
 	private MediaPlayer gameBackgroundMediaPlayer;
 
 	// Managers
@@ -87,7 +83,7 @@ public abstract class LevelParent extends Observable implements Observer {
 	private final UIManager uiManager;
 	private final GameStateManager gameStateManager;
 	protected final PowerUpManager powerUpManager;
-	private InputHandler inputHandler;
+	private final InputHandler inputHandler;
 	protected final ProjectileManager projectileManager;
 	protected final EnemyManager enemyManager;
 
@@ -107,6 +103,13 @@ public abstract class LevelParent extends Observable implements Observer {
 		this.menuLayer = new Group();
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
+
+		// Check if the background resource exists
+		URL resource = getClass().getResource(backgroundImageName);
+		if (resource == null) {
+			throw new IllegalArgumentException("Background image not found: " + backgroundImageName);
+		}
+		this.background = new ImageView(new Image(resource.toExternalForm()));
 
 		// Initialize game components
 		this.timeline = new Timeline();
@@ -128,11 +131,8 @@ public abstract class LevelParent extends Observable implements Observer {
 		this.screenWidth = screenWidth;
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
 
-		// Load background image
-		this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
 
-		// Stage and level setup
-		this.stage = stage;
+		// Level setup
 		this.currentLevel = levelName;
 		this.levelView = instantiateLevelView();
 
@@ -146,7 +146,6 @@ public abstract class LevelParent extends Observable implements Observer {
 
 		// Initialize UI
 		this.friendlyUnits = new ArrayList<>();
-		this.powerUps = new ArrayList<>();
 		this.uiManager = UIManager.getInstance(this, menuLayer, screenWidth, screenHeight, stage);
 		addObserver(uiManager); // Register UIManager as an observer
 
@@ -189,8 +188,8 @@ public abstract class LevelParent extends Observable implements Observer {
 		background.setFitWidth(screenWidth); // Fit background to screen width
 
 		// Delegate key handling to InputHandler
-		background.setOnKeyPressed(event -> inputHandler.handleKeyPress(event));
-		background.setOnKeyReleased(event -> inputHandler.handleKeyRelease(event));
+		background.setOnKeyPressed(inputHandler::handleKeyPress);
+		background.setOnKeyReleased(inputHandler::handleKeyRelease);
 
 		// Add the background to the root group
 		root.getChildren().add(background);
@@ -225,8 +224,12 @@ public abstract class LevelParent extends Observable implements Observer {
 	 */
 	private void initializeGameBackgroundMusic() {
 		try {
-			// Load the background music file
-			Media gameMusic = new Media(getClass().getResource("/com/example/demo/sounds/Background.mp3").toExternalForm());
+			// Load the background music file with null check
+			URL musicResource = getClass().getResource("/com/example/demo/sounds/Background.mp3");
+			if (musicResource == null) {
+				throw new IllegalArgumentException("Music resource not found.");
+			}
+			Media gameMusic = new Media(musicResource.toExternalForm());
 
 			// Create a MediaPlayer instance for the music
 			gameBackgroundMediaPlayer = new MediaPlayer(gameMusic);
@@ -238,10 +241,10 @@ public abstract class LevelParent extends Observable implements Observer {
 			gameBackgroundMediaPlayer.setVolume(0.6);
 		} catch (Exception e) {
 			// Log an error message if the music file cannot be loaded
-			System.err.println("Error loading game background music: " + e.getMessage());
-			e.printStackTrace();
+			Logger.getLogger(LevelParent.class.getName()).log(Level.SEVERE, "Error loading background music", e);
 		}
 	}
+
 
 	/**
 	 * Starts the game for the current level.
@@ -273,33 +276,16 @@ public abstract class LevelParent extends Observable implements Observer {
 	@Override
 	public void update(Object arg) {
 		// Check if the argument is an instance of GameStateManager.GameState
-		if (arg instanceof GameStateManager.GameState) {
-			// Cast the argument to the appropriate type
-			GameStateManager.GameState newState = (GameStateManager.GameState) arg;
-
-			// Handle the new game state with appropriate logic
+		if (arg instanceof GameStateManager.GameState newState) {
 			switch (newState) {
-				case PLAYING:
-					// Resume the game when the state is set to PLAYING
-					resumeGame();
-					break;
-				case PAUSED:
-					// Pause the game when the state is set to PAUSED
-					pauseGame();
-					break;
-				case GAME_OVER:
-					// Handle game over logic when the state is set to GAME_OVER
-					loseGame();
-					break;
-				case WIN:
-					// Handle win logic when the state is set to WIN
-					winGame();
-					break;
-				default:
-					// Log unhandled states to help with debugging
-					System.out.println("Unhandled game state: " + newState);
+				case PLAYING -> resumeGame();
+				case PAUSED -> pauseGame();
+				case GAME_OVER -> loseGame();
+				case WIN -> winGame();
+				default -> System.out.println("Unhandled game state: " + newState);
 			}
 		}
+
 	}
 
 	/**
@@ -343,17 +329,14 @@ public abstract class LevelParent extends Observable implements Observer {
 	 * @return The message to display for the level.
 	 */
 	private String getLevelMessage(String levelName) {
-		switch (levelName) {
-			case "Level 1":
-				return "Level 1: Kill all the enemies!";
-			case "Level 2":
-				return "Level 2: Kill the boss!";
-			case "Final Level":
-				return "Level 3: Kill all the enemies and the boss!";
-			default:
-				return levelName; // Default to the provided level name
-		}
+		return switch (levelName) {
+			case "Level 1" -> "Level 1: Kill all the enemies!";
+			case "Level 2" -> "Level 2: Kill the boss!";
+			case "Final Level" -> "Level 3: Kill all the enemies and the boss!";
+			default -> levelName; // Default to the provided level name
+		};
 	}
+
 
 	/**
 	 * Creates a styled {@link Text} object to display level information.
@@ -472,6 +455,8 @@ public abstract class LevelParent extends Observable implements Observer {
 		if (gameBackgroundMediaPlayer != null && !soundManager.isMusicMuted()) {
 			gameBackgroundMediaPlayer.play(); // Resume background music
 		}
+		setChanged(); // Mark LevelParent as changed
+		notifyObservers("RESUME_GAME"); // Notify observers of win
 
 		isPaused = false; // Update pause state
 		uiManager.getPauseButton().setVisible(true); // Show pause button
@@ -571,7 +556,7 @@ public abstract class LevelParent extends Observable implements Observer {
 	 * This includes spawning enemies, updating actors, handling collisions, and checking for game over.
 	 */
 	private void updateScene() {
-		if (!gameStateManager.isPlaying()) {
+		if (gameStateManager.isNotPlaying()) {
 			return; // Do not update if the game is not in PLAYING state
 		}
 
@@ -620,7 +605,7 @@ public abstract class LevelParent extends Observable implements Observer {
 	private void removeDestroyedActors(List<ActiveActorDestructible> actors) {
 		List<ActiveActorDestructible> destroyedActors = actors.stream()
 				.filter(ActiveActorDestructible::isDestroyed) // Filter destroyed actors
-				.collect(Collectors.toList());
+				.toList();
 
 		root.getChildren().removeAll(destroyedActors); // Remove destroyed actors from the scene
 		actors.removeAll(destroyedActors); // Remove destroyed actors from the list
@@ -664,24 +649,6 @@ public abstract class LevelParent extends Observable implements Observer {
 		projectileManager.addUserProjectile(projectile); // Add user projectile
 	}
 
-	/**
-	 * Adds an enemy unit to the scene and tracks it.
-	 *
-	 * @param enemy The enemy unit to add.
-	 */
-	protected void addEnemyUnit(ActiveActorDestructible enemy) {
-		enemyManager.addEnemy(enemy); // Add enemy to the scene and track it
-	}
-
-
-	/**
-	 * Adds a power-up to the scene and tracks it.
-	 *
-	 * @param powerUp The power-up to add.
-	 */
-	protected void addPowerUp(PowerUp powerUp) {
-		powerUpManager.addPowerUp(powerUp); // Add power-up to the scene and track it
-	}
 
 	/**
 	 * Generates projectiles fired by enemies.
@@ -728,14 +695,7 @@ public abstract class LevelParent extends Observable implements Observer {
 		return root;
 	}
 
-	/**
-	 * Gets the current number of active enemies in the level.
-	 *
-	 * @return The count of active enemies in the level.
-	 */
-	protected int getCurrentNumberOfEnemies() {
-		return enemyManager.getEnemyCount();
-	}
+
 
 	/**
 	 * Retrieves the maximum Y-coordinate position that enemies can reach before being considered out of bounds.
