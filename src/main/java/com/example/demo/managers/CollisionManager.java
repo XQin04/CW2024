@@ -76,7 +76,7 @@ public class CollisionManager {
     /**
      * Handles collisions between user projectiles and enemy units.
      * <p>
-     * Special collision logic is applied for {@link BossSpider} to account for its custom hitbox.
+     * Special collision logic is applied for {@link BossSpider} to account for its custom hit box.
      * </p>
      *
      * @param projectiles List of user projectiles.
@@ -125,7 +125,7 @@ public class CollisionManager {
         for (ActiveActorDestructible powerUp : powerUps) {
             if (powerUp.getBoundsInParent().intersects(user.getBoundsInParent())) {
                 if (powerUp instanceof SpreadshotPowerUp spreadshotPowerUp) {
-                    spreadshotPowerUp.activate(user); // Activate spreadshot power-up
+                    spreadshotPowerUp.activate(user); // Activate spread shot power-up
                 } else if (powerUp instanceof PowerUp genericPowerUp) {
                     genericPowerUp.activate(user); // Activate generic power-up
                 }

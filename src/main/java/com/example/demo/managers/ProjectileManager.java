@@ -6,7 +6,6 @@ import javafx.scene.Group;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Manages all projectiles in the game, including user and enemy projectiles.
@@ -20,8 +19,8 @@ public class ProjectileManager {
     // Singleton instance
     private static ProjectileManager instance;
 
-    private List<ActiveActorDestructible> userProjectiles; // Projectiles fired by the user
-    private List<ActiveActorDestructible> enemyProjectiles; // Projectiles fired by enemies
+    private final List<ActiveActorDestructible> userProjectiles; // Projectiles fired by the user
+    private final  List<ActiveActorDestructible> enemyProjectiles; // Projectiles fired by enemies
     private Group root; // Root group for rendering projectiles in the scene
 
     /**
@@ -103,7 +102,7 @@ public class ProjectileManager {
     private void removeDestroyed(List<ActiveActorDestructible> projectiles) {
         List<ActiveActorDestructible> destroyed = projectiles.stream()
                 .filter(ActiveActorDestructible::isDestroyed)
-                .collect(Collectors.toList());
+                .toList();
         if (root != null) {
             root.getChildren().removeAll(destroyed);
         }

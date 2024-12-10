@@ -126,9 +126,9 @@ public class BossSpider extends FighterSpider {
 	}
 
 	/**
-	 * Creates a custom hitbox for the BossSpider to allow more precise collision detection.
+	 * Creates a custom hit box for the BossSpider to allow more precise collision detection.
 	 *
-	 * @return Adjusted hitbox bounds.
+	 * @return Adjusted hit box bounds.
 	 */
 	public javafx.geometry.Bounds getCustomHitbox() {
 		javafx.geometry.Bounds originalBounds = super.getBoundsInParent();

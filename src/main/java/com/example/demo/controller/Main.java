@@ -5,6 +5,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Entry point for the Sky Battle game.
@@ -15,12 +17,11 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Main extends Application {
 
-	// Constants for the game's screen properties and title
 	private static final int SCREEN_WIDTH = 1300; // Default screen width
 	private static final int SCREEN_HEIGHT = 750; // Default screen height
 	private static final String TITLE = "Sky Battle"; // Title of the application
 
-	private Controller gameController; // Game controller to manage game flow
+	private static final Logger logger = Logger.getLogger(Main.class.getName()); // Logger instance
 
 	/**
 	 * Starts the JavaFX application and initializes the main menu.
@@ -67,7 +68,7 @@ public class Main extends Application {
 	 */
 	public void startGame(Stage stage) {
 		try {
-			gameController = new Controller(stage); // Initialize the game controller
+			Controller gameController = new Controller(stage); // Local variable
 			gameController.launchGame(); // Launch the game
 		} catch (Exception e) {
 			handleException(e); // Handle any exceptions that occur during initialization
@@ -76,13 +77,12 @@ public class Main extends Application {
 
 	/**
 	 * Handles exceptions that occur during game initialization.
-	 * Prints the stack trace for debugging purposes.
+	 * Logs the exception details for debugging purposes.
 	 *
 	 * @param e The exception to handle.
 	 */
 	private void handleException(Exception e) {
-		System.err.println("An error occurred while starting the game:");
-		e.printStackTrace(); // Print stack trace to the error stream
+		logger.log(Level.SEVERE, "An error occurred while starting the game", e); // Log exception
 	}
 
 	/**

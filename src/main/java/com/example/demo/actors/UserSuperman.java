@@ -11,7 +11,7 @@ import java.util.List;
  * Represents the player's character in the game, "UserSuperman."
  *
  * <p>The UserSuperman can move within defined screen boundaries, fire projectiles,
- * and use power-ups like spreadshot. It interacts with the game through its parent
+ * and use power-ups like spread shot. It interacts with the game through its parent
  * level, leveraging game managers for sound, projectiles, and interactions.</p>
  *
  * <p>This class extends {@link FighterSpider} to utilize health management
@@ -37,7 +37,7 @@ public class UserSuperman extends FighterSpider {
 
 	// Game-specific properties
 	private int numberOfKills = 0; // Number of kills by the player
-	private int spreadshotCount = 0; // Counter for spreadshot power-ups
+	private int spreadshotCount = 0; // Counter for spread shot power-ups
 
 	private final LevelParent levelParent; // Reference to the LevelParent for scene interactions
 
@@ -83,9 +83,9 @@ public class UserSuperman extends FighterSpider {
 	}
 
 	/**
-	 * Fires a projectile. If a spreadshot power-up is active, fires multiple projectiles.
+	 * Fires a projectile. If a spread shot power-up is active, fires multiple projectiles.
 	 *
-	 * @return The center projectile (or one of the spreadshot projectiles for compatibility).
+	 * @return The center projectile (or one of the spread shot projectiles for compatibility).
 	 */
 	@Override
 	public ActiveActorDestructible fireProjectile() {
@@ -97,12 +97,12 @@ public class UserSuperman extends FighterSpider {
 		ProjectileManager projectileManager = levelParent.getProjectileManager();
 
 		if (spreadshotCount > 0) {
-			// Create and add spreadshot projectiles
+			// Create and add spread shot projectiles
 			List<ActiveActorDestructible> spreadshotProjectiles = getSpreadshotProjectiles();
 			for (ActiveActorDestructible projectile : spreadshotProjectiles) {
 				projectileManager.addUserProjectile(projectile);
 			}
-			spreadshotCount--; // Decrease the spreadshot count
+			spreadshotCount--; // Decrease the spread shot count
 			return spreadshotProjectiles.get(spreadshotProjectiles.size() / 2); // Return center projectile
 		} else {
 			// Create and add a single projectile
@@ -113,16 +113,16 @@ public class UserSuperman extends FighterSpider {
 	}
 
 	/**
-	 * Activates a one-time spreadshot power-up, enabling the firing of multiple projectiles.
+	 * Activates a one-time spread shot power-up, enabling the firing of multiple projectiles.
 	 */
 	public void activateOneTimeSpreadshot() {
 		spreadshotCount++;
 	}
 
 	/**
-	 * Creates and returns a list of spreadshot projectiles.
+	 * Creates and returns a list of spread shot projectiles.
 	 *
-	 * @return A list of spreadshot projectiles fired in an arrow-like pattern.
+	 * @return A list of spread shot projectiles fired in an arrow-like pattern.
 	 */
 	public List<ActiveActorDestructible> getSpreadshotProjectiles() {
 		List<ActiveActorDestructible> projectiles = new ArrayList<>();
@@ -130,7 +130,7 @@ public class UserSuperman extends FighterSpider {
 		double currentX = getLayoutX() + getTranslateX();
 		double currentY = getLayoutY() + getTranslateY();
 
-		// Create spreadshot projectiles in an arrow-like pattern
+		// Create spread shot projectiles in an arrow-like pattern
 		projectiles.add(new UserProjectile(currentX + 75, currentY - 30)); // Left (Upwards)
 		projectiles.add(new UserProjectile(currentX + 85, currentY - 15)); // Slightly Left (Upwards)
 		projectiles.add(new UserProjectile(currentX + 100, currentY));     // Center (Straight)

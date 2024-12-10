@@ -32,6 +32,7 @@ public class LevelView {
 	private final GameOverImage gameOverImage; // "Game Over" image displayed when the level is lost
 	private final HeartDisplay heartDisplay; // Heart display for player's health
 
+
 	/**
 	 * Constructs a LevelView with the specified root group and number of hearts.
 	 *
@@ -71,18 +72,14 @@ public class LevelView {
 	 * Removes the "Win" image from the screen if it is currently displayed.
 	 */
 	public void removeWinImage() {
-		if (root.getChildren().contains(winImage)) {
-			root.getChildren().remove(winImage);
-		}
+		root.getChildren().remove(winImage);
 	}
 
 	/**
 	 * Removes the "Game Over" image from the screen if it is currently displayed.
 	 */
 	public void removeGameOverImage() {
-		if (root.getChildren().contains(gameOverImage)) {
-			root.getChildren().remove(gameOverImage);
-		}
+		root.getChildren().remove(gameOverImage);
 	}
 
 	/**

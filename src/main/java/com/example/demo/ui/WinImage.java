@@ -36,7 +36,12 @@ public class WinImage extends ImageView {
 	 */
 	public WinImage(double xPosition, double yPosition) {
 		// Load the "You Win" image from the resource path
-		this.setImage(new Image(getClass().getResource(IMAGE_NAME).toExternalForm()));
+		var resource = getClass().getResource(IMAGE_NAME);
+		if (resource == null) {
+			throw new IllegalArgumentException("Resource not found: " + IMAGE_NAME);
+		}
+
+		this.setImage(new Image(resource.toExternalForm()));
 
 		// Set initial properties
 		this.setVisible(false); // Initially hidden

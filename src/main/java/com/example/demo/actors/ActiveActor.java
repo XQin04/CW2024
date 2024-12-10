@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
  * capable of movement and position updates.
  *
  * <p>The {@code ActiveActor} class is designed to be extended by specific game actors
- * such as enemies, projectiles, or the player character. It uses JavaFX's {@link ImageView}
+ * such as enemies, projectiles, or the player character. It uses Java Fx {@link ImageView}
  * for rendering and supports basic movement functionality.</p>
  */
 public abstract class ActiveActor extends ImageView {
@@ -17,18 +17,31 @@ public abstract class ActiveActor extends ImageView {
 	private static final String IMAGE_LOCATION = "/com/example/demo/images/";
 
 	/**
-	 * Constructs an ActiveActor with the specified image, size, and initial position.
+	 * Constructs an {@code ActiveActor} with the specified image, size, and initial position.
+	 * This constructor loads the actor's image from the resources folder and initializes its position and size.
 	 *
-	 * @param imageName   Name of the image file for the actor (e.g., "player.png").
-	 * @param imageHeight Height of the image to be displayed, in pixels.
-	 * @param initialXPos Initial X-coordinate position of the actor on the screen.
-	 * @param initialYPos Initial Y-coordinate position of the actor on the screen.
+	 * @param imageName   The name of the image file for the actor (e.g., "player.png").
+	 * @param imageHeight The height of the image to be displayed, in pixels.
+	 * @param initialXPos The initial X-coordinate position of the actor on the screen.
+	 * @param initialYPos The initial Y-coordinate position of the actor on the screen.
 	 *
-	 * @throws NullPointerException if the image file cannot be found in the resources folder.
+	 * @throws IllegalArgumentException If the image resource cannot be found in the resources folder.
+	 *
+	 * <p><b>Example Usage:</b></p>
+	 * <pre>{@code
+	 * ActiveActor player = new PlayerActor("player.png", 50, 100, 200);
+	 * }</pre>
 	 */
 	public ActiveActor(String imageName, int imageHeight, double initialXPos, double initialYPos) {
 		// Load the image from the resources folder
-		this.setImage(new Image(getClass().getResource(IMAGE_LOCATION + imageName).toExternalForm()));
+		String resourcePath = IMAGE_LOCATION + imageName;
+		var resourceUrl = getClass().getResource(resourcePath);
+
+		if (resourceUrl == null) {
+			throw new IllegalArgumentException("Resource not found: " + resourcePath);
+		}
+
+		this.setImage(new Image(resourceUrl.toExternalForm()));
 
 		// Set the initial position and size
 		this.setLayoutX(initialXPos);
@@ -36,6 +49,7 @@ public abstract class ActiveActor extends ImageView {
 		this.setFitHeight(imageHeight);
 		this.setPreserveRatio(true);
 	}
+
 
 	/**
 	 * Updates the position of the actor.

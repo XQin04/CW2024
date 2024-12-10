@@ -29,7 +29,7 @@ public class PowerUp extends ActiveActorDestructible {
     }
 
     /**
-     * Updates the power-up's state on each frame.
+     * Updates the power up state on each frame.
      * <p>
      * This method makes the power-up fall down the screen
      * and destroys it if it moves out of the visible game bounds.
@@ -72,9 +72,9 @@ public class PowerUp extends ActiveActorDestructible {
      * @param user The {@link UserSuperman} instance collecting the power-up.
      */
     public void activate(UserSuperman user) {
-        // Check if this power-up is a spreadshot power-up and activate its effect
+        // Check if this power-up is a spread shot power-up and activate its effect
         if ("spreadshot.png".equals(getImage().getUrl())) { // Adjust with your actual image path
-            user.activateOneTimeSpreadshot(); // Grant spreadshot ability to the player
+            user.activateOneTimeSpreadshot(); // Grant spread shot ability to the player
         }
         destroy(); // Remove the power-up after activation
     }

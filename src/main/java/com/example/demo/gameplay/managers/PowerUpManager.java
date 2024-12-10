@@ -7,7 +7,6 @@ import javafx.scene.Group;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Manages all power-ups in the game, including spawning, updating, and handling collisions.
@@ -82,7 +81,7 @@ public class PowerUpManager {
         // Find all destroyed power-ups
         List<ActiveActorDestructible> destroyedPowerUps = powerUps.stream()
                 .filter(ActiveActorDestructible::isDestroyed)
-                .collect(Collectors.toList());
+                .toList(); // Replaced `collect(Collectors.toList())` with `toList()`
 
         if (root != null) {
             root.getChildren().removeAll(destroyedPowerUps); // Remove destroyed power-ups from the scene graph

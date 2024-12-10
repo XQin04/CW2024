@@ -5,7 +5,6 @@ import javafx.scene.Group;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Manages all enemy units in the game.
@@ -90,7 +89,7 @@ public class EnemyManager {
         // Collect destroyed enemies into a separate list
         List<ActiveActorDestructible> destroyed = enemyUnits.stream()
                 .filter(ActiveActorDestructible::isDestroyed)
-                .collect(Collectors.toList());
+                .toList();
 
         // Remove them from the scene graph
         if (root != null) {

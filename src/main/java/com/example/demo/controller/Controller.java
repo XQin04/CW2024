@@ -103,9 +103,7 @@ public class Controller implements Observer {
 	 */
 	@Override
 	public void update(Object arg) {
-		if (arg instanceof String) {
-			String message = (String) arg;
-
+		if (arg instanceof String message) {
 			switch (message) {
 				case "LOSE_GAME":
 					System.out.println("Game over. Showing end game menu.");
@@ -141,6 +139,7 @@ public class Controller implements Observer {
 			System.err.println("Unhandled update argument: " + arg);
 		}
 	}
+
 
 	/**
 	 * Displays an error alert with the exception details.

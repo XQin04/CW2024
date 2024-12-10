@@ -2,6 +2,8 @@ module com.example.demo {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;
+    requires java.logging;
+
 
     // Open packages required by JavaFX for reflection (e.g., FXML loaders)
     opens com.example.demo.controller to javafx.fxml;
@@ -15,6 +17,7 @@ module com.example.demo {
     exports com.example.demo.ui;
     exports com.example.demo.managers;
     exports com.example.demo.gameplay;
+    exports com.example.demo.gameplay.levels;
     exports com.example.demo.observer;
 
 }

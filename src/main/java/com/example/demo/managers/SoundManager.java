@@ -142,7 +142,7 @@ public class SoundManager {
     }
 
     /**
-     * Mutes or unmutes sound effects based on the specified parameter.
+     * Mutes or unmute sound effects based on the specified parameter.
      *
      * @param muted {@code true} to mute sound effects, {@code false} to unmute them.
      */
@@ -158,7 +158,7 @@ public class SoundManager {
     }
 
     /**
-     * Mutes or unmutes background music based on the specified parameter.
+     * Mutes or unmute background music based on the specified parameter.
      *
      * @param muted {@code true} to mute music, {@code false} to unmute it.
      */
