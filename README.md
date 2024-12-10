@@ -500,8 +500,25 @@ The boss projectile has been modified from a normal projectile to a spread web p
 - levelparent split into 7 classes:
 1. Power-Up Management
 2. UI manager
-3. Game State manager 
-4. Collision manager 
-5. Enemy manager 
-6. Input Handler 
+3. Game State manager
+4. Collision manager
+5. Enemy manager
+6. Input Handler
 7. Projectile Manager
+
+modified to utilize SRP class files from levelparent
+1. usersuperman
+2. level 1-3
+
+## Design patterns
+Summary of Affected Files
+1/GameStateManager (/Singleton, and /Observer for state changes).
+1/UIManager (/Singleton and /Observer for UI updates).
+1/LevelParent (/Observable for level events and health updates).
+
+1/EnemyManager (/Singleton and Factory for enemy creation).
+
+
+2/PowerUpManager (/Singleton).
+
+ProjectileManager (/Singleton).
