@@ -4,29 +4,37 @@ import com.example.demo.actors.UserSuperman;
 
 /**
  * Represents a spreadshot power-up in the game.
- * When collected by the user, it activates the spreadshot ability for a limited time or number of shots.
+ * <p>
+ * When collected by the player, this power-up activates the spreadshot ability,
+ * allowing the user to fire multiple projectiles in a spread pattern.
+ * </p>
  */
 public class SpreadshotPowerUp extends PowerUp {
 
-    private static final String SPREADSHOT_IMAGE = "spreadshot.png"; // Path to the spreadshot image
+    // Path to the image representing the spreadshot power-up
+    private static final String SPREADSHOT_IMAGE = "spreadshot.png";
 
     /**
-     * Constructor for creating a spreadshot power-up.
+     * Constructs a SpreadshotPowerUp instance with the specified initial position.
      *
-     * @param initialX The initial X-coordinate of the power-up.
-     * @param initialY The initial Y-coordinate of the power-up.
+     * @param initialX The initial X-coordinate where the power-up spawns.
+     * @param initialY The initial Y-coordinate where the power-up spawns.
      */
     public SpreadshotPowerUp(double initialX, double initialY) {
         super(SPREADSHOT_IMAGE, initialX, initialY);
     }
 
     /**
-     * Activates the spreadshot effect when collected by the user.
+     * Activates the spreadshot ability for the player when collected.
+     * <p>
+     * This method triggers the spreadshot mechanic, granting the user the ability
+     * to fire multiple projectiles in a single shot.
+     * </p>
      *
-     * @param user The user superman that collects the power-up.
+     * @param user The {@link UserSuperman} instance collecting the power-up.
      */
     @Override
     public void activate(UserSuperman user) {
-        user.activateOneTimeSpreadshot(); // Activates spreadshot for the user
+        user.activateOneTimeSpreadshot(); // Grant the spreadshot ability to the user
     }
 }

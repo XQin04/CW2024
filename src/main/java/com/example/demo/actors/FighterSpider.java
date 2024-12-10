@@ -2,7 +2,12 @@ package com.example.demo.actors;
 
 /**
  * Represents a fighter spider in the game, capable of firing projectiles and taking damage.
- * This class serves as a base for both player and enemy spider.
+ *
+ * <p>This abstract class serves as a base for both player and enemy spiders, providing
+ * common functionalities such as health management and projectile firing positions.</p>
+ *
+ * <p>Classes extending {@link FighterSpider} must implement the {@link #fireProjectile()} method
+ * to define their specific projectile firing behavior.</p>
  */
 public abstract class FighterSpider extends ActiveActorDestructible {
 
@@ -11,11 +16,11 @@ public abstract class FighterSpider extends ActiveActorDestructible {
 	/**
 	 * Constructs a FighterSpider with the specified image, size, position, and health.
 	 *
-	 * @param imageName   Name of the image file for the fighter spider.
-	 * @param imageHeight Height of the image to be displayed.
-	 * @param initialXPos Initial X position of the fighter spider.
-	 * @param initialYPos Initial Y position of the fighter spider.
-	 * @param health      Initial health of the fighter spider.
+	 * @param imageName   Name of the image file for the fighter spider (e.g., "player.png").
+	 * @param imageHeight Height of the image to be displayed, in pixels.
+	 * @param initialXPos Initial X-coordinate position of the spider.
+	 * @param initialYPos Initial Y-coordinate position of the spider.
+	 * @param health      Initial health of the spider.
 	 */
 	public FighterSpider(String imageName, int imageHeight, double initialXPos, double initialYPos, int health) {
 		super(imageName, imageHeight, initialXPos, initialYPos);
@@ -24,9 +29,8 @@ public abstract class FighterSpider extends ActiveActorDestructible {
 
 	/**
 	 * Fires a projectile from the fighter spider.
-	 * Subclasses must implement the specific behavior for firing projectiles.
 	 *
-	 * @return A new projectile if fired, otherwise null.
+	 * @return A new {@link ActiveActorDestructible} projectile if fired, otherwise null.
 	 */
 	public abstract ActiveActorDestructible fireProjectile();
 
@@ -45,7 +49,7 @@ public abstract class FighterSpider extends ActiveActorDestructible {
 	 * Calculates the X position from which a projectile will be fired.
 	 *
 	 * @param xPositionOffset Offset to adjust the firing position.
-	 * @return The X position for the projectile.
+	 * @return The X-coordinate for the projectile.
 	 */
 	protected double getProjectileXPosition(double xPositionOffset) {
 		return getLayoutX() + getTranslateX() + xPositionOffset;
@@ -55,7 +59,7 @@ public abstract class FighterSpider extends ActiveActorDestructible {
 	 * Calculates the Y position from which a projectile will be fired.
 	 *
 	 * @param yPositionOffset Offset to adjust the firing position.
-	 * @return The Y position for the projectile.
+	 * @return The Y-coordinate for the projectile.
 	 */
 	protected double getProjectileYPosition(double yPositionOffset) {
 		return getLayoutY() + getTranslateY() + yPositionOffset;
@@ -64,7 +68,7 @@ public abstract class FighterSpider extends ActiveActorDestructible {
 	/**
 	 * Checks if the fighter spider's health is zero.
 	 *
-	 * @return True if health is zero, otherwise false.
+	 * @return True if health is zero or below, otherwise false.
 	 */
 	private boolean isHealthAtZero() {
 		return health <= 0;

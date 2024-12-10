@@ -4,7 +4,10 @@ import com.example.demo.projectiles.EnemyProjectile;
 
 /**
  * Represents an enemy spider in the game.
- * Handles movement, projectile firing, and interactions with other game entities.
+ *
+ * <p>The EnemySpider moves horizontally across the screen and can fire projectiles
+ * with a defined probability. This class extends {@link FighterSpider} to reuse
+ * functionality for health management and interactions.</p>
  */
 public class EnemySpider extends FighterSpider {
 
@@ -38,7 +41,7 @@ public class EnemySpider extends FighterSpider {
 	/**
 	 * Fires a projectile from the enemy spider, with a small probability defined by FIRE_RATE.
 	 *
-	 * @return An EnemyProjectile if fired, otherwise null.
+	 * @return An {@link EnemyProjectile} if fired, otherwise null.
 	 */
 	@Override
 	public ActiveActorDestructible fireProjectile() {

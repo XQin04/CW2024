@@ -12,11 +12,14 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * Handles the overall control of the game, including level transitions and game launch.
+ *
+ * <p>This class implements the Observer pattern to listen for updates from game levels
+ * and manage transitions between levels dynamically using reflection.</p>
  */
 public class Controller implements Observer {
 
-	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.gameplay.levels.LevelOne";
-	private final Stage stage;
+	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.gameplay.levels.LevelOne"; // Default first level
+	private final Stage stage; // Primary stage for the application
 
 	/**
 	 * Constructs a Controller for managing game levels and stages.
@@ -38,8 +41,8 @@ public class Controller implements Observer {
 	 */
 	public void launchGame() throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
-		stage.show();
-		goToLevel(LEVEL_ONE_CLASS_NAME);
+		stage.show(); // Make the primary stage visible
+		goToLevel(LEVEL_ONE_CLASS_NAME); // Transition to the first level
 	}
 
 	/**
@@ -55,15 +58,23 @@ public class Controller implements Observer {
 	private void goToLevel(String className) throws ClassNotFoundException, NoSuchMethodException,
 			InstantiationException, IllegalAccessException, InvocationTargetException {
 
+		// Load the level class dynamically
 		Class<?> levelClass = Class.forName(className);
-		String levelName = getLevelName(className);
+		String levelName = getLevelName(className); // Determine a user-friendly name for the level
 
+		// Retrieve the constructor that matches the expected parameters
 		Constructor<?> constructor = levelClass.getConstructor(double.class, double.class, Stage.class);
-		LevelParent level = (LevelParent) constructor.newInstance(stage.getHeight(), stage.getWidth(), stage);
-		level.addObserver(this); // Correctly register this as an Observer
 
+		// Create an instance of the level
+		LevelParent level = (LevelParent) constructor.newInstance(stage.getHeight(), stage.getWidth(), stage);
+
+		level.addObserver(this); // Register this controller as an Observer
+
+		// Initialize the level's scene and set it to the stage
 		Scene scene = level.initializeScene(stage);
 		stage.setScene(scene);
+
+		// Start the level's gameplay
 		level.startGame(levelName);
 	}
 
@@ -86,9 +97,9 @@ public class Controller implements Observer {
 	}
 
 	/**
-	 * Receives updates from levels and transitions to the next level.
+	 * Receives updates from levels and handles transitions or other game state changes.
 	 *
-	 * @param arg The argument passed by the observable, expected to be the next level's class name.
+	 * @param arg The argument passed by the observable, expected to be the next level's class name or a game state.
 	 */
 	@Override
 	public void update(Object arg) {
@@ -98,22 +109,22 @@ public class Controller implements Observer {
 			switch (message) {
 				case "LOSE_GAME":
 					System.out.println("Game over. Showing end game menu.");
-					// Handle game over logic here if needed
+					// Handle game over logic, e.g., display an end game screen
 					break;
 
 				case "WIN_GAME":
 					System.out.println("Game won. Showing win screen.");
-					// Handle game win logic here if needed
+					// Handle game win logic, e.g., display a victory screen
 					break;
 
 				case "TOGGLE_PAUSE":
 					System.out.println("Game paused.");
-					// Handle pause or resume logic here if needed
+					// Handle pause-related logic if needed
 					break;
 
 				case "RESUME_GAME":
 					System.out.println("Game resumed.");
-					// Handle game resume logic here if needed
+					// Handle resume-related logic if needed
 					break;
 
 				default:
@@ -131,7 +142,6 @@ public class Controller implements Observer {
 		}
 	}
 
-
 	/**
 	 * Displays an error alert with the exception details.
 	 *
@@ -143,9 +153,7 @@ public class Controller implements Observer {
 			alert.setTitle("Error");
 			alert.setHeaderText("An error occurred while transitioning levels.");
 			alert.setContentText(e.getMessage());
-			alert.show(); // Use show() instead of showAndWait()
+			alert.show(); // Display the error alert to the user
 		});
 	}
-
 }
-

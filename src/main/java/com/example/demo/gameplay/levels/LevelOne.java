@@ -6,16 +6,20 @@ import javafx.stage.Stage;
 
 /**
  * Represents the first level of the game.
- * Handles enemy spawning, game state checks, and transitions to the next level.
+ *
+ * <p>This class defines the specific behavior for Level One, including:
+ * - Initialization of the level's background and player.
+ * - Spawning enemy units in cycles.
+ * - Checking for game over conditions and transitioning to the next level.</p>
  */
 public class LevelOne extends LevelParent {
 
 	// Constants for level configuration
-	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg";
-	private static final String NEXT_LEVEL = "com.example.demo.gameplay.levels.LevelTwo";
-	private static final int TOTAL_ENEMIES_PER_CYCLE = 5;
-	private static final int TOTAL_SPAWN_CYCLES = 3;
-	private static final int PLAYER_INITIAL_HEALTH = 5;
+	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg"; // Background image path
+	private static final String NEXT_LEVEL = "com.example.demo.gameplay.levels.LevelTwo"; // Class name of the next level
+	private static final int TOTAL_ENEMIES_PER_CYCLE = 5; // Number of enemies spawned per cycle
+	private static final int TOTAL_SPAWN_CYCLES = 3; // Total number of spawn cycles for this level
+	private static final int PLAYER_INITIAL_HEALTH = 5; // Initial health of the player
 
 	// Tracks the number of completed enemy spawn cycles
 	private int spawnCyclesCompleted = 0;
@@ -33,18 +37,23 @@ public class LevelOne extends LevelParent {
 
 	/**
 	 * Checks if the game is over or if the player should proceed to the next level.
+	 *
+	 * <p>Conditions:
+	 * - The game ends if the player's health reaches zero.
+	 * - The level transitions to the next if all enemies are defeated and all spawn cycles are completed.</p>
 	 */
 	@Override
 	protected void checkIfGameOver() {
 		if (userIsDestroyed()) {
-			loseGame();
+			loseGame(); // Handle game over scenario
 		} else if (enemyManager.getEnemyCount() == 0 && spawnCyclesCompleted >= TOTAL_SPAWN_CYCLES) {
-			goToNextLevel(NEXT_LEVEL);
+			goToNextLevel(NEXT_LEVEL); // Transition to the next level
 		}
 	}
 
 	/**
 	 * Initializes friendly units (e.g., player's superman) at the start of the level.
+	 * <p>Adds the player's character to the scene graph.</p>
 	 */
 	@Override
 	protected void initializeFriendlyUnits() {
@@ -53,23 +62,27 @@ public class LevelOne extends LevelParent {
 
 	/**
 	 * Spawns enemy units if the spawn cycle is incomplete and no enemies remain.
+	 *
+	 * <p>Behavior:
+	 * - Spawns a fixed number of enemies per cycle.
+	 * - Ensures that enemies are spawned only if all previous enemies are defeated.</p>
 	 */
 	@Override
 	protected void spawnEnemyUnits() {
 		if (spawnCyclesCompleted < TOTAL_SPAWN_CYCLES && enemyManager.getEnemyCount() == 0) {
 			for (int i = 0; i < TOTAL_ENEMIES_PER_CYCLE; i++) {
-				double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition();
+				double newEnemyInitialYPosition = Math.random() * getEnemyMaximumYPosition(); // Random Y position
 				EnemySpider newEnemy = new EnemySpider(getScreenWidth(), newEnemyInitialYPosition);
-				enemyManager.addEnemy(newEnemy); // Delegate enemy addition to EnemyManager
+				enemyManager.addEnemy(newEnemy); // Add the new enemy to the game
 			}
-			spawnCyclesCompleted++;
+			spawnCyclesCompleted++; // Increment the spawn cycle count
 		}
 	}
 
 	/**
 	 * Creates and returns the view for this level.
 	 *
-	 * @return The level view for Level One.
+	 * @return The level view for Level One, which includes the player's health display.
 	 */
 	@Override
 	protected LevelView instantiateLevelView() {

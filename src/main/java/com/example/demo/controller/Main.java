@@ -8,16 +8,19 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * Entry point for the Sky Battle game.
- * Initializes the main menu and allows launching the game.
+ * <p>
+ * This class initializes the JavaFX application, sets up the main menu,
+ * and provides functionality to launch the game.
+ * </p>
  */
 public class Main extends Application {
 
 	// Constants for the game's screen properties and title
-	private static final int SCREEN_WIDTH = 1300;
-	private static final int SCREEN_HEIGHT = 750;
-	private static final String TITLE = "Sky Battle";
+	private static final int SCREEN_WIDTH = 1300; // Default screen width
+	private static final int SCREEN_HEIGHT = 750; // Default screen height
+	private static final String TITLE = "Sky Battle"; // Title of the application
 
-	private Controller gameController;
+	private Controller gameController; // Game controller to manage game flow
 
 	/**
 	 * Starts the JavaFX application and initializes the main menu.
@@ -32,55 +35,65 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
-		configureStage(stage);
+		configureStage(stage); // Configure the primary stage
 
 		// Initialize and start the main menu
 		MainMenu menu = new MainMenu();
-		menu.start(stage, this);
+		menu.start(stage, this); // Pass the stage and the main application reference to the menu
 	}
 
 	/**
 	 * Configures the main application stage with default properties.
+	 * Sets the stage's title, size, and ensures it is not resizable.
 	 *
 	 * @param stage The primary stage to configure.
 	 */
 	private void configureStage(Stage stage) {
-		stage.setTitle(TITLE);
-		stage.setResizable(false);
-		stage.setWidth(SCREEN_WIDTH);
-		stage.setHeight(SCREEN_HEIGHT);
+		stage.setTitle(TITLE); // Set the window title
+		stage.setResizable(false); // Disable resizing
+		stage.setWidth(SCREEN_WIDTH); // Set the default width
+		stage.setHeight(SCREEN_HEIGHT); // Set the default height
 	}
 
 	/**
 	 * Launches the game from the main menu.
 	 *
+	 * <p>
+	 * This method initializes the game controller and starts the game
+	 * by transitioning to the first level.
+	 * </p>
+	 *
 	 * @param stage The primary stage where the game will be displayed.
 	 */
 	public void startGame(Stage stage) {
 		try {
-			gameController = new Controller(stage);
-			gameController.launchGame();
+			gameController = new Controller(stage); // Initialize the game controller
+			gameController.launchGame(); // Launch the game
 		} catch (Exception e) {
-			handleException(e);
+			handleException(e); // Handle any exceptions that occur during initialization
 		}
 	}
 
 	/**
 	 * Handles exceptions that occur during game initialization.
+	 * Prints the stack trace for debugging purposes.
 	 *
 	 * @param e The exception to handle.
 	 */
 	private void handleException(Exception e) {
 		System.err.println("An error occurred while starting the game:");
-		e.printStackTrace();
+		e.printStackTrace(); // Print stack trace to the error stream
 	}
 
 	/**
 	 * Main entry point for the Java application.
+	 * <p>
+	 * This method launches the JavaFX application.
+	 * </p>
 	 *
 	 * @param args Command-line arguments (not used).
 	 */
 	public static void main(String[] args) {
-		launch();
+		launch(); // Launch the JavaFX application
 	}
 }

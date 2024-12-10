@@ -12,7 +12,11 @@ import java.util.List;
 
 /**
  * Represents the BossSpider enemy in the game.
- * Handles movement, firing projectiles, shield activation, and interactions with other entities.
+ *
+ * <p>The BossSpider is a powerful enemy with unique behaviors, such as firing projectiles,
+ * activating shields, and following a predefined movement pattern. This class
+ * extends {@link FighterSpider} to reuse base functionality while adding
+ * boss-specific features.</p>
  */
 public class BossSpider extends FighterSpider {
 
@@ -66,6 +70,7 @@ public class BossSpider extends FighterSpider {
 
 	/**
 	 * Updates the position of the BossSpider based on its movement pattern and boundaries.
+	 * Ensures the spider stays within the screen limits.
 	 */
 	@Override
 	public void updatePosition() {
@@ -89,7 +94,7 @@ public class BossSpider extends FighterSpider {
 	}
 
 	/**
-	 * Updates the state of the BossSpider, including position and shield status.
+	 * Updates the state of the BossSpider, including its position and shield status.
 	 */
 	@Override
 	public void updateActor() {
@@ -100,7 +105,7 @@ public class BossSpider extends FighterSpider {
 	/**
 	 * Fires a projectile from the BossSpider with a predefined probability.
 	 *
-	 * @return A BossProjectile if fired, otherwise null.
+	 * @return A {@link BossProjectile} if fired, otherwise null.
 	 */
 	@Override
 	public ActiveActorDestructible fireProjectile() {
@@ -111,7 +116,7 @@ public class BossSpider extends FighterSpider {
 	}
 
 	/**
-	 * Handles damage taken by the BossSpider. Damage is ignored if shielded.
+	 * Handles damage taken by the BossSpider. Damage is ignored if the shield is active.
 	 */
 	@Override
 	public void takeDamage() {
@@ -139,6 +144,7 @@ public class BossSpider extends FighterSpider {
 
 	/**
 	 * Initializes the movement pattern for the BossSpider.
+	 * The pattern alternates between moving up, down, and staying still.
 	 */
 	private void initializeMovePattern() {
 		for (int i = 0; i < MOVE_FREQUENCY_PER_CYCLE; i++) {
@@ -151,6 +157,7 @@ public class BossSpider extends FighterSpider {
 
 	/**
 	 * Updates the shield's activation status and visual effects.
+	 * Activates or deactivates the shield based on predefined conditions.
 	 */
 	private void updateShield() {
 		if (isShielded) {
@@ -166,7 +173,7 @@ public class BossSpider extends FighterSpider {
 	/**
 	 * Determines the next move in the movement pattern.
 	 *
-	 * @return The next vertical velocity.
+	 * @return The next vertical velocity for movement.
 	 */
 	private int getNextMove() {
 		int currentMove = movePattern.get(indexOfCurrentMove);
@@ -194,7 +201,7 @@ public class BossSpider extends FighterSpider {
 	/**
 	 * Calculates the initial position for a projectile fired by the BossSpider.
 	 *
-	 * @return The Y-coordinate for the projectile.
+	 * @return The Y-coordinate for the projectile's initial position.
 	 */
 	private double getProjectileInitialPosition() {
 		return getLayoutY() + getTranslateY() + PROJECTILE_Y_POSITION_OFFSET;
@@ -210,7 +217,7 @@ public class BossSpider extends FighterSpider {
 	}
 
 	/**
-	 * Activates the shield, applying visual effects and notifying the user.
+	 * Activates the shield, applying visual effects and notifying the player.
 	 */
 	private void activateShield() {
 		isShielded = true;

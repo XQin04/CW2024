@@ -4,74 +4,87 @@ import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.actors.UserSuperman;
 
 /**
- * Represents a power-up item in the game.
- * Power-ups provide special abilities or boosts when collected by the user.
+ * Represents a collectible power-up item in the game.
+ * <p>
+ * Power-ups provide temporary abilities or boosts to the player
+ * when collected. This class defines the basic behavior and
+ * interactions for power-up items.
+ * </p>
  */
 public class PowerUp extends ActiveActorDestructible {
 
-    private static final int IMAGE_HEIGHT = 40;
-    private static final double FALL_SPEED = 3.0; // Speed at which the power-up falls
+    // Constants for power-up properties
+    private static final int IMAGE_HEIGHT = 40;      // Height of the power-up image
+    private static final double FALL_SPEED = 3.0;   // Vertical falling speed of the power-up
 
     /**
-     * Constructor for creating a power-up.
+     * Constructs a PowerUp instance with the specified image and initial position.
      *
-     * @param imageName The name of the image file representing the power-up.
-     * @param initialX  The initial X-coordinate of the power-up.
-     * @param initialY  The initial Y-coordinate of the power-up.
+     * @param imageName The file name of the image representing the power-up.
+     * @param initialX  The initial X-coordinate where the power-up spawns.
+     * @param initialY  The initial Y-coordinate where the power-up spawns.
      */
     public PowerUp(String imageName, double initialX, double initialY) {
         super(imageName, IMAGE_HEIGHT, initialX, initialY);
     }
 
     /**
-     * Updates the actor's behavior on each frame.
-     * Moves the power-up downwards and destroys it if it falls below the screen.
+     * Updates the power-up's state on each frame.
+     * <p>
+     * This method makes the power-up fall down the screen
+     * and destroys it if it moves out of the visible game bounds.
+     * </p>
      */
     @Override
     public void updateActor() {
-        moveVertically(FALL_SPEED); // Power-up falls slowly
+        moveVertically(FALL_SPEED); // Make the power-up fall
         if (isOutOfBounds()) {
-            destroy();
+            destroy(); // Remove the power-up if it falls out of bounds
         }
     }
 
     /**
-     * Updates the position of the power-up, making it fall downwards.
+     * Updates the position of the power-up.
+     * <p>
+     * This method moves the power-up vertically downward
+     * at a constant rate defined by {@link #FALL_SPEED}.
+     * </p>
      */
     @Override
     public void updatePosition() {
-        moveVertically(FALL_SPEED); // Moves down at a constant rate
+        moveVertically(FALL_SPEED); // Move the power-up down the screen
     }
 
     /**
-     * Handles what happens when the power-up "takes damage."
-     * By default, it destroys the power-up.
+     * Handles damage logic for the power-up.
+     * <p>
+     * By default, this destroys the power-up, simulating its removal from the game.
+     * </p>
      */
     @Override
     public void takeDamage() {
-        destroy(); // Simply destroy the power-up if it "takes damage"
+        destroy(); // Destroy the power-up when it "takes damage"
     }
 
     /**
-     * Activates the effect of the power-up when collected by the user.
+     * Activates the effect of the power-up upon collection by the player.
      *
-     * @param user The user superman that collects the power-up.
+     * @param user The {@link UserSuperman} instance collecting the power-up.
      */
     public void activate(UserSuperman user) {
-        // Check if the power-up is a spreadshot and apply its effect
-        if ("spreadshot.png".equals(getImage().getUrl())) { // Replace with your spreadshot image path
-            user.activateOneTimeSpreadshot(); // Activate the spreadshot power-up
+        // Check if this power-up is a spreadshot power-up and activate its effect
+        if ("spreadshot.png".equals(getImage().getUrl())) { // Adjust with your actual image path
+            user.activateOneTimeSpreadshot(); // Grant spreadshot ability to the player
         }
-
         destroy(); // Remove the power-up after activation
     }
 
     /**
-     * Checks if the power-up has fallen out of bounds.
+     * Determines if the power-up has moved out of the visible game area.
      *
-     * @return True if the power-up is below the screen; otherwise, false.
+     * @return True if the power-up has fallen below the screen; otherwise, false.
      */
     private boolean isOutOfBounds() {
-        return getTranslateY() > 650;
+        return getTranslateY() > 650; // Replace 650 with your game's screen height limit if needed
     }
 }

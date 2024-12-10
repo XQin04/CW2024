@@ -2,7 +2,9 @@ package com.example.demo.actors;
 
 /**
  * Represents an active actor in the game that can be destroyed.
- * This abstract class extends ActiveActor and implements the Destructible interface.
+ *
+ * <p>This abstract class extends {@link ActiveActor} and implements the {@link Destructible}
+ * interface, combining movement and destruction capabilities for game entities.</p>
  */
 public abstract class ActiveActorDestructible extends ActiveActor implements Destructible {
 
@@ -11,10 +13,10 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 	/**
 	 * Constructs an ActiveActorDestructible with the specified image, size, and initial position.
 	 *
-	 * @param imageName   Name of the image file for the actor.
-	 * @param imageHeight Height of the image to be displayed.
-	 * @param initialXPos Initial X position of the actor.
-	 * @param initialYPos Initial Y position of the actor.
+	 * @param imageName   Name of the image file for the actor (e.g., "enemy.png").
+	 * @param imageHeight Height of the image to be displayed, in pixels.
+	 * @param initialXPos Initial X-coordinate position of the actor on the screen.
+	 * @param initialYPos Initial Y-coordinate position of the actor on the screen.
 	 */
 	public ActiveActorDestructible(String imageName, int imageHeight, double initialXPos, double initialYPos) {
 		super(imageName, imageHeight, initialXPos, initialYPos);
@@ -22,19 +24,18 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 	}
 
 	/**
-	 * Updates the position of the actor. Subclasses must define specific behavior.
+	 * Updates the position of the actor.
 	 */
 	@Override
 	public abstract void updatePosition();
 
 	/**
 	 * Updates the actor's state, including position, interactions, or effects.
-	 * Subclasses must implement this to define behavior.
 	 */
 	public abstract void updateActor();
 
 	/**
-	 * Handles damage logic for the actor. Subclasses must implement specific damage behavior.
+	 * Handles damage logic for the actor.
 	 */
 	@Override
 	public abstract void takeDamage();

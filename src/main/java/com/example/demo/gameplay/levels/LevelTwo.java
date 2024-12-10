@@ -9,17 +9,19 @@ import javafx.stage.Stage;
 
 /**
  * Represents the second level of the game.
- * Introduces a BossSpider enemy with shield mechanics and transitions to the next level upon completion.
+ *
+ * <p>This level introduces the BossSpider, a challenging enemy with shield mechanics.
+ * The player must defeat the boss to proceed to the next level.</p>
  */
 public class LevelTwo extends LevelParent {
 
 	// Constants for level configuration
-	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png";
-	private static final int PLAYER_INITIAL_HEALTH = 5;
-	private static final String NEXT_LEVEL = "com.example.demo.gameplay.levels.LevelThree";
+	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png"; // Path to background image
+	private static final int PLAYER_INITIAL_HEALTH = 5; // Initial health of the player
+	private static final String NEXT_LEVEL = "com.example.demo.gameplay.levels.LevelThree"; // Class name of the next level
 
 	private final BossSpider boss; // Reference to the boss enemy
-	private final Label shieldAlert; // Label for displaying shield alerts
+	private final Label shieldAlert; // Label for displaying shield activation messages
 
 	/**
 	 * Constructs the second level with the specified screen dimensions and stage.
@@ -40,7 +42,9 @@ public class LevelTwo extends LevelParent {
 	}
 
 	/**
-	 * Adds the user's superman to the level.
+	 * Adds the user's superman character to the level.
+	 * <p>This method is called during level initialization to ensure the player's character
+	 * is present on the screen.</p>
 	 */
 	@Override
 	protected void initializeFriendlyUnits() {
@@ -48,31 +52,36 @@ public class LevelTwo extends LevelParent {
 	}
 
 	/**
-	 * Checks if the game is over based on the state of the player and boss.
+	 * Checks if the game is over or if the player has completed the level.
+	 *
+	 * <p>Conditions:
+	 * - The game ends if the player's health reaches zero.
+	 * - The level transitions to the next if the boss is defeated.</p>
 	 */
 	@Override
 	protected void checkIfGameOver() {
 		if (userIsDestroyed()) {
-			loseGame(); // Player loses
+			loseGame(); // Trigger game over logic
 		} else if (boss.isDestroyed()) {
-			goToNextLevel(NEXT_LEVEL); // Player wins and proceeds to the next level
+			goToNextLevel(NEXT_LEVEL); // Transition to the next level
 		}
 	}
 
 	/**
-	 * Spawns enemy units for the level. Adds the boss if no enemies are currently present.
+	 * Spawns enemy units for the level.
+	 * <p>If no enemies are currently present, the boss is added to the level.</p>
 	 */
 	@Override
 	protected void spawnEnemyUnits() {
 		if (enemyManager.getEnemyCount() == 0) {
-			enemyManager.addEnemy(boss); // Use EnemyManager to ensure the boss is managed properly
+			enemyManager.addEnemy(boss); // Add the boss using EnemyManager
 		}
 	}
 
 	/**
 	 * Instantiates the view for this level.
 	 *
-	 * @return A generic LevelView for Level Two.
+	 * @return A LevelView object that includes the player's health display.
 	 */
 	@Override
 	protected LevelView instantiateLevelView() {
@@ -80,17 +89,17 @@ public class LevelTwo extends LevelParent {
 	}
 
 	/**
-	 * Creates and configures a Label for displaying shield alerts.
+	 * Creates and configures a Label for displaying shield activation messages.
 	 *
-	 * @return A configured Label object.
+	 * @return A configured Label object with font, color, and layout settings.
 	 */
 	private Label createShieldAlert() {
 		Label label = new Label();
-		label.setFont(new Font("Arial", 24));
-		label.setTextFill(Color.RED);
-		label.setLayoutX(500); // Adjust X position as needed
-		label.setLayoutY(50);  // Adjust Y position as needed
-		label.setVisible(false); // Initially hidden
+		label.setFont(new Font("Arial", 24)); // Set font size and style
+		label.setTextFill(Color.RED); // Set text color
+		label.setLayoutX(500); // Position the label on the X-axis
+		label.setLayoutY(50);  // Position the label on the Y-axis
+		label.setVisible(false); // Hide the label initially
 		return label;
 	}
 }

@@ -8,8 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the user's superman in the game, capable of moving,
- * firing projectiles, and collecting power-ups like spreadshot.
+ * Represents the player's character in the game, "UserSuperman."
+ *
+ * <p>The UserSuperman can move within defined screen boundaries, fire projectiles,
+ * and use power-ups like spreadshot. It interacts with the game through its parent
+ * level, leveraging game managers for sound, projectiles, and interactions.</p>
+ *
+ * <p>This class extends {@link FighterSpider} to utilize health management
+ * and interaction capabilities.</p>
  */
 public class UserSuperman extends FighterSpider {
 
@@ -30,7 +36,7 @@ public class UserSuperman extends FighterSpider {
 	private int horizontalVelocityMultiplier = 0;
 
 	// Game-specific properties
-	private int numberOfKills = 0;
+	private int numberOfKills = 0; // Number of kills by the player
 	private int spreadshotCount = 0; // Counter for spreadshot power-ups
 
 	private final LevelParent levelParent; // Reference to the LevelParent for scene interactions
@@ -79,7 +85,7 @@ public class UserSuperman extends FighterSpider {
 	/**
 	 * Fires a projectile. If a spreadshot power-up is active, fires multiple projectiles.
 	 *
-	 * @return The center projectile or one of the spreadshot projectiles for compatibility.
+	 * @return The center projectile (or one of the spreadshot projectiles for compatibility).
 	 */
 	@Override
 	public ActiveActorDestructible fireProjectile() {
@@ -88,26 +94,26 @@ public class UserSuperman extends FighterSpider {
 		double currentX = getLayoutX() + getTranslateX();
 		double currentY = getLayoutY() + getTranslateY();
 
-		ProjectileManager projectileManager = levelParent.getProjectileManager(); // Access ProjectileManager
+		ProjectileManager projectileManager = levelParent.getProjectileManager();
 
 		if (spreadshotCount > 0) {
 			// Create and add spreadshot projectiles
 			List<ActiveActorDestructible> spreadshotProjectiles = getSpreadshotProjectiles();
 			for (ActiveActorDestructible projectile : spreadshotProjectiles) {
-				projectileManager.addUserProjectile(projectile); // Use ProjectileManager
+				projectileManager.addUserProjectile(projectile);
 			}
 			spreadshotCount--; // Decrease the spreadshot count
 			return spreadshotProjectiles.get(spreadshotProjectiles.size() / 2); // Return center projectile
 		} else {
 			// Create and add a single projectile
 			ActiveActorDestructible projectile = new UserProjectile(currentX + 100, currentY);
-			projectileManager.addUserProjectile(projectile); // Use ProjectileManager
+			projectileManager.addUserProjectile(projectile);
 			return projectile;
 		}
 	}
 
 	/**
-	 * Activates a one-time spreadshot power-up.
+	 * Activates a one-time spreadshot power-up, enabling the firing of multiple projectiles.
 	 */
 	public void activateOneTimeSpreadshot() {
 		spreadshotCount++;
@@ -116,7 +122,7 @@ public class UserSuperman extends FighterSpider {
 	/**
 	 * Creates and returns a list of spreadshot projectiles.
 	 *
-	 * @return A list of spreadshot projectiles.
+	 * @return A list of spreadshot projectiles fired in an arrow-like pattern.
 	 */
 	public List<ActiveActorDestructible> getSpreadshotProjectiles() {
 		List<ActiveActorDestructible> projectiles = new ArrayList<>();
@@ -127,13 +133,12 @@ public class UserSuperman extends FighterSpider {
 		// Create spreadshot projectiles in an arrow-like pattern
 		projectiles.add(new UserProjectile(currentX + 75, currentY - 30)); // Left (Upwards)
 		projectiles.add(new UserProjectile(currentX + 85, currentY - 15)); // Slightly Left (Upwards)
-		projectiles.add(new UserProjectile(currentX + 100, currentY));      // Center (Straight)
+		projectiles.add(new UserProjectile(currentX + 100, currentY));     // Center (Straight)
 		projectiles.add(new UserProjectile(currentX + 85, currentY + 15)); // Slightly Right (Downwards)
 		projectiles.add(new UserProjectile(currentX + 75, currentY + 30)); // Right (Downwards)
 
 		return projectiles;
 	}
-
 
 	/**
 	 * Checks if the user's superman is moving vertically.
@@ -154,30 +159,52 @@ public class UserSuperman extends FighterSpider {
 	}
 
 	// Movement controls
+
+	/**
+	 * Starts moving the user's superman upward.
+	 */
 	public void moveUp() {
 		verticalVelocityMultiplier = -1;
 	}
 
+	/**
+	 * Starts moving the user's superman downward.
+	 */
 	public void moveDown() {
 		verticalVelocityMultiplier = 1;
 	}
 
+	/**
+	 * Starts moving the user's superman to the left.
+	 */
 	public void moveLeft() {
 		horizontalVelocityMultiplier = -1;
 	}
 
+	/**
+	 * Starts moving the user's superman to the right.
+	 */
 	public void moveRight() {
 		horizontalVelocityMultiplier = 1;
 	}
 
+	/**
+	 * Stops the vertical movement of the user's superman.
+	 */
 	public void stopVertical() {
 		verticalVelocityMultiplier = 0;
 	}
 
+	/**
+	 * Stops the horizontal movement of the user's superman.
+	 */
 	public void stopHorizontal() {
 		horizontalVelocityMultiplier = 0;
 	}
 
+	/**
+	 * Increments the kill count for the user's superman.
+	 */
 	public void incrementKillCount() {
 		numberOfKills++;
 	}

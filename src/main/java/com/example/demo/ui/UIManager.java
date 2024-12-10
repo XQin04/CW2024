@@ -9,19 +9,25 @@ import com.example.demo.observer.Observer;
 
 /**
  * Manages UI elements like menus and buttons for the game level.
- * Implements Observer to respond to changes in LevelParent.
+ * Implements Observer to respond to changes in LevelParent or GameStateManager.
  */
 public class UIManager implements Observer {
     private static UIManager instance; // Singleton instance
 
-    private Group menuLayer;
-    private LevelParent levelParent;
-    private PauseMenu pauseMenu;
-    private EndGameMenu endGameMenu;
-    private Button pauseButton;
+    private Group menuLayer; // Layer for menus
+    private LevelParent levelParent; // Reference to the current LevelParent
+    private PauseMenu pauseMenu; // Pause menu UI
+    private EndGameMenu endGameMenu; // End game menu UI
+    private Button pauseButton; // Pause button UI
 
     /**
      * Private constructor to enforce the Singleton pattern.
+     *
+     * @param levelParent  The LevelParent instance.
+     * @param menuLayer    The menu layer.
+     * @param screenWidth  The screen width.
+     * @param screenHeight The screen height.
+     * @param stage        The game stage.
      */
     private UIManager(LevelParent levelParent, Group menuLayer, double screenWidth, double screenHeight, Stage stage) {
         this.levelParent = levelParent;
@@ -70,15 +76,13 @@ public class UIManager implements Observer {
      * Initializes the UI elements by adding them to the appropriate layers.
      */
     public void initializeUI() {
-        levelParent.getRoot().getChildren().remove(pauseButton); // Remove existing button if present
-        menuLayer.getChildren().clear(); // Clear to avoid duplicates
-
-        // Add menus and buttons
+        // Clear and re-add UI components
+        levelParent.getRoot().getChildren().remove(pauseButton);
+        menuLayer.getChildren().clear();
         menuLayer.getChildren().addAll(pauseMenu, endGameMenu);
         levelParent.getRoot().getChildren().add(pauseButton);
 
-        // Ensure pause button is visible
-        pauseButton.setVisible(true);
+        pauseButton.setVisible(true); // Ensure pause button is visible
     }
 
     /**
@@ -174,31 +178,20 @@ public class UIManager implements Observer {
         if (arg instanceof GameStateManager.GameState) {
             GameStateManager.GameState newState = (GameStateManager.GameState) arg;
             switch (newState) {
-                case PLAYING:
-                    // Handle UI changes for PLAYING state
-                    System.out.println("Game is now playing.");
-                    break;
-                case PAUSED:
-                    // Handle UI changes for PAUSED state
-                    System.out.println("Game is paused.");
-                    break;
-                case GAME_OVER:
-                    // Handle UI changes for GAME_OVER state
-                    System.out.println("Game over!");
-                    break;
-                case WIN:
-                    // Handle UI changes for WIN state
-                    System.out.println("You win!");
-                    break;
-                default:
-                    System.out.println("Unhandled game state: " + newState);
+                case PLAYING -> System.out.println("Game is now playing.");
+                case PAUSED -> System.out.println("Game is paused.");
+                case GAME_OVER -> System.out.println("Game over!");
+                case WIN -> System.out.println("You win!");
+                default -> System.out.println("Unhandled game state: " + newState);
             }
         }
     }
+
+    /**
+     * Cleans up UI elements for level transitions or restarts.
+     */
     public void cleanup() {
-        menuLayer.getChildren().clear(); // Clear all UI elements
+        menuLayer.getChildren().clear();
         System.out.println("UIManager cleaned up.");
     }
-
-
 }

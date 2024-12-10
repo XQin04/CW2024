@@ -5,8 +5,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 /**
- * Represents a display for heart icons, used to indicate player lives or health in a game.
- * Hearts are displayed in a horizontal box (HBox) and can be removed dynamically.
+ * Represents a heart display for showing player health or lives in a game.
+ * The hearts are displayed horizontally using an HBox and can be dynamically updated by removing hearts.
  */
 public class HeartDisplay {
 
@@ -19,17 +19,17 @@ public class HeartDisplay {
 	// Index of the first item in the HBox container, used for removing hearts
 	private static final int INDEX_OF_FIRST_ITEM = 0;
 
-	private HBox container; // HBox to hold the heart icons
-	private double containerXPosition; // X position of the heart display
-	private double containerYPosition; // Y position of the heart display
+	private HBox container;              // HBox to hold the heart icons
+	private double containerXPosition;   // X position of the heart display
+	private double containerYPosition;   // Y position of the heart display
 	private int numberOfHeartsToDisplay; // Number of hearts to display initially
 
 	/**
-	 * Constructs a HeartDisplay at the specified position with the given number of hearts.
+	 * Constructs a `HeartDisplay` at the specified position with the given number of hearts.
 	 *
-	 * @param xPosition       the X coordinate of the heart display
-	 * @param yPosition       the Y coordinate of the heart display
-	 * @param heartsToDisplay the initial number of hearts to display
+	 * @param xPosition       The X coordinate for the heart display's position.
+	 * @param yPosition       The Y coordinate for the heart display's position.
+	 * @param heartsToDisplay The initial number of hearts to display.
 	 */
 	public HeartDisplay(double xPosition, double yPosition, int heartsToDisplay) {
 		this.containerXPosition = xPosition;
@@ -46,8 +46,8 @@ public class HeartDisplay {
 	 */
 	private void initializeContainer() {
 		container = new HBox();
-		container.setLayoutX(containerXPosition); // Set horizontal position
-		container.setLayoutY(containerYPosition); // Set vertical position
+		container.setLayoutX(containerXPosition); // Set the horizontal position
+		container.setLayoutY(containerYPosition); // Set the vertical position
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class HeartDisplay {
 	 * Returns the HBox container holding the hearts.
 	 * This allows external components to add the heart display to their layout.
 	 *
-	 * @return the HBox container with the heart icons
+	 * @return The HBox container with the heart icons.
 	 */
 	public HBox getContainer() {
 		return container;

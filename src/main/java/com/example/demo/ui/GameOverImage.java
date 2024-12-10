@@ -4,8 +4,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- * Represents the "Game Over" image displayed when the game ends.
- * This class handles loading the image, resizing it, and positioning it on the screen.
+ * Represents the "Game Over" image displayed when the player loses the game.
+ * <p>
+ * This class handles loading the image, setting its size and position, and ensuring it integrates seamlessly into the game's UI.
+ * </p>
  */
 public class GameOverImage extends ImageView {
 
@@ -13,20 +15,20 @@ public class GameOverImage extends ImageView {
 	private static final String IMAGE_NAME = "/com/example/demo/images/gameover.png";
 
 	// Dimensions for resizing the image
-	private static final double IMAGE_WIDTH = 650; // The width of the image
-	private static final double IMAGE_HEIGHT = 600; // The height of the image
+	private static final double IMAGE_WIDTH = 650; // Width of the "Game Over" image
+	private static final double IMAGE_HEIGHT = 600; // Height of the "Game Over" image
 
 	/**
-	 * Constructs a GameOverImage and sets its position and size.
+	 * Constructs a `GameOverImage` and configures its size and position on the screen.
 	 *
-	 * @param xPosition the X coordinate for the image's layout position
-	 * @param yPosition the Y coordinate for the image's layout position
+	 * @param xPosition The X coordinate for positioning the image on the screen.
+	 * @param yPosition The Y coordinate for positioning the image on the screen.
 	 */
 	public GameOverImage(double xPosition, double yPosition) {
-		// Load the "Game Over" image
+		// Load the "Game Over" image resource
 		setImage(new Image(getClass().getResource(IMAGE_NAME).toExternalForm()));
 
-		// Set the image's dimensions
+		// Set the dimensions of the image
 		setFitWidth(IMAGE_WIDTH);
 		setFitHeight(IMAGE_HEIGHT);
 

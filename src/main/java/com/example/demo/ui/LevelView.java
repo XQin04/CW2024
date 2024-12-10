@@ -3,9 +3,15 @@ package com.example.demo.ui;
 import javafx.scene.Group;
 
 /**
- * Represents the visual elements of a game level, including hearts for player health,
- * a "Win" image, and a "Game Over" image.
- * Manages the display and removal of these elements.
+ * Represents the visual elements of a game level, including:
+ * <ul>
+ *     <li>A heart display for the player's health.</li>
+ *     <li>A "Win" image displayed when the player wins.</li>
+ *     <li>A "Game Over" image displayed when the player loses.</li>
+ * </ul>
+ * <p>
+ * This class manages the creation, addition, and removal of these elements in the game scene.
+ * </p>
  */
 public class LevelView {
 
@@ -19,24 +25,24 @@ public class LevelView {
 
 	// Position constants for the "Game Over" image
 	private static final int LOSS_SCREEN_X_POSITION = -160;   // X position for "Game Over" image
-	private static final int LOSS_SCREEN_Y_POSISITION = -375; // Y position for "Game Over" image
+	private static final int LOSS_SCREEN_Y_POSITION = -375;   // Y position for "Game Over" image
 
-	private final Group root; // Root group where all visual elements are added
-	private final WinImage winImage; // "Win" image to display when the level is won
-	private final GameOverImage gameOverImage; // "Game Over" image to display when the level is lost
-	private final HeartDisplay heartDisplay; // Heart display for player health
+	private final Group root;                // Root group where all visual elements are added
+	private final WinImage winImage;         // "Win" image displayed when the level is won
+	private final GameOverImage gameOverImage; // "Game Over" image displayed when the level is lost
+	private final HeartDisplay heartDisplay; // Heart display for player's health
 
 	/**
 	 * Constructs a LevelView with the specified root group and number of hearts.
 	 *
-	 * @param root            the root group to which the visual elements are added
-	 * @param heartsToDisplay the initial number of hearts to display
+	 * @param root            The root group to which the visual elements are added.
+	 * @param heartsToDisplay The initial number of hearts to display for the player.
 	 */
 	public LevelView(Group root, int heartsToDisplay) {
 		this.root = root;
 		this.heartDisplay = new HeartDisplay(HEART_DISPLAY_X_POSITION, HEART_DISPLAY_Y_POSITION, heartsToDisplay);
 		this.winImage = new WinImage(WIN_IMAGE_X_POSITION, WIN_IMAGE_Y_POSITION);
-		this.gameOverImage = new GameOverImage(LOSS_SCREEN_X_POSITION, LOSS_SCREEN_Y_POSISITION);
+		this.gameOverImage = new GameOverImage(LOSS_SCREEN_X_POSITION, LOSS_SCREEN_Y_POSITION);
 	}
 
 	/**
@@ -81,8 +87,11 @@ public class LevelView {
 
 	/**
 	 * Updates the heart display by removing the appropriate number of hearts.
+	 * <p>
+	 * This method ensures the heart display reflects the player's current health.
+	 * </p>
 	 *
-	 * @param heartsRemaining the number of hearts that should remain displayed
+	 * @param heartsRemaining The number of hearts that should remain displayed.
 	 */
 	public void removeHearts(int heartsRemaining) {
 		int currentNumberOfHearts = heartDisplay.getContainer().getChildren().size();

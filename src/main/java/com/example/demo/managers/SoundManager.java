@@ -8,13 +8,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Singleton class to manage game sounds and music.
+ * Singleton class to manage all game sounds and music.
+ * <p>
  * Provides functionality to play, mute, and manage sound effects and background music.
+ * Supports preloading of audio resources for optimized playback.
+ * </p>
  */
 public class SoundManager {
 
     private static SoundManager instance; // Singleton instance
 
+    // File paths for sound effects
     private static final String SHOOT_SOUND_PATH = "/com/example/demo/sounds/Shoot.mp3";
     private static final String WIN_SOUND_PATH = "/com/example/demo/sounds/Win.mp3";
     private static final String GAME_OVER_SOUND_PATH = "/com/example/demo/sounds/GameOver.mp3";
@@ -22,14 +26,14 @@ public class SoundManager {
 
     private AudioClip shootClip;         // Low-latency clip for shooting sound
     private AudioClip powerUpClip;       // Low-latency clip for power-up sound
-    private final Map<String, MediaPlayer> soundEffects; // Map to store MediaPlayer objects
+    private final Map<String, MediaPlayer> soundEffects; // Map for storing MediaPlayer objects for other sounds
 
-    private boolean soundEffectsMuted = false; // Mute status for sound effects
-    private boolean musicMuted = false;        // Mute status for music
+    private boolean soundEffectsMuted = false; // Tracks mute status for sound effects
+    private boolean musicMuted = false;        // Tracks mute status for background music
 
     /**
-     * Private constructor to enforce the singleton pattern.
-     * Loads sounds into memory for playback.
+     * Private constructor to enforce the Singleton pattern.
+     * Preloads audio files into memory for optimized playback during the game.
      */
     private SoundManager() {
         soundEffects = new HashMap<>();
@@ -37,9 +41,9 @@ public class SoundManager {
     }
 
     /**
-     * Returns the singleton instance of SoundManager.
+     * Retrieves the singleton instance of {@code SoundManager}.
      *
-     * @return The SoundManager instance.
+     * @return The single instance of {@code SoundManager}.
      */
     public static SoundManager getInstance() {
         if (instance == null) {
@@ -49,65 +53,60 @@ public class SoundManager {
     }
 
     /**
-     * Loads all sounds into memory.
+     * Loads all sound resources into memory for playback.
      */
     private void loadSounds() {
         try {
-            // Load shoot sound
+            // Load shooting and power-up sounds as AudioClips
             shootClip = loadAudioClip(SHOOT_SOUND_PATH);
-
-            // Load power-up sound
             powerUpClip = loadAudioClip(POWER_UP_SOUND_PATH);
 
-            // Load win sound
+            // Load other sound effects as MediaPlayer objects
             soundEffects.put("win", loadMediaPlayer(WIN_SOUND_PATH));
-
-            // Load game over sound
             soundEffects.put("gameOver", loadMediaPlayer(GAME_OVER_SOUND_PATH));
-
         } catch (Exception e) {
-            System.err.println("Error loading sounds.");
+            System.err.println("Error loading sound resources.");
             e.printStackTrace();
         }
     }
 
     /**
-     * Loads an AudioClip from the given path.
+     * Loads an {@code AudioClip} from the given file path.
      *
-     * @param path The file path of the audio clip.
-     * @return The loaded AudioClip.
+     * @param path The path to the audio file.
+     * @return The loaded {@code AudioClip}, or {@code null} if loading fails.
      */
     private AudioClip loadAudioClip(String path) {
         try {
             AudioClip clip = new AudioClip(getClass().getResource(path).toExternalForm());
-            System.out.println("Loaded sound: " + path);
+            System.out.println("Loaded AudioClip: " + path);
             return clip;
         } catch (Exception e) {
-            System.err.println("Failed to load sound: " + path);
+            System.err.println("Failed to load AudioClip: " + path);
             return null;
         }
     }
 
     /**
-     * Loads a MediaPlayer from the given path.
+     * Loads a {@code MediaPlayer} from the given file path.
      *
-     * @param path The file path of the media file.
-     * @return The loaded MediaPlayer.
+     * @param path The path to the media file.
+     * @return The loaded {@code MediaPlayer}, or {@code null} if loading fails.
      */
     private MediaPlayer loadMediaPlayer(String path) {
         try {
             Media media = new Media(getClass().getResource(path).toExternalForm());
             MediaPlayer player = new MediaPlayer(media);
-            System.out.println("Loaded sound: " + path);
+            System.out.println("Loaded MediaPlayer: " + path);
             return player;
         } catch (Exception e) {
-            System.err.println("Failed to load sound: " + path);
+            System.err.println("Failed to load MediaPlayer: " + path);
             return null;
         }
     }
 
     /**
-     * Plays the shoot sound if not muted.
+     * Plays the shooting sound effect if sound effects are not muted.
      */
     public void playShootSound() {
         if (!soundEffectsMuted && shootClip != null) {
@@ -116,7 +115,7 @@ public class SoundManager {
     }
 
     /**
-     * Plays the power-up sound if not muted.
+     * Plays the power-up collection sound effect if sound effects are not muted.
      */
     public void playPowerUpSound() {
         if (!soundEffectsMuted && powerUpClip != null) {
@@ -125,9 +124,9 @@ public class SoundManager {
     }
 
     /**
-     * Plays a specific sound effect by name.
+     * Plays a specific sound effect identified by its name.
      *
-     * @param soundName The name of the sound to play.
+     * @param soundName The name of the sound effect to play (e.g., "win" or "gameOver").
      */
     public void playSound(String soundName) {
         if (soundEffectsMuted) return;
@@ -135,7 +134,7 @@ public class SoundManager {
         MediaPlayer player = soundEffects.get(soundName);
         if (player != null) {
             player.stop();
-            player.seek(javafx.util.Duration.ZERO);
+            player.seek(javafx.util.Duration.ZERO); // Reset playback to the start
             player.play();
         } else {
             System.err.println("Sound not found: " + soundName);
@@ -143,9 +142,9 @@ public class SoundManager {
     }
 
     /**
-     * Sets the mute state for sound effects.
+     * Mutes or unmutes sound effects based on the specified parameter.
      *
-     * @param muted True to mute sound effects, false to unmute.
+     * @param muted {@code true} to mute sound effects, {@code false} to unmute them.
      */
     public void setSoundEffectsMuted(boolean muted) {
         soundEffectsMuted = muted;
@@ -159,9 +158,9 @@ public class SoundManager {
     }
 
     /**
-     * Sets the mute state for background music.
+     * Mutes or unmutes background music based on the specified parameter.
      *
-     * @param muted True to mute music, false to unmute.
+     * @param muted {@code true} to mute music, {@code false} to unmute it.
      */
     public void setMusicMuted(boolean muted) {
         musicMuted = muted;
@@ -172,9 +171,9 @@ public class SoundManager {
     }
 
     /**
-     * Checks if music is muted.
+     * Checks if background music is muted.
      *
-     * @return True if music is muted, false otherwise.
+     * @return {@code true} if music is muted, {@code false} otherwise.
      */
     public boolean isMusicMuted() {
         return musicMuted;
@@ -183,17 +182,17 @@ public class SoundManager {
     /**
      * Checks if sound effects are muted.
      *
-     * @return True if sound effects are muted, false otherwise.
+     * @return {@code true} if sound effects are muted, {@code false} otherwise.
      */
     public boolean isSoundEffectsMuted() {
         return soundEffectsMuted;
     }
 
     /**
-     * Sets the volume of an AudioClip.
+     * Sets the volume of an {@code AudioClip}.
      *
-     * @param clip  The AudioClip to adjust.
-     * @param muted True to mute the clip, false to set full volume.
+     * @param clip  The {@code AudioClip} whose volume is to be adjusted.
+     * @param muted {@code true} to mute the clip, {@code false} to restore full volume.
      */
     private void setAudioClipVolume(AudioClip clip, boolean muted) {
         if (clip != null) {
