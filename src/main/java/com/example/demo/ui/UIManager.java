@@ -76,6 +76,7 @@ public class UIManager implements Observer {
 
     /**
      * Initializes the UI elements by adding them to the appropriate layers.
+     * Removes the existing pause button, clears menuLayer, and re-adds necessary components.
      */
     public void initializeUI() {
         // Clear and re-add UI components
@@ -138,6 +139,14 @@ public class UIManager implements Observer {
         instance = null;
     }
 
+    /**
+     * Updates the game state based on the current game state.
+     * This method is called whenever the {@link GameStateManager} notifies its observers of a state change.
+     * It reacts to different game states by printing corresponding messages to the console.
+     *
+     * @param arg The updated game state, which should be an instance of {@link GameStateManager.GameState}.
+     *            If the argument is not an instance of {@link GameStateManager.GameState}, this method does nothing.
+     */
     @Override
     public void update(Object arg) {
         if (arg instanceof GameStateManager.GameState newState) {
