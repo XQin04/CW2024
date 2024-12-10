@@ -1,14 +1,17 @@
 package com.example.demo.ui;
 
 import com.example.demo.gameplay.levels.LevelParent;
+import com.example.demo.gameplay.GameStateManager;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import com.example.demo.observer.Observer;
 
 /**
  * Manages UI elements like menus and buttons for the game level.
+ * Implements Observer to respond to changes in LevelParent.
  */
-public class UIManager {
+public class UIManager implements Observer {
     private static UIManager instance; // Singleton instance
 
     private Group menuLayer;
@@ -23,6 +26,9 @@ public class UIManager {
     private UIManager(LevelParent levelParent, Group menuLayer, double screenWidth, double screenHeight, Stage stage) {
         this.levelParent = levelParent;
         this.menuLayer = menuLayer;
+
+        // Register as an observer of LevelParent
+        levelParent.addObserver(this);
 
         // Initialize menus
         this.pauseMenu = new PauseMenu(
@@ -87,6 +93,9 @@ public class UIManager {
     public void reset(LevelParent levelParent, Group menuLayer, double screenWidth, double screenHeight, Stage stage) {
         this.levelParent = levelParent;
         this.menuLayer = menuLayer;
+
+        // Re-register as an observer of the new LevelParent
+        levelParent.addObserver(this);
 
         // Reinitialize menus
         this.pauseMenu = new PauseMenu(
@@ -159,4 +168,37 @@ public class UIManager {
     public static void resetInstance() {
         instance = null;
     }
+
+    @Override
+    public void update(Object arg) {
+        if (arg instanceof GameStateManager.GameState) {
+            GameStateManager.GameState newState = (GameStateManager.GameState) arg;
+            switch (newState) {
+                case PLAYING:
+                    // Handle UI changes for PLAYING state
+                    System.out.println("Game is now playing.");
+                    break;
+                case PAUSED:
+                    // Handle UI changes for PAUSED state
+                    System.out.println("Game is paused.");
+                    break;
+                case GAME_OVER:
+                    // Handle UI changes for GAME_OVER state
+                    System.out.println("Game over!");
+                    break;
+                case WIN:
+                    // Handle UI changes for WIN state
+                    System.out.println("You win!");
+                    break;
+                default:
+                    System.out.println("Unhandled game state: " + newState);
+            }
+        }
+    }
+    public void cleanup() {
+        menuLayer.getChildren().clear(); // Clear all UI elements
+        System.out.println("UIManager cleaned up.");
+    }
+
+
 }

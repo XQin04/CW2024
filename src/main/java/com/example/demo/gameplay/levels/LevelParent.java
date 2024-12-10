@@ -2,6 +2,8 @@ package com.example.demo.gameplay.levels;
 
 import com.example.demo.actors.ActiveActorDestructible;
 import com.example.demo.actors.UserSuperman;
+import com.example.demo.observer.Observable;
+import com.example.demo.observer.Observer;
 import com.example.demo.controller.Main;
 import com.example.demo.gameplay.GameStateManager;
 import com.example.demo.gameplay.managers.PowerUpManager;
@@ -34,11 +36,10 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 import java.util.stream.Collectors;
 
 
-public abstract class LevelParent extends Observable {
+public abstract class LevelParent extends Observable implements Observer{
 
 	// Constants for screen adjustments and game loop timing
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
@@ -86,7 +87,29 @@ public abstract class LevelParent extends Observable {
 	protected final ProjectileManager projectileManager;
 	protected final EnemyManager enemyManager;
 
+	@Override
+	public void update(Object arg) {
+		if (arg instanceof GameStateManager.GameState) {
+			GameStateManager.GameState newState = (GameStateManager.GameState) arg;
 
+			switch (newState) {
+				case PLAYING:
+					resumeGame();
+					break;
+				case PAUSED:
+					pauseGame();
+					break;
+				case GAME_OVER:
+					loseGame();
+					break;
+				case WIN:
+					winGame();
+					break;
+				default:
+					System.out.println("Unhandled game state: " + newState);
+			}
+		}
+	}
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth,
 					   int playerInitialHealth, Stage stage, String levelName) {
 		this.menuLayer = new Group();
@@ -97,6 +120,7 @@ public abstract class LevelParent extends Observable {
 		this.soundManager = SoundManager.getInstance();
 		this.collisionManager = new CollisionManager(user, soundManager);
 		this.gameStateManager = GameStateManager.getInstance();
+		this.gameStateManager.addObserver(this); // Register LevelParent as an observer
 		this.powerUpManager = PowerUpManager.getInstance();
 		this.powerUpManager.initialize(root); // Pass the root for initialization
 		this.inputHandler = new InputHandler(user, gameStateManager);
@@ -124,6 +148,7 @@ public abstract class LevelParent extends Observable {
 		this.friendlyUnits = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
 		this.uiManager = UIManager.getInstance(this, menuLayer, screenWidth, screenHeight, stage);
+		addObserver(uiManager); // Register UIManager as an observer
 
 		initializeTimeline();
 		friendlyUnits.add(user);
@@ -263,25 +288,27 @@ public abstract class LevelParent extends Observable {
 	}
 
 	public void goToNextLevel(String levelName) {
+		cleanup(); // Unregister LevelParent as an observer
+
 		gameStateManager.setCurrentState(GameStateManager.GameState.LOADING);
 		currentLevel = levelName;
 
 		ProjectileManager.getInstance().clearAllProjectiles();
-		EnemyManager.getInstance().clearAllEnemies(); // Clear enemies for the next level
-		PowerUpManager.getInstance().clearAllPowerUps(); // Clear power-ups for the next level
+		EnemyManager.getInstance().clearAllEnemies();
+		PowerUpManager.getInstance().clearAllPowerUps();
 		stopGameBackgroundMusic();
 		timeline.stop();
 		root.getChildren().clear();
 
-		// Reset and reinitialize UIManager
 		UIManager.resetInstance();
 		uiManager.initializeUI();
 
-		setChanged();
-		notifyObservers(levelName);
+		setChanged(); // Mark LevelParent as changed
+		notifyObservers(levelName); // Notify observers of the level change
 
 		gameStateManager.setCurrentState(GameStateManager.GameState.INITIALIZING);
 	}
+
 
 	public void togglePause() {
 		if (isPaused) {
@@ -289,30 +316,57 @@ public abstract class LevelParent extends Observable {
 		} else {
 			pauseGame();
 		}
+		setChanged(); // Mark LevelParent as changed
+		notifyObservers("TOGGLE_PAUSE"); // Notify observers of the pause toggle
 	}
 
+
 	private void pauseGame() {
-		gameStateManager.setCurrentState(GameStateManager.GameState.PAUSED); // Update state
+		// Update the game state to PAUSED
+		gameStateManager.setCurrentState(GameStateManager.GameState.PAUSED);
+
+		// Pause the game timeline
 		timeline.pause();
+
+		// Pause background music if playing
 		if (gameBackgroundMediaPlayer != null) {
 			gameBackgroundMediaPlayer.pause();
 		}
+
+		// Update the pause state
 		isPaused = true;
+
+		// Update UI elements
 		uiManager.getPauseButton().setVisible(false);
 		uiManager.getPauseMenu().setVisible(true);
 		menuLayer.toFront();
+
+
 	}
 
 	public void resumeGame() {
-		gameStateManager.setCurrentState(GameStateManager.GameState.PLAYING); // Update state
+		// Update the game state to PLAYING
+		gameStateManager.setCurrentState(GameStateManager.GameState.PLAYING);
+
+		// Resume the game timeline
 		timeline.play();
+
+		// Resume background music if not muted
 		if (gameBackgroundMediaPlayer != null && !soundManager.isMusicMuted()) {
 			gameBackgroundMediaPlayer.play();
 		}
+
+		// Update the pause state
 		isPaused = false;
+
+		// Update UI elements
 		uiManager.getPauseButton().setVisible(true);
 		uiManager.getPauseMenu().setVisible(false);
 		background.requestFocus();
+
+		// Notify observers about the resume state
+		setChanged();
+		notifyObservers("RESUME_GAME");
 	}
 
 	protected void winGame() {
@@ -326,7 +380,9 @@ public abstract class LevelParent extends Observable {
 
 		soundManager.playSound("win"); // Play the win sound
 
-		// Delay to show the win image before transitioning to the end-game menu
+		setChanged(); // Mark LevelParent as changed
+		notifyObservers("WIN_GAME"); // Notify observers of win
+
 		PauseTransition delay = new PauseTransition(Duration.seconds(3));
 		delay.setOnFinished(e -> {
 			levelView.removeWinImage(); // Remove the win image
@@ -335,6 +391,7 @@ public abstract class LevelParent extends Observable {
 		});
 		delay.play();
 	}
+
 
 	protected void loseGame() {
 		gameStateManager.setCurrentState(GameStateManager.GameState.GAME_OVER); // Update state
@@ -347,7 +404,9 @@ public abstract class LevelParent extends Observable {
 
 		soundManager.playSound("gameOver"); // Play the game-over sound
 
-		// Delay to show the game-over image before transitioning to the end-game menu
+		setChanged(); // Mark LevelParent as changed
+		notifyObservers("LOSE_GAME"); // Notify observers of game over
+
 		PauseTransition delay = new PauseTransition(Duration.seconds(3));
 		delay.setOnFinished(e -> {
 			levelView.removeGameOverImage(); // Remove the game-over image
@@ -357,7 +416,10 @@ public abstract class LevelParent extends Observable {
 		delay.play();
 	}
 
+
 	public void goToMainMenu(Stage stage) {
+		cleanup(); // Unregister LevelParent as an observer
+
 		// Stop game-related processes
 		timeline.stop();
 		stopGameBackgroundMusic();
@@ -502,5 +564,12 @@ public abstract class LevelParent extends Observable {
 	private void updateNumberOfEnemies() {
 		currentNumberOfEnemies = enemyManager.getEnemyCount();
 	}
+	public void cleanup() {
+		gameStateManager.deleteObserver(this); // Unregister from GameStateManager
+		uiManager.cleanup(); // Cleanup UIManager
+		System.out.println("LevelParent cleaned up and observers unregistered.");
+	}
+
+
 
 }

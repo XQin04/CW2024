@@ -1,11 +1,12 @@
 package com.example.demo.gameplay;
+import com.example.demo.observer.Observable;
 
 /**
  * Manages the current state of the game.
  * Implements the Singleton pattern to ensure a single instance.
- * Provides methods to transition between states and check the current state.
+ * Uses the Observer pattern to notify listeners about state changes.
  */
-public class GameStateManager {
+public class GameStateManager extends Observable {
 
     /**
      * Enum representing the possible game states.
@@ -44,12 +45,13 @@ public class GameStateManager {
     }
 
     /**
-     * Sets the current state of the game.
+     * Sets the current state of the game and notifies observers.
      *
      * @param newState The new state to set.
      */
     public void setCurrentState(GameState newState) {
         this.currentState = newState;
+        notifyObservers(newState); // Notify all observers about the state change
     }
 
     /**

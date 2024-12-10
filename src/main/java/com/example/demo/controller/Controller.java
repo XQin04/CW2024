@@ -1,14 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.observer.Observer;
 import com.example.demo.gameplay.levels.LevelParent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Handles the overall control of the game, including level transitions and game launch.
@@ -60,7 +60,7 @@ public class Controller implements Observer {
 
 		Constructor<?> constructor = levelClass.getConstructor(double.class, double.class, Stage.class);
 		LevelParent level = (LevelParent) constructor.newInstance(stage.getHeight(), stage.getWidth(), stage);
-		level.addObserver(this);
+		level.addObserver(this); // Correctly register this as an Observer
 
 		Scene scene = level.initializeScene(stage);
 		stage.setScene(scene);
@@ -88,18 +88,49 @@ public class Controller implements Observer {
 	/**
 	 * Receives updates from levels and transitions to the next level.
 	 *
-	 * @param observable The observable object sending the update.
-	 * @param arg        The argument passed by the observable, expected to be the next level's class name.
+	 * @param arg The argument passed by the observable, expected to be the next level's class name.
 	 */
 	@Override
-	public void update(Observable observable, Object arg) {
-		try {
-			goToLevel((String) arg);
-		} catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
-				 | IllegalAccessException | InvocationTargetException e) {
-			showErrorAlert(e);
+	public void update(Object arg) {
+		if (arg instanceof String) {
+			String message = (String) arg;
+
+			switch (message) {
+				case "LOSE_GAME":
+					System.out.println("Game over. Showing end game menu.");
+					// Handle game over logic here if needed
+					break;
+
+				case "WIN_GAME":
+					System.out.println("Game won. Showing win screen.");
+					// Handle game win logic here if needed
+					break;
+
+				case "TOGGLE_PAUSE":
+					System.out.println("Game paused.");
+					// Handle pause or resume logic here if needed
+					break;
+
+				case "RESUME_GAME":
+					System.out.println("Game resumed.");
+					// Handle game resume logic here if needed
+					break;
+
+				default:
+					try {
+						// Treat any other string as a level transition
+						goToLevel(message);
+					} catch (ClassNotFoundException | NoSuchMethodException | InstantiationException
+							 | IllegalAccessException | InvocationTargetException e) {
+						showErrorAlert(e);
+					}
+					break;
+			}
+		} else {
+			System.err.println("Unhandled update argument: " + arg);
 		}
 	}
+
 
 	/**
 	 * Displays an error alert with the exception details.
@@ -107,10 +138,14 @@ public class Controller implements Observer {
 	 * @param e The exception to display.
 	 */
 	private void showErrorAlert(Exception e) {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("An error occurred while transitioning levels.");
-		alert.setContentText(e.getMessage());
-		alert.showAndWait();
+		Platform.runLater(() -> {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("An error occurred while transitioning levels.");
+			alert.setContentText(e.getMessage());
+			alert.show(); // Use show() instead of showAndWait()
+		});
 	}
+
 }
+
