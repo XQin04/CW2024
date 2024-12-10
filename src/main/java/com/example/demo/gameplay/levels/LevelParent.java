@@ -443,6 +443,7 @@ public abstract class LevelParent extends Observable implements Observer{
 		}
 	}
 
+
 	private void updateScene() {
 		if (!gameStateManager.isPlaying()) return;
 
