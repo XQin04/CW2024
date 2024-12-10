@@ -16,7 +16,7 @@ public class Observable {
 
     // List to store registered observers
     private final List<Observer> observers = new ArrayList<>();
-    private boolean changed = false; // Indicates whether the observable's state has changed
+    private boolean changed = false; // Indicates whether the observables state has changed
 
     /**
      * Adds an observer to the list of observers.
@@ -30,17 +30,7 @@ public class Observable {
         observers.add(observer);
     }
 
-    /**
-     * Removes an observer from the list of observers.
-     * <p>
-     * The observer will no longer be notified of state changes.
-     * </p>
-     *
-     * @param observer The observer to be removed from the list.
-     */
-    public void removeObserver(Observer observer) {
-        observers.remove(observer);
-    }
+
 
     /**
      * Marks this observable object as having been changed.

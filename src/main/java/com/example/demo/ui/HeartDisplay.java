@@ -19,10 +19,10 @@ public class HeartDisplay {
 	// Index of the first item in the HBox container, used for removing hearts
 	private static final int INDEX_OF_FIRST_ITEM = 0;
 
-	private HBox container;              // HBox to hold the heart icons
-	private double containerXPosition;   // X position of the heart display
-	private double containerYPosition;   // Y position of the heart display
-	private int numberOfHeartsToDisplay; // Number of hearts to display initially
+	private final HBox container;              // HBox to hold the heart icons
+	private final double containerXPosition;   // X position of the heart display
+	private final double containerYPosition;   // Y position of the heart display
+	private final int numberOfHeartsToDisplay; // Number of hearts to display initially
 
 	/**
 	 * Constructs a `HeartDisplay` at the specified position with the given number of hearts.
@@ -36,6 +36,7 @@ public class HeartDisplay {
 		this.containerYPosition = yPosition;
 		this.numberOfHeartsToDisplay = heartsToDisplay;
 
+		this.container = new HBox();
 		initializeContainer(); // Initialize the container (HBox)
 		initializeHearts();    // Populate the container with hearts
 	}
@@ -45,7 +46,6 @@ public class HeartDisplay {
 	 * Sets the position of the container on the screen.
 	 */
 	private void initializeContainer() {
-		container = new HBox();
 		container.setLayoutX(containerXPosition); // Set the horizontal position
 		container.setLayoutY(containerYPosition); // Set the vertical position
 	}
@@ -56,8 +56,15 @@ public class HeartDisplay {
 	 */
 	private void initializeHearts() {
 		for (int i = 0; i < numberOfHeartsToDisplay; i++) {
+			// Load the heart image
+			var resource = getClass().getResource(HEART_IMAGE_NAME);
+			if (resource == null) {
+				System.err.println("Error: Heart image resource not found: " + HEART_IMAGE_NAME);
+				continue;
+			}
+
 			// Create a new ImageView for each heart
-			ImageView heart = new ImageView(new Image(getClass().getResource(HEART_IMAGE_NAME).toExternalForm()));
+			ImageView heart = new ImageView(new Image(resource.toExternalForm()));
 
 			// Set the height and maintain the aspect ratio
 			heart.setFitHeight(HEART_HEIGHT);
