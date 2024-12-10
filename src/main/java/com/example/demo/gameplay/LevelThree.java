@@ -23,7 +23,6 @@ public class LevelThree extends LevelParent {
     private static final double POWER_UP_SPAWN_PROBABILITY = 0.02; // Probability of spawning a power-up each frame
 
     private final BossSpider levelThreeBoss; // Reference to the boss enemy
-    private final Label shieldAlert;   // Label for displaying shield activation alerts
     private int waveCount = 0;         // Tracks the number of completed waves
     private boolean bossSpawned = false; // Indicates if the boss has been introduced
 
@@ -38,7 +37,7 @@ public class LevelThree extends LevelParent {
         super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage, "Final Level");
 
         // Initialize and add the shield alert label to the game root
-        shieldAlert = createShieldAlert();
+        Label shieldAlert = createShieldAlert();
         getRoot().getChildren().add(shieldAlert);
 
         // Initialize the boss enemy

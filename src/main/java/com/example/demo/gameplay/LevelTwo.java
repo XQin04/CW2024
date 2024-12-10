@@ -21,7 +21,6 @@ public class LevelTwo extends LevelParent {
 	private static final String NEXT_LEVEL = "com.example.demo.gameplay.LevelThree"; // Class name of the next level
 
 	private final BossSpider boss; // Reference to the boss enemy
-	private final Label shieldAlert; // Label for displaying shield activation messages
 
 	/**
 	 * Constructs the second level with the specified screen dimensions and stage.
@@ -34,7 +33,7 @@ public class LevelTwo extends LevelParent {
 		super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage, "Level 2");
 
 		// Initialize the shield alert label and add it to the root node
-		shieldAlert = createShieldAlert();
+		Label shieldAlert = createShieldAlert();
 		getRoot().getChildren().add(shieldAlert);
 
 		// Initialize the boss with a reference to this level and the shield alert

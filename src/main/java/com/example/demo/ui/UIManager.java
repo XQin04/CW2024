@@ -16,11 +16,11 @@ import javafx.stage.Stage;
 public class UIManager implements Observer {
     private static UIManager instance; // Singleton instance
 
-    private Group menuLayer; // Layer for menus
-    private LevelParent levelParent; // Reference to the current LevelParent
-    private PauseMenu pauseMenu; // Pause menu UI
-    private EndGameMenu endGameMenu; // End game menu UI
-    private Button pauseButton; // Pause button UI
+    private final Group menuLayer; // Layer for menus
+    private final LevelParent levelParent; // Reference to the current LevelParent
+    private final PauseMenu pauseMenu; // Pause menu UI
+    private final EndGameMenu endGameMenu; // End game menu UI
+    private final Button pauseButton; // Pause button UI
 
     /**
      * Private constructor to enforce the Singleton pattern.
@@ -87,43 +87,6 @@ public class UIManager implements Observer {
         pauseButton.setVisible(true); // Ensure pause button is visible
     }
 
-    /**
-     * Resets the UIManager instance to handle level transitions or restarts.
-     *
-     * @param levelParent  The LevelParent instance.
-     * @param menuLayer    The menu layer.
-     * @param screenWidth  The screen width.
-     * @param screenHeight The screen height.
-     * @param stage        The game stage.
-     */
-    public void reset(LevelParent levelParent, Group menuLayer, double screenWidth, double screenHeight, Stage stage) {
-        this.levelParent = levelParent;
-        this.menuLayer = menuLayer;
-
-        // Re-register as an observer of the new LevelParent
-        levelParent.addObserver(this);
-
-        // Reinitialize menus
-        this.pauseMenu = new PauseMenu(
-                screenWidth,
-                screenHeight,
-                levelParent::resumeGame,
-                () -> levelParent.goToMainMenu(stage)
-        );
-
-        this.endGameMenu = new EndGameMenu(
-                screenWidth,
-                screenHeight,
-                () -> levelParent.goToMainMenu(stage),
-                () -> System.exit(0)
-        );
-
-        // Reinitialize pause button
-        this.pauseButton = createPauseButton(screenWidth);
-
-        // Reinitialize UI elements
-        initializeUI();
-    }
 
     /**
      * Retrieves the PauseMenu instance.
@@ -177,8 +140,7 @@ public class UIManager implements Observer {
 
     @Override
     public void update(Object arg) {
-        if (arg instanceof GameStateManager.GameState) {
-            GameStateManager.GameState newState = (GameStateManager.GameState) arg;
+        if (arg instanceof GameStateManager.GameState newState) {
             switch (newState) {
                 case PLAYING -> System.out.println("Game is now playing.");
                 case PAUSED -> System.out.println("Game is paused.");
@@ -188,6 +150,7 @@ public class UIManager implements Observer {
             }
         }
     }
+
 
     /**
      * Cleans up UI elements for level transitions or restarts.

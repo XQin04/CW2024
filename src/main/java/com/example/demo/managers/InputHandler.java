@@ -44,7 +44,7 @@ public class InputHandler {
      */
     public void handleKeyPress(KeyEvent event) {
         // Ignore input if the game is not in the PLAYING state
-        if (!gameStateManager.isPlaying()) {
+        if (gameStateManager.isNotPlaying()) {
             return;
         }
 
@@ -77,7 +77,7 @@ public class InputHandler {
      */
     public void handleKeyRelease(KeyEvent event) {
         // Ignore input if the game is not in the PLAYING state
-        if (!gameStateManager.isPlaying()) {
+        if (gameStateManager.isNotPlaying()) {
             return;
         }
 

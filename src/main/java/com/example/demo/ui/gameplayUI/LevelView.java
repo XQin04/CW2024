@@ -23,10 +23,6 @@ public class LevelView {
 	private static final int WIN_IMAGE_X_POSITION = 355;  // X position for "Win" image
 	private static final int WIN_IMAGE_Y_POSITION = 175;  // Y position for "Win" image
 
-	// Position constants for the "Game Over" image
-	private static final int LOSS_SCREEN_X_POSITION = -160;   // X position for "Game Over" image
-	private static final int LOSS_SCREEN_Y_POSITION = -375;   // Y position for "Game Over" image
-
 	private final Group root;                // Root group where all visual elements are added
 	private final WinImage winImage;         // "Win" image displayed when the level is won
 	private final GameOverImage gameOverImage; // "Game Over" image displayed when the level is lost
@@ -43,7 +39,7 @@ public class LevelView {
 		this.root = root;
 		this.heartDisplay = new HeartDisplay(HEART_DISPLAY_X_POSITION, HEART_DISPLAY_Y_POSITION, heartsToDisplay);
 		this.winImage = new WinImage(WIN_IMAGE_X_POSITION, WIN_IMAGE_Y_POSITION);
-		this.gameOverImage = new GameOverImage(LOSS_SCREEN_X_POSITION, LOSS_SCREEN_Y_POSITION);
+		this.gameOverImage = new GameOverImage();
 	}
 
 	/**

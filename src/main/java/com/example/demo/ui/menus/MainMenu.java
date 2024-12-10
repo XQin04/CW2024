@@ -17,49 +17,50 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import java.net.URL;
 
 /**
  * Represents the main menu of the game.
  * Provides options to start the game, access settings, view instructions, or exit the application.
+ * <p>
+ * This class creates a user interface for the main menu, including background music, settings, and
+ * navigation to different parts of the game.
+ * </p>
  */
 public class MainMenu {
 
-    private static final int SCREEN_WIDTH = 1300; // Width of the main menu screen
-    private static final int SCREEN_HEIGHT = 750; // Height of the main menu screen
+    private static final int SCREEN_WIDTH = 1300; // The width of the main menu screen.
+    private static final int SCREEN_HEIGHT = 750; // The height of the main menu screen.
 
-    private MediaPlayer backgroundMediaPlayer; // MediaPlayer for playing background music
-    private final SoundManager soundManager = SoundManager.getInstance(); // Singleton instance for managing sound settings
+    private static final String BACKGROUND_IMAGE_PATH = "/com/example/demo/images/menubackground.png"; // Path to the background image.
+    private static final String BACKGROUND_MUSIC_PATH = "/com/example/demo/sounds/Background.mp3"; // Path to the background music.
+
+    private MediaPlayer backgroundMediaPlayer; // MediaPlayer to play background music.
+    private final SoundManager soundManager = SoundManager.getInstance(); // Singleton instance for managing sound.
 
     /**
      * Initializes and displays the main menu.
      *
-     * @param stage the primary stage for displaying the menu
-     * @param main  the main game controller
+     * @param stage the primary stage for displaying the menu.
+     * @param main  the main game controller.
      */
     public void start(Stage stage, Main main) {
-        // Play the background music for the main menu
-        playBackgroundMusic("/com/example/demo/sounds/Background.mp3");
+        playBackgroundMusic(); // Start background music for the main menu.
+        StackPane root = new StackPane(); // Root container for stacking layouts.
 
-        // Root layout for the menu
-        StackPane root = new StackPane();
-
-        // Add the background image to the root
-        ImageView backgroundImage = createBackgroundImage("/com/example/demo/images/menubackground.png");
+        ImageView backgroundImage = createBackgroundImage(); // Create and set the background image.
         root.getChildren().add(backgroundImage);
 
-        // Create individual layouts for main menu, settings, and instructions
-        VBox mainMenuLayout = createMainMenuLayout(root, stage, main);
-        VBox settingsLayout = createSettingsLayout(root);
-        VBox howToPlayLayout = createHowToPlayLayout(root);
+        VBox mainMenuLayout = createMainMenuLayout(root, stage, main); // Main menu layout.
+        VBox settingsLayout = createSettingsLayout(root); // Settings menu layout.
+        VBox howToPlayLayout = createHowToPlayLayout(root); // Instructions layout.
 
-        // Add all layouts to the root StackPane
+        // Add all layouts to the root container and set their visibility.
         root.getChildren().addAll(mainMenuLayout, settingsLayout, howToPlayLayout);
+        settingsLayout.setVisible(false); // Hide settings layout initially.
+        howToPlayLayout.setVisible(false); // Hide "How to Play" layout initially.
 
-        // Set visibility: initially, only the main menu layout is visible
-        settingsLayout.setVisible(false);
-        howToPlayLayout.setVisible(false);
-
-        // Set up the scene and stage
+        // Set up the scene and stage.
         Scene menuScene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         stage.setScene(menuScene);
         stage.setTitle("Sky Battle - Main Menu");
@@ -69,84 +70,91 @@ public class MainMenu {
     /**
      * Creates the background image for the main menu.
      *
-     * @param filePath the file path of the background image
-     * @return the configured ImageView for the background image
+     * @return the configured ImageView for the background image.
      */
-    private ImageView createBackgroundImage(String filePath) {
-        // Load the image from the specified file path
-        Image image = new Image(getClass().getResource(filePath).toExternalForm());
+    private ImageView createBackgroundImage() {
+        // Load the background image resource.
+        URL resource = getClass().getResource(BACKGROUND_IMAGE_PATH);
+        if (resource == null) {
+            throw new IllegalArgumentException("Resource not found: " + BACKGROUND_IMAGE_PATH);
+        }
+        Image image = new Image(resource.toExternalForm());
         ImageView imageView = new ImageView(image);
 
-        // Set the dimensions of the image to fit the screen
+        // Set dimensions and ensure it covers the entire screen.
         imageView.setFitWidth(SCREEN_WIDTH);
         imageView.setFitHeight(SCREEN_HEIGHT);
-        imageView.setPreserveRatio(false); // Disable maintaining aspect ratio
+        imageView.setPreserveRatio(false); // Disable aspect ratio preservation.
 
         return imageView;
     }
 
     /**
      * Plays the background music for the main menu.
-     *
-     * @param filePath the file path of the background music file
      */
-    private void playBackgroundMusic(String filePath) {
-        // Stop the current background music if it is already playing
+    private void playBackgroundMusic() {
+        // Stop existing music if already playing.
         if (backgroundMediaPlayer != null) {
             backgroundMediaPlayer.stop();
         }
 
-        // Load and play the new background music
-        Media media = new Media(getClass().getResource(filePath).toExternalForm());
+        // Load the background music resource.
+        URL resource = getClass().getResource(BACKGROUND_MUSIC_PATH);
+        if (resource == null) {
+            throw new IllegalArgumentException("Music resource not found: " + BACKGROUND_MUSIC_PATH);
+        }
+
+        // Set up and play the MediaPlayer for background music.
+        Media media = new Media(resource.toExternalForm());
         backgroundMediaPlayer = new MediaPlayer(media);
-        backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the music
-        backgroundMediaPlayer.setVolume(soundManager.isMusicMuted() ? 0 : 1); // Set volume based on mute state
+        backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the music indefinitely.
+        backgroundMediaPlayer.setVolume(soundManager.isMusicMuted() ? 0 : 1); // Adjust volume based on mute state.
         backgroundMediaPlayer.play();
     }
 
     /**
      * Creates the main menu layout with options to start the game, access settings, view instructions, or exit.
      *
-     * @param root  the root StackPane for switching layouts
-     * @param stage the primary stage for the application
-     * @param main  the main game controller
-     * @return the VBox containing the main menu layout
+     * @param root  the root StackPane for switching layouts.
+     * @param stage the primary stage for the application.
+     * @param main  the main game controller.
+     * @return the VBox containing the main menu layout.
      */
     private VBox createMainMenuLayout(StackPane root, Stage stage, Main main) {
-        // Title of the main menu
+        // Create a title for the main menu.
         Label title = new Label("Sky Battle");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 50)); // Bold and large font
-        title.setTextFill(Color.BLACK); // Black text color
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 50)); // Bold font for the title.
+        title.setTextFill(Color.BLACK); // Set title text color.
 
-        // Buttons for main menu options
+        // Create buttons for main menu options.
         Button startButton = new Button("START GAME");
         Button settingsButton = new Button("SETTINGS");
         Button howToPlayButton = new Button("HOW TO PLAY");
         Button exitButton = new Button("EXIT");
 
-        // Apply consistent styling to the buttons
+        // Apply consistent styling to buttons.
         styleButton(startButton, "#FF6347", "#FF4500");
         styleButton(settingsButton, "#FFD700", "#FFA500");
         styleButton(howToPlayButton, "#87CEFA", "#4682B4");
         styleButton(exitButton, "#A9A9A9", "#808080");
 
-        // Define actions for the buttons
+        // Define actions for each button.
         startButton.setOnAction(e -> {
             if (backgroundMediaPlayer != null) {
-                backgroundMediaPlayer.stop(); // Stop the music before starting the game
+                backgroundMediaPlayer.stop(); // Stop the background music before starting the game.
             }
-            main.startGame(stage); // Start the game
+            main.startGame(stage); // Start the game.
         });
-        settingsButton.setOnAction(e -> switchToLayout(root, 1)); // Show settings menu
-        howToPlayButton.setOnAction(e -> switchToLayout(root, 2)); // Show instructions menu
-        exitButton.setOnAction(e -> stage.close()); // Close the application
+        settingsButton.setOnAction(e -> switchToLayout(root, 1)); // Show settings layout.
+        howToPlayButton.setOnAction(e -> switchToLayout(root, 2)); // Show instructions layout.
+        exitButton.setOnAction(e -> stage.close()); // Exit the application.
 
-        // Arrange the buttons vertically in the main menu layout
+        // Arrange buttons in a vertical box.
         VBox mainMenuLayout = new VBox(20, title, startButton, settingsButton, howToPlayButton, exitButton);
-        mainMenuLayout.setAlignment(Pos.CENTER); // Center-align the elements
+        mainMenuLayout.setAlignment(Pos.CENTER); // Center-align elements.
         mainMenuLayout.setStyle("-fx-padding: 20; -fx-background-color: rgba(255, 255, 255, 0.7);"
                 + "-fx-border-color: #FF8C00; -fx-border-radius: 20; -fx-background-radius: 20;");
-        mainMenuLayout.setMaxWidth(400); // Set maximum width for the layout
+        mainMenuLayout.setMaxWidth(400); // Set maximum layout width.
 
         return mainMenuLayout;
     }
@@ -154,52 +162,47 @@ public class MainMenu {
     /**
      * Creates the settings layout with options to mute sound effects and background music.
      *
-     * @param root the root StackPane for switching layouts
-     * @return the VBox containing the settings layout
+     * @param root the root StackPane for switching layouts.
+     * @return the VBox containing the settings layout.
      */
     private VBox createSettingsLayout(StackPane root) {
-        // Title for the settings menu
+        // Create a title for the settings layout.
         Label settingsTitle = new Label("Settings");
-        settingsTitle.setFont(Font.font("Arial", FontWeight.BOLD, 36)); // Bold and large font
-        settingsTitle.setTextFill(Color.web("#FF69B4")); // Pink text color
+        settingsTitle.setFont(Font.font("Arial", FontWeight.BOLD, 36)); // Bold font for the title.
+        settingsTitle.setTextFill(Color.web("#FF69B4")); // Set title color to pink.
 
-        // Checkboxes for toggling sound effects and music
+        // Create checkboxes for sound and music mute options.
         CheckBox soundCheckBox = new CheckBox("Mute Sound Effects");
-        soundCheckBox.setSelected(soundManager.isSoundEffectsMuted()); // Initial state based on SoundManager
+        soundCheckBox.setSelected(soundManager.isSoundEffectsMuted()); // Set initial state based on SoundManager.
         soundCheckBox.setStyle("-fx-font-size: 20px;");
         soundCheckBox.setOnAction(e -> soundManager.setSoundEffectsMuted(soundCheckBox.isSelected()));
 
-        CheckBox musicCheckBox = new CheckBox("Mute Background Music");
-        musicCheckBox.setSelected(soundManager.isMusicMuted()); // Initial state based on SoundManager
-        musicCheckBox.setStyle("-fx-font-size: 20px;");
-        musicCheckBox.setOnAction(e -> {
-            boolean isMuted = musicCheckBox.isSelected();
-            soundManager.setMusicMuted(isMuted); // Update mute state in SoundManager
-            if (backgroundMediaPlayer != null) {
-                backgroundMediaPlayer.setVolume(isMuted ? 0 : 1); // Adjust music volume
-            }
-        });
+        CheckBox musicCheckBox = createMusicCheckBox();
 
-        // Back button to return to the main menu
+        // Back button to return to the main menu.
         Button backButton = new Button("BACK");
         styleButton(backButton, "#87CEFA", "#4682B4");
-        backButton.setOnAction(e -> switchToLayout(root, 0)); // Switch back to the main menu
+        backButton.setOnAction(e -> switchToLayout(root, 0)); // Switch back to main menu.
 
-        // Arrange elements in the settings layout
+        // Arrange elements in the settings layout.
         VBox settingsLayout = new VBox(20, settingsTitle, soundCheckBox, musicCheckBox, backButton);
-        settingsLayout.setAlignment(Pos.CENTER); // Center-align the elements
+        settingsLayout.setAlignment(Pos.CENTER); // Center-align elements.
         settingsLayout.setStyle("-fx-padding: 20; -fx-background-color: rgba(255, 255, 255, 0.7);"
                 + "-fx-border-color: #FF69B4; -fx-border-radius: 15;");
-        settingsLayout.setMaxWidth(400); // Set maximum width for the layout
+        settingsLayout.setMaxWidth(400); // Set maximum layout width.
 
         return settingsLayout;
     }
 
     /**
      * Switches the visibility of layouts within the root StackPane.
+     * <p>
+     * This method loops through all child nodes in the root StackPane and ensures
+     * only the layout corresponding to the given index is visible.
+     * </p>
      *
-     * @param root        the root StackPane
-     * @param layoutIndex the index of the layout to make visible
+     * @param root        the root StackPane containing the layouts.
+     * @param layoutIndex the index of the layout to make visible.
      */
     private void switchToLayout(StackPane root, int layoutIndex) {
         for (int i = 1; i < root.getChildren().size(); i++) {
@@ -209,19 +212,26 @@ public class MainMenu {
 
     /**
      * Styles a button with gradient colors and hover effects.
+     * <p>
+     * This method applies a uniform style to buttons in the menu, using a gradient
+     * color scheme and hover effects to improve interactivity.
+     * </p>
      *
-     * @param button     the button to style
-     * @param startColor the starting gradient color
-     * @param endColor   the ending gradient color
+     * @param button     the button to style.
+     * @param startColor the starting color for the gradient.
+     * @param endColor   the ending color for the gradient.
      */
     private void styleButton(Button button, String startColor, String endColor) {
-        button.setFont(Font.font("Arial", FontWeight.BOLD, 20)); // Bold font
-        button.setTextFill(Color.WHITE); // White text color
-        button.setPrefWidth(250); // Fixed button width
+        // Set font and text color.
+        button.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        button.setTextFill(Color.WHITE);
+
+        // Define button dimensions and style.
+        button.setPrefWidth(250);
         button.setStyle("-fx-background-color: linear-gradient(to bottom, " + startColor + ", " + endColor + ");"
                 + "-fx-background-radius: 15; -fx-padding: 10 40; -fx-border-radius: 15;");
 
-        // Change button style on hover
+        // Define hover effects for the button.
         button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: linear-gradient(to bottom, " + endColor + ", " + startColor + ");"
                 + "-fx-background-radius: 15; -fx-padding: 10 40; -fx-border-radius: 15;"));
         button.setOnMouseExited(e -> button.setStyle("-fx-background-color: linear-gradient(to bottom, " + startColor + ", " + endColor + ");"
@@ -229,44 +239,81 @@ public class MainMenu {
     }
 
     /**
-     * Creates the "How to Play" layout with instructions for playing the game.
+     * Creates the "How to Play" layout with instructions for the game.
+     * <p>
+     * This layout provides guidance to players on game objectives, controls, and strategies.
+     * It includes an instructional image and descriptive text.
+     * </p>
      *
-     * @param root the root StackPane for switching layouts
-     * @return the VBox containing the "How to Play" layout
+     * @param root the root StackPane for switching layouts.
+     * @return a VBox containing the "How to Play" layout.
      */
     private VBox createHowToPlayLayout(StackPane root) {
-        // Title for the instructions menu
+        // Create a title for the "How to Play" layout.
         Label howToPlayTitle = new Label("How to Play");
-        howToPlayTitle.setFont(Font.font("Arial", FontWeight.BOLD, 36)); // Bold and large font
-        howToPlayTitle.setTextFill(Color.web("#FF69B4")); // Pink text color
+        howToPlayTitle.setFont(Font.font("Arial", FontWeight.BOLD, 36));
+        howToPlayTitle.setTextFill(Color.web("#FF69B4"));
 
-        // Image for instructions
-        ImageView instructionImage = new ImageView(new Image(getClass().getResource("/com/example/demo/images/instruction.png").toExternalForm()));
-        instructionImage.setFitWidth(350); // Width of the instruction image
-        instructionImage.setPreserveRatio(true); // Maintain aspect ratio
+        // Load the instructional image.
+        URL resource = getClass().getResource("/com/example/demo/images/instruction.png");
+        if (resource == null) {
+            throw new IllegalArgumentException("Resource not found: /com/example/demo/images/instruction.png");
+        }
 
-        // Instruction text
-        Label instructions = new Label(
-                "Destroy all enemy spiders to advance.\n\n" +
-                        "Collect power-ups to enhance abilities.\n\n" +
-                        "Defeat the boss to WIN the game!\n"
-        );
-        instructions.setFont(Font.font("Arial", 18)); // Font size for the instructions
-        instructions.setTextFill(Color.DARKBLUE); // Dark blue text color
+        ImageView instructionImage = new ImageView(new Image(resource.toExternalForm()));
+        instructionImage.setFitWidth(350);
+        instructionImage.setPreserveRatio(true);
 
-        // Back button to return to the main menu
+        // Define instructional text.
+        Label instructions = new Label("""
+        Destroy all enemy spiders to advance.
+
+        Collect power-ups to enhance abilities.
+
+        Defeat the boss to WIN the game!
+        """);
+        instructions.setFont(Font.font("Arial", 18));
+        instructions.setTextFill(Color.DARKBLUE);
+
+        // Create a back button to return to the main menu.
         Button backButton = new Button("BACK");
         styleButton(backButton, "#87CEFA", "#4682B4");
-        backButton.setOnAction(e -> switchToLayout(root, 0)); // Switch back to the main menu
+        backButton.setOnAction(e -> switchToLayout(root, 0));
 
-        // Arrange elements in the "How to Play" layout
+        // Arrange elements in a vertical box.
         VBox howToPlayLayout = new VBox(20, howToPlayTitle, instructionImage, instructions, backButton);
-        howToPlayLayout.setAlignment(Pos.CENTER); // Center-align the elements
+        howToPlayLayout.setAlignment(Pos.CENTER);
         howToPlayLayout.setStyle("-fx-padding: 20; -fx-background-color: rgba(255, 255, 255, 0.7);"
                 + "-fx-border-color: #FF69B4; -fx-border-radius: 15;");
-        howToPlayLayout.setMaxWidth(400); // Set maximum width for the layout
+        howToPlayLayout.setMaxWidth(400);
 
         return howToPlayLayout;
     }
 
+    /**
+     * Creates a checkbox for toggling background music mute state.
+     * <p>
+     * This method creates a checkbox that allows the user to mute or unmute the
+     * background music in the game. The checkbox reflects the current mute state
+     * from the SoundManager.
+     * </p>
+     *
+     * @return a CheckBox for muting or unmuting background music.
+     */
+    private CheckBox createMusicCheckBox() {
+        CheckBox musicCheckBox = new CheckBox("Mute Background Music");
+        musicCheckBox.setSelected(soundManager.isMusicMuted()); // Set initial state based on SoundManager.
+        musicCheckBox.setStyle("-fx-font-size: 20px;");
+
+        // Define the action to take when the checkbox state changes.
+        musicCheckBox.setOnAction(e -> {
+            boolean isMuted = musicCheckBox.isSelected();
+            soundManager.setMusicMuted(isMuted); // Update the mute state in SoundManager.
+            if (backgroundMediaPlayer != null) {
+                backgroundMediaPlayer.setVolume(isMuted ? 0 : 1); // Adjust the volume of the background music.
+            }
+        });
+
+        return musicCheckBox;
+    }
 }

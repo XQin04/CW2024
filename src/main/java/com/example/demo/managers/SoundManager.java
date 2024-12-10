@@ -4,8 +4,10 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Singleton class to manage all game sounds and music.
@@ -16,7 +18,8 @@ import java.util.Map;
  */
 public class SoundManager {
 
-    private static SoundManager instance; // Singleton instance
+    private static final Logger logger = Logger.getLogger(SoundManager.class.getName());
+    private static SoundManager instance;
 
     // File paths for sound effects
     private static final String SHOOT_SOUND_PATH = "/com/example/demo/sounds/Shoot.mp3";
@@ -24,9 +27,9 @@ public class SoundManager {
     private static final String GAME_OVER_SOUND_PATH = "/com/example/demo/sounds/GameOver.mp3";
     private static final String POWER_UP_SOUND_PATH = "/com/example/demo/sounds/Spreadshot.mp3";
 
-    private AudioClip shootClip;         // Low-latency clip for shooting sound
-    private AudioClip powerUpClip;       // Low-latency clip for power-up sound
-    private final Map<String, MediaPlayer> soundEffects; // Map for storing MediaPlayer objects for other sounds
+    private AudioClip shootClip;          // Low-latency clip for shooting sound
+    private AudioClip powerUpClip;        // Low-latency clip for power-up sound
+    private final Map<String, MediaPlayer> soundEffects = new HashMap<>(); // Map for other sound effects
 
     private boolean soundEffectsMuted = false; // Tracks mute status for sound effects
     private boolean musicMuted = false;        // Tracks mute status for background music
@@ -36,7 +39,6 @@ public class SoundManager {
      * Preloads audio files into memory for optimized playback during the game.
      */
     private SoundManager() {
-        soundEffects = new HashMap<>();
         loadSounds();
     }
 
@@ -65,8 +67,7 @@ public class SoundManager {
             soundEffects.put("win", loadMediaPlayer(WIN_SOUND_PATH));
             soundEffects.put("gameOver", loadMediaPlayer(GAME_OVER_SOUND_PATH));
         } catch (Exception e) {
-            System.err.println("Error loading sound resources.");
-            e.printStackTrace();
+            logger.severe("Error loading sound resources: " + e.getMessage());
         }
     }
 
@@ -78,11 +79,14 @@ public class SoundManager {
      */
     private AudioClip loadAudioClip(String path) {
         try {
-            AudioClip clip = new AudioClip(getClass().getResource(path).toExternalForm());
-            System.out.println("Loaded AudioClip: " + path);
-            return clip;
+            URL resource = getClass().getResource(path);
+            if (resource == null) {
+                logger.severe("AudioClip resource not found: " + path);
+                return null;
+            }
+            return new AudioClip(resource.toExternalForm());
         } catch (Exception e) {
-            System.err.println("Failed to load AudioClip: " + path);
+            logger.severe("Failed to load AudioClip: " + path + " - " + e.getMessage());
             return null;
         }
     }
@@ -95,12 +99,15 @@ public class SoundManager {
      */
     private MediaPlayer loadMediaPlayer(String path) {
         try {
-            Media media = new Media(getClass().getResource(path).toExternalForm());
-            MediaPlayer player = new MediaPlayer(media);
-            System.out.println("Loaded MediaPlayer: " + path);
-            return player;
+            URL resource = getClass().getResource(path);
+            if (resource == null) {
+                logger.severe("MediaPlayer resource not found: " + path);
+                return null;
+            }
+            Media media = new Media(resource.toExternalForm());
+            return new MediaPlayer(media);
         } catch (Exception e) {
-            System.err.println("Failed to load MediaPlayer: " + path);
+            logger.severe("Failed to load MediaPlayer: " + path + " - " + e.getMessage());
             return null;
         }
     }
@@ -130,19 +137,18 @@ public class SoundManager {
      */
     public void playSound(String soundName) {
         if (soundEffectsMuted) return;
-
         MediaPlayer player = soundEffects.get(soundName);
         if (player != null) {
             player.stop();
             player.seek(javafx.util.Duration.ZERO); // Reset playback to the start
             player.play();
         } else {
-            System.err.println("Sound not found: " + soundName);
+            logger.warning("Sound not found: " + soundName);
         }
     }
 
     /**
-     * Mutes or unmute sound effects based on the specified parameter.
+     * Mutes or unmutes sound effects based on the specified parameter.
      *
      * @param muted {@code true} to mute sound effects, {@code false} to unmute them.
      */
@@ -158,7 +164,7 @@ public class SoundManager {
     }
 
     /**
-     * Mutes or unmute background music based on the specified parameter.
+     * Mutes or unmutes background music based on the specified parameter.
      *
      * @param muted {@code true} to mute music, {@code false} to unmute it.
      */
