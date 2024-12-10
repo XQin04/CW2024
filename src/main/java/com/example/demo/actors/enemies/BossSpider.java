@@ -1,6 +1,7 @@
-package com.example.demo.actors;
+package com.example.demo.actors.enemies;
 
-import com.example.demo.gameplay.levels.LevelParent;
+import com.example.demo.actors.ActiveActorDestructible;
+import com.example.demo.gameplay.LevelParent;
 import com.example.demo.projectiles.BossProjectile;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;

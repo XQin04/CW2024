@@ -1,6 +1,6 @@
-package com.example.demo.gameplay.levels;
+package com.example.demo.gameplay;
 
-import com.example.demo.actors.BossSpider;
+import com.example.demo.actors.enemies.BossSpider;
 import com.example.demo.ui.LevelView;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -18,7 +18,7 @@ public class LevelTwo extends LevelParent {
 	// Constants for level configuration
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background2.png"; // Path to background image
 	private static final int PLAYER_INITIAL_HEALTH = 5; // Initial health of the player
-	private static final String NEXT_LEVEL = "com.example.demo.gameplay.levels.LevelThree"; // Class name of the next level
+	private static final String NEXT_LEVEL = "com.example.demo.gameplay.LevelThree"; // Class name of the next level
 
 	private final BossSpider boss; // Reference to the boss enemy
 	private final Label shieldAlert; // Label for displaying shield activation messages

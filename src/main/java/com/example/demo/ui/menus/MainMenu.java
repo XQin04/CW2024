@@ -1,4 +1,4 @@
-package com.example.demo.ui;
+package com.example.demo.ui.menus;
 
 import com.example.demo.controller.Main;
 import com.example.demo.managers.SoundManager;

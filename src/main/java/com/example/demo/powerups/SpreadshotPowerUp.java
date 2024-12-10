@@ -1,6 +1,6 @@
 package com.example.demo.powerups;
 
-import com.example.demo.actors.UserSuperman;
+import com.example.demo.actors.player.UserSuperman;
 
 /**
  * Represents a spread shot power-up in the game.

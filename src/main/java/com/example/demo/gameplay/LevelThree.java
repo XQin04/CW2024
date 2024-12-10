@@ -1,7 +1,7 @@
-package com.example.demo.gameplay.levels;
+package com.example.demo.gameplay;
 
-import com.example.demo.actors.BossSpider;
-import com.example.demo.actors.EnemySpider;
+import com.example.demo.actors.enemies.BossSpider;
+import com.example.demo.actors.enemies.EnemySpider;
 import com.example.demo.powerups.SpreadshotPowerUp;
 import com.example.demo.ui.LevelView;
 import javafx.scene.control.Label;

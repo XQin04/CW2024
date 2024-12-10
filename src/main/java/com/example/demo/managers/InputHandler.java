@@ -1,7 +1,6 @@
 package com.example.demo.managers;
 
-import com.example.demo.actors.UserSuperman;
-import com.example.demo.gameplay.GameStateManager;
+import com.example.demo.actors.player.UserSuperman;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 

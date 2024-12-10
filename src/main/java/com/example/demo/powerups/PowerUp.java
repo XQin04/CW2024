@@ -1,7 +1,7 @@
 package com.example.demo.powerups;
 
 import com.example.demo.actors.ActiveActorDestructible;
-import com.example.demo.actors.UserSuperman;
+import com.example.demo.actors.player.UserSuperman;
 
 /**
  * Represents a collectible power-up item in the game.

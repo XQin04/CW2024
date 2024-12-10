@@ -1,4 +1,4 @@
-package com.example.demo.gameplay;
+package com.example.demo.managers;
 
 import com.example.demo.observer.Observable;
 

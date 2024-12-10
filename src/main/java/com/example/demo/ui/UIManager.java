@@ -1,8 +1,10 @@
 package com.example.demo.ui;
 
-import com.example.demo.gameplay.GameStateManager;
-import com.example.demo.gameplay.levels.LevelParent;
+import com.example.demo.gameplay.LevelParent;
+import com.example.demo.managers.GameStateManager;
 import com.example.demo.observer.Observer;
+import com.example.demo.ui.menus.EndGameMenu;
+import com.example.demo.ui.menus.PauseMenu;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;

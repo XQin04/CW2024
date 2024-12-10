@@ -1,6 +1,6 @@
 package com.example.demo.projectiles;
 
-import com.example.demo.gameplay.levels.LevelParent;
+import com.example.demo.gameplay.LevelParent;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;

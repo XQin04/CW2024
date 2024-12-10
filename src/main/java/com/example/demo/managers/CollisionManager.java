@@ -1,8 +1,8 @@
 package com.example.demo.managers;
 
 import com.example.demo.actors.ActiveActorDestructible;
-import com.example.demo.actors.BossSpider;
-import com.example.demo.actors.UserSuperman;
+import com.example.demo.actors.enemies.BossSpider;
+import com.example.demo.actors.player.UserSuperman;
 import com.example.demo.powerups.PowerUp;
 import com.example.demo.powerups.SpreadshotPowerUp;
 

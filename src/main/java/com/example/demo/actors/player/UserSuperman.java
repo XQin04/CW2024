@@ -1,6 +1,8 @@
-package com.example.demo.actors;
+package com.example.demo.actors.player;
 
-import com.example.demo.gameplay.levels.LevelParent;
+import com.example.demo.actors.ActiveActorDestructible;
+import com.example.demo.actors.enemies.FighterSpider;
+import com.example.demo.gameplay.LevelParent;
 import com.example.demo.managers.ProjectileManager;
 import com.example.demo.projectiles.UserProjectile;
 

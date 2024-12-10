@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.gameplay.levels.LevelParent;
+import com.example.demo.gameplay.LevelParent;
 import com.example.demo.observer.Observer;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Controller implements Observer {
 
-	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.gameplay.levels.LevelOne"; // Default first level
+	private static final String LEVEL_ONE_CLASS_NAME = "com.example.demo.gameplay.LevelOne"; // Default first level
 	private final Stage stage; // Primary stage for the application
 
 	/**

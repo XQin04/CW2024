@@ -1,4 +1,6 @@
-package com.example.demo.actors;
+package com.example.demo.actors.enemies;
+
+import com.example.demo.actors.ActiveActorDestructible;
 
 /**
  * Represents a fighter spider in the game, capable of firing projectiles and taking damage.

@@ -1,6 +1,6 @@
-package com.example.demo.gameplay.levels;
+package com.example.demo.gameplay;
 
-import com.example.demo.actors.EnemySpider;
+import com.example.demo.actors.enemies.EnemySpider;
 import com.example.demo.ui.LevelView;
 import javafx.stage.Stage;
 
@@ -16,7 +16,7 @@ public class LevelOne extends LevelParent {
 
 	// Constants for level configuration
 	private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/background1.jpg"; // Background image path
-	private static final String NEXT_LEVEL = "com.example.demo.gameplay.levels.LevelTwo"; // Class name of the next level
+	private static final String NEXT_LEVEL = "com.example.demo.gameplay.LevelTwo"; // Class name of the next level
 	private static final int TOTAL_ENEMIES_PER_CYCLE = 5; // Number of enemies spawned per cycle
 	private static final int TOTAL_SPAWN_CYCLES = 3; // Total number of spawn cycles for this level
 	private static final int PLAYER_INITIAL_HEALTH = 5; // Initial health of the player

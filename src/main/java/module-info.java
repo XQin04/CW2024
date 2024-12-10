@@ -17,7 +17,10 @@ module com.example.demo {
     exports com.example.demo.ui;
     exports com.example.demo.managers;
     exports com.example.demo.gameplay;
-    exports com.example.demo.gameplay.levels;
     exports com.example.demo.observer;
+    exports com.example.demo.actors.enemies;
+    exports com.example.demo.actors.player;
+    exports com.example.demo.ui.menus;
+    opens com.example.demo.ui.menus to javafx.fxml;
 
 }

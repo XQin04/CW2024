@@ -1,7 +1,7 @@
 package com.example.demo.managers;
 
 import com.example.demo.actors.ActiveActorDestructible;
-import com.example.demo.actors.FighterSpider;
+import com.example.demo.actors.enemies.FighterSpider;
 import javafx.scene.Group;
 
 import java.util.ArrayList;

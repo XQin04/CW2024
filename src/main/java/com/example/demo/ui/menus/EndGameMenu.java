@@ -1,4 +1,4 @@
-package com.example.demo.ui;
+package com.example.demo.ui.menus;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
