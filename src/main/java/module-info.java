@@ -22,5 +22,7 @@ module com.example.demo {
     exports com.example.demo.actors.player;
     exports com.example.demo.ui.menus;
     opens com.example.demo.ui.menus to javafx.fxml;
+    exports com.example.demo.ui.gameplayUI;
+    opens com.example.demo.ui.gameplayUI to javafx.fxml;
 
 }

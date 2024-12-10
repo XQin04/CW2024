@@ -7,7 +7,7 @@ import com.example.demo.managers.*;
 import com.example.demo.observer.Observable;
 import com.example.demo.observer.Observer;
 import com.example.demo.powerups.PowerUp;
-import com.example.demo.ui.LevelView;
+import com.example.demo.ui.gameplayUI.LevelView;
 import com.example.demo.ui.UIManager;
 import com.example.demo.ui.menus.EndGameMenu;
 import com.example.demo.ui.menus.MainMenu;

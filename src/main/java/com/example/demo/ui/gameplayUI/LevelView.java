@@ -1,4 +1,4 @@
-package com.example.demo.ui;
+package com.example.demo.ui.gameplayUI;
 
 import javafx.scene.Group;
 

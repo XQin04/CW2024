@@ -3,7 +3,7 @@ package com.example.demo.gameplay;
 import com.example.demo.actors.enemies.BossSpider;
 import com.example.demo.actors.enemies.EnemySpider;
 import com.example.demo.powerups.SpreadshotPowerUp;
-import com.example.demo.ui.LevelView;
+import com.example.demo.ui.gameplayUI.LevelView;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
