@@ -1,8 +1,8 @@
 package com.example.demo.actors;
 
 import com.example.demo.gameplay.levels.LevelParent;
-import com.example.demo.projectiles.UserProjectile;
 import com.example.demo.managers.ProjectileManager;
+import com.example.demo.projectiles.UserProjectile;
 
 import java.util.ArrayList;
 import java.util.List;

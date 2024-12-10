@@ -1,11 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.observer.Observer;
 import com.example.demo.gameplay.levels.LevelParent;
+import com.example.demo.observer.Observer;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import javafx.application.Platform;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

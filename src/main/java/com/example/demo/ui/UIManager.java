@@ -1,11 +1,11 @@
 package com.example.demo.ui;
 
-import com.example.demo.gameplay.levels.LevelParent;
 import com.example.demo.gameplay.GameStateManager;
+import com.example.demo.gameplay.levels.LevelParent;
+import com.example.demo.observer.Observer;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import com.example.demo.observer.Observer;
 
 /**
  * Manages UI elements like menus and buttons for the game level.
