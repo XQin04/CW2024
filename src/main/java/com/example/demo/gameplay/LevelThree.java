@@ -36,7 +36,7 @@ public class LevelThree extends LevelParent {
     public LevelThree(double screenHeight, double screenWidth, Stage stage) {
         super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, stage, "Final Level");
 
-        // Initialize and add the shield alert label to the game root
+        // Create and add the shield alert label to the game root
         Label shieldAlert = createShieldAlert();
         getRoot().getChildren().add(shieldAlert);
 
