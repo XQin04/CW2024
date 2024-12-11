@@ -25,6 +25,10 @@ public class GameStateManager extends Observable {
         notifyObservers(newState);
     }
 
+    public GameState getCurrentState() {
+        return currentState;
+    }
+
     public boolean isNotPlaying() {
         return currentState != GameState.PLAYING;
     }
