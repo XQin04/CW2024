@@ -75,6 +75,13 @@ public class UIManager implements Observer {
     }
 
     /**
+     * Resets the Singleton instance.
+     */
+    public static void resetInstance() {
+        instance = null;
+    }
+
+    /**
      * Initializes the UI elements by adding them to the appropriate layers.
      * Removes the existing pause button, clears menuLayer, and re-adds necessary components.
      */
@@ -87,7 +94,6 @@ public class UIManager implements Observer {
 
         pauseButton.setVisible(true); // Ensure pause button is visible
     }
-
 
     /**
      * Retrieves the PauseMenu instance.
@@ -130,13 +136,6 @@ public class UIManager implements Observer {
         button.setLayoutY(20);
         button.setOnAction(e -> levelParent.togglePause());
         return button;
-    }
-
-    /**
-     * Resets the Singleton instance.
-     */
-    public static void resetInstance() {
-        instance = null;
     }
 
     /**

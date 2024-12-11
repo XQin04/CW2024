@@ -20,7 +20,7 @@ public class ProjectileManager {
     private static ProjectileManager instance;
 
     private final List<ActiveActorDestructible> userProjectiles; // Projectiles fired by the user
-    private final  List<ActiveActorDestructible> enemyProjectiles; // Projectiles fired by enemies
+    private final List<ActiveActorDestructible> enemyProjectiles; // Projectiles fired by enemies
     private Group root; // Root group for rendering projectiles in the scene
 
     /**

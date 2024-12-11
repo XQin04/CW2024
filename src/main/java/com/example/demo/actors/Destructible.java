@@ -8,15 +8,13 @@ package com.example.demo.actors;
  */
 public interface Destructible {
 
-	/**
-	 * Applies damage to the entity.
-	 *
-	 */
-	void takeDamage();
+    /**
+     * Applies damage to the entity.
+     */
+    void takeDamage();
 
-	/**
-	 * Destroys the entity.
-	 *
-	 */
-	void destroy();
+    /**
+     * Destroys the entity.
+     */
+    void destroy();
 }

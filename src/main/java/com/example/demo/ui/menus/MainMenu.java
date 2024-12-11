@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+
 import java.net.URL;
 
 /**
@@ -34,9 +35,8 @@ public class MainMenu {
 
     private static final String BACKGROUND_IMAGE_PATH = "/com/example/demo/images/menubackground.png"; // Path to the background image.
     private static final String BACKGROUND_MUSIC_PATH = "/com/example/demo/sounds/Background.mp3"; // Path to the background music.
-
-    private MediaPlayer backgroundMediaPlayer; // MediaPlayer to play background music.
     private final SoundManager soundManager = SoundManager.getInstance(); // Singleton instance for managing sound.
+    private MediaPlayer backgroundMediaPlayer; // MediaPlayer to play background music.
 
     /**
      * Initializes and displays the main menu.
@@ -266,12 +266,12 @@ public class MainMenu {
 
         // Define instructional text.
         Label instructions = new Label("""
-        Destroy all enemy spiders to advance.
+                Destroy all enemy spiders to advance.
 
-        Collect power-ups to enhance abilities.
+                Collect power-ups to enhance abilities.
 
-        Defeat the boss to WIN the game!
-        """);
+                Defeat the boss to WIN the game!
+                """);
         instructions.setFont(Font.font("Arial", 18));
         instructions.setTextFill(Color.DARKBLUE);
 

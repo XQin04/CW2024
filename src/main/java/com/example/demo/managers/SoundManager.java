@@ -19,18 +19,16 @@ import java.util.logging.Logger;
 public class SoundManager {
 
     private static final Logger logger = Logger.getLogger(SoundManager.class.getName());
-    private static SoundManager instance;
-
     // File paths for sound effects
     private static final String SHOOT_SOUND_PATH = "/com/example/demo/sounds/Shoot.mp3";
     private static final String WIN_SOUND_PATH = "/com/example/demo/sounds/Win.mp3";
     private static final String GAME_OVER_SOUND_PATH = "/com/example/demo/sounds/GameOver.mp3";
     private static final String POWER_UP_SOUND_PATH = "/com/example/demo/sounds/Spreadshot.mp3";
 
+    private static SoundManager instance;
+    private final Map<String, MediaPlayer> soundEffects = new HashMap<>(); // Map for other sound effects
     private AudioClip shootClip;          // Low-latency clip for shooting sound
     private AudioClip powerUpClip;        // Low-latency clip for power-up sound
-    private final Map<String, MediaPlayer> soundEffects = new HashMap<>(); // Map for other sound effects
-
     private boolean soundEffectsMuted = false; // Tracks mute status for sound effects
     private boolean musicMuted = false;        // Tracks mute status for background music
 
@@ -148,19 +146,12 @@ public class SoundManager {
     }
 
     /**
-     * Mutes or unmutes sound effects based on the specified parameter.
+     * Checks if background music is muted.
      *
-     * @param muted {@code true} to mute sound effects, {@code false} to unmute them.
+     * @return {@code true} if music is muted, {@code false} otherwise.
      */
-    public void setSoundEffectsMuted(boolean muted) {
-        soundEffectsMuted = muted;
-
-        // Adjust volume of AudioClips
-        setAudioClipVolume(shootClip, muted);
-        setAudioClipVolume(powerUpClip, muted);
-
-        // Adjust volume of MediaPlayers
-        soundEffects.values().forEach(player -> player.setVolume(muted ? 0 : 1));
+    public boolean isMusicMuted() {
+        return musicMuted;
     }
 
     /**
@@ -177,21 +168,28 @@ public class SoundManager {
     }
 
     /**
-     * Checks if background music is muted.
-     *
-     * @return {@code true} if music is muted, {@code false} otherwise.
-     */
-    public boolean isMusicMuted() {
-        return musicMuted;
-    }
-
-    /**
      * Checks if sound effects are muted.
      *
      * @return {@code true} if sound effects are muted, {@code false} otherwise.
      */
     public boolean isSoundEffectsMuted() {
         return soundEffectsMuted;
+    }
+
+    /**
+     * Mutes or unmutes sound effects based on the specified parameter.
+     *
+     * @param muted {@code true} to mute sound effects, {@code false} to unmute them.
+     */
+    public void setSoundEffectsMuted(boolean muted) {
+        soundEffectsMuted = muted;
+
+        // Adjust volume of AudioClips
+        setAudioClipVolume(shootClip, muted);
+        setAudioClipVolume(powerUpClip, muted);
+
+        // Adjust volume of MediaPlayers
+        soundEffects.values().forEach(player -> player.setVolume(muted ? 0 : 1));
     }
 
     /**

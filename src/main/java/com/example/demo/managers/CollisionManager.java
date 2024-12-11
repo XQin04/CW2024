@@ -24,8 +24,8 @@ public class CollisionManager {
     /**
      * Constructs a CollisionManager with the specified user and SoundManager.
      *
-     * @param user          The player's character.
-     * @param soundManager  The manager for handling game sound effects.
+     * @param user         The player's character.
+     * @param soundManager The manager for handling game sound effects.
      */
     public CollisionManager(UserSuperman user, SoundManager soundManager) {
         this.user = user;

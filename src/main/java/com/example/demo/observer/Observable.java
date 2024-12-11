@@ -31,7 +31,6 @@ public class Observable {
     }
 
 
-
     /**
      * Marks this observable object as having been changed.
      * <p>

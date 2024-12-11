@@ -70,10 +70,10 @@ public class EndGameMenu extends VBox {
     /**
      * Creates a styled button with specified colors and action.
      *
-     * @param text        the text displayed on the button
-     * @param startColor  the starting gradient color of the button
-     * @param endColor    the ending gradient color of the button
-     * @param action      the action to execute when the button is clicked
+     * @param text       the text displayed on the button
+     * @param startColor the starting gradient color of the button
+     * @param endColor   the ending gradient color of the button
+     * @param action     the action to execute when the button is clicked
      * @return a Button object with the specified properties
      */
     private Button createStyledButton(String text, String startColor, String endColor, Runnable action) {

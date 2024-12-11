@@ -7,18 +7,8 @@ import com.example.demo.observer.Observable;
  */
 public class GameStateManager extends Observable {
 
-    public enum GameState {
-        INITIALIZING,
-        PLAYING,
-        PAUSED,
-        GAME_OVER,
-        WIN,
-        LOADING
-    }
-
     private static GameStateManager instance;
     private GameState currentState;
-
     private GameStateManager() {
         this.currentState = GameState.INITIALIZING;
     }
@@ -35,8 +25,17 @@ public class GameStateManager extends Observable {
         notifyObservers(newState);
     }
 
-
     public boolean isNotPlaying() {
         return currentState != GameState.PLAYING;
+    }
+
+
+    public enum GameState {
+        INITIALIZING,
+        PLAYING,
+        PAUSED,
+        GAME_OVER,
+        WIN,
+        LOADING
     }
 }
