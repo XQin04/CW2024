@@ -129,7 +129,7 @@ public class BossProjectile extends Projectile {
     /**
      * Represents the smaller fragments created upon the explosion of the boss projectile.
      */
-    private class Fragment extends Projectile {
+    protected class Fragment extends Projectile {
 
         private static final String FRAGMENT_IMAGE_NAME = "enemyweb.png"; // Image for the fragment
         private final double horizontalVelocity;                          // Horizontal velocity of the fragment

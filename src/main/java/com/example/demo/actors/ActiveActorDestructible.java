@@ -8,7 +8,7 @@ package com.example.demo.actors;
  */
 public abstract class ActiveActorDestructible extends ActiveActor implements Destructible {
 
-    private boolean isDestroyed; // Tracks if the actor has been destroyed
+    protected boolean isDestroyed; // Tracks if the actor has been destroyed
 
     /**
      * Constructs an ActiveActorDestructible with the specified image, size, and initial position.

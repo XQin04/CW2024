@@ -218,7 +218,7 @@ public class BossSpider extends FighterSpider {
     /**
      * Activates the shield, applying visual effects and notifying the player.
      */
-    private void activateShield() {
+    protected void activateShield() {
         isShielded = true;
         framesWithShieldActivated = 0;
         setEffect(shieldGlowEffect);
@@ -233,7 +233,7 @@ public class BossSpider extends FighterSpider {
     /**
      * Deactivates the shield, removing visual effects and hiding the alert.
      */
-    private void deactivateShield() {
+    protected void deactivateShield() {
         isShielded = false;
         framesWithShieldActivated = 0;
         setEffect(null);

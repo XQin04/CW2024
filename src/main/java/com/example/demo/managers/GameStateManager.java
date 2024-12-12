@@ -7,9 +7,9 @@ import com.example.demo.observer.Observable;
  */
 public class GameStateManager extends Observable {
 
-    private static GameStateManager instance;
+    protected static GameStateManager instance;
     private GameState currentState;
-    private GameStateManager() {
+    protected GameStateManager() {
         this.currentState = GameState.INITIALIZING;
     }
 

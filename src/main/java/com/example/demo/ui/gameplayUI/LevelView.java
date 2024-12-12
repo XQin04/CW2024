@@ -92,4 +92,13 @@ public class LevelView {
             heartDisplay.removeHeart();
         }
     }
+
+    /**
+     * Gets the current number of hearts displayed in the heart display.
+     *
+     * @return The number of hearts currently displayed.
+     */
+    public int getHealthDisplayCount() {
+        return heartDisplay.getContainer().getChildren().size();
+    }
 }

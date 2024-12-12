@@ -73,7 +73,7 @@ public abstract class LevelParent extends Observable implements Observer {
     private final GameStateManager gameStateManager;
     private final InputHandler inputHandler;
     private Button pauseButton;
-    private boolean isPaused;
+    public boolean isPaused;
     private int currentNumberOfEnemies;
     private String currentLevel;
     private MediaPlayer gameBackgroundMediaPlayer;
@@ -738,6 +738,34 @@ public abstract class LevelParent extends Observable implements Observer {
         gameStateManager.deleteObserver(this); // Unregister from GameStateManager
         uiManager.cleanup(); // Cleanup UIManager
         System.out.println("LevelParent cleaned up and observers unregistered.");
+    }
+
+    /**
+     * Checks whether the game is currently paused.
+     *
+     * @return {@code true} if the game is paused, {@code false} otherwise.
+     */
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    /**
+     * Retrieves the enemy manager responsible for managing all enemy units in the game.
+     *
+     * @return The {@link EnemyManager} instance used to manage enemies.
+     */
+    public EnemyManager getEnemyManager() {
+        return enemyManager;
+    }
+
+    /**
+     * Retrieves the game state manager that handles the game's current state, such as
+     * running, paused, or game over.
+     *
+     * @return The {@link GameStateManager} instance managing the game's state.
+     */
+    public GameStateManager getGameStateManager() {
+        return gameStateManager;
     }
 
 

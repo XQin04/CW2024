@@ -2,6 +2,7 @@ package com.example.demo.gameplay;
 
 import com.example.demo.actors.enemies.BossSpider;
 import com.example.demo.actors.enemies.EnemySpider;
+import com.example.demo.managers.PowerUpManager;
 import com.example.demo.powerups.SpreadshotPowerUp;
 import com.example.demo.ui.gameplayUI.LevelView;
 import javafx.scene.control.Label;
@@ -22,7 +23,7 @@ public class LevelThree extends LevelParent {
     private static final int WAVES_BEFORE_BOSS = 3; // Number of waves before the boss appears
     private static final double POWER_UP_SPAWN_PROBABILITY = 0.02; // Probability of spawning a power-up each frame
 
-    private final BossSpider levelThreeBoss; // Reference to the boss enemy
+    protected final BossSpider levelThreeBoss; // Reference to the boss enemy
     private int waveCount = 0;         // Tracks the number of completed waves
     private boolean bossSpawned = false; // Indicates if the boss has been introduced
 
@@ -143,4 +144,17 @@ public class LevelThree extends LevelParent {
         label.setVisible(false); // Hide the label initially
         return label;
     }
+
+    /**
+     * Retrieves the power-up manager responsible for handling all power-ups in the game.
+     *
+     * <p>The power-up manager manages the spawning, tracking, and application of power-ups
+     * within the game.</p>
+     *
+     * @return The {@link PowerUpManager} instance used to manage power-ups.
+     */
+    public PowerUpManager getPowerUpManager() {
+        return powerUpManager;
+    }
+
 }

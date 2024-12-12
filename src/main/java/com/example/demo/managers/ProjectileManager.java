@@ -153,4 +153,31 @@ public class ProjectileManager {
         userProjectiles.clear();
         enemyProjectiles.clear();
     }
+    /**
+     * Retrieves the list of active projectiles fired by the user.
+     *
+     * <p>The projectiles in this list are tracked to manage their behavior, collisions,
+     * and removal when necessary.</p>
+     *
+     * @return A {@link List} of {@link ActiveActorDestructible} objects representing the user's active projectiles.
+     */
+    public List<ActiveActorDestructible> getUserProjectiles() {
+        return userProjectiles;
+    }
+
+    /**
+     * Checks whether a specific projectile is currently in the list of user projectiles.
+     *
+     * <p>This method can be used to verify if a given projectile is being tracked by the
+     * system.</p>
+     *
+     * @param projectile The {@link ActiveActorDestructible} projectile to check.
+     * @return {@code true} if the projectile is in the list, {@code false} otherwise.
+     */
+    public boolean containsUserProjectile(ActiveActorDestructible projectile) {
+        return userProjectiles.contains(projectile);
+    }
+
+
+
 }

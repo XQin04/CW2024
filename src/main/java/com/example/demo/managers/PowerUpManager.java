@@ -16,7 +16,8 @@ import java.util.List;
 public class PowerUpManager {
 
     private static PowerUpManager instance; // Singleton instance
-    private List<ActiveActorDestructible> powerUps; // List of active power-ups in the game
+    protected List<ActiveActorDestructible> powerUps; // List of active power-ups in the game
+    private List<PowerUp> activePowerUps;
     private Group root; // Root group for adding/removing power-ups from the scene graph
 
     /**
@@ -25,6 +26,7 @@ public class PowerUpManager {
      */
     private PowerUpManager() {
         this.powerUps = new ArrayList<>();
+        this.activePowerUps = new ArrayList<>();
     }
 
     /**
@@ -108,4 +110,16 @@ public class PowerUpManager {
         }
         powerUps.clear(); // Clear the internal list of power-ups
     }
+    /**
+     * Retrieves the total number of active power-ups currently managed by the power-up manager.
+     *
+     * <p>This method returns the size of the collection that tracks all active power-ups
+     * in the game.</p>
+     *
+     * @return The number of active power-ups.
+     */
+    public int getPowerUpCount() {
+        return activePowerUps.size(); // Return the size of the collection
+    }
+
 }
