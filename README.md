@@ -1,524 +1,145 @@
-### ShieldImage.java Changes
+## **README.md**
 
-#### Changes Made
-- **Corrected Image Path:**
-    - Updated the path from `"/com/example/demo/images/shield.jpg"` to `"/com/example/demo/images/shield.png"`.
-
-
-### LevelParent.java Changes
-
-#### Changes Made
-Added the following code in `goToNextLevel` method to allow the boss to appear smoothly and immediately after entering Level Two:
-  ```java
-  timeline.stop(); // Stop the current game loop.
-  root.getChildren().clear(); // Clear all nodes from the scene to release resources.
-  ```
-#### Collision Handling Enhancements
-
-#### Changes Made
-
-1. **Refined `handleEnemyProjectileCollisions` Method:**
-    - Specifically handles collisions between enemy projectiles and the user.
-        - decrease user's health only when there is actual collision with the enemy projectiles
-    - When an enemy projectile collides with the user:
-        - The projectile is destroyed (`projectile.takeDamage()`).
-        - The user's health is decreased (`user.takeDamage()`).
-
-2. **Updated `handleCollisions` Method:**
-    - Introduced logic to detect collisions between projectiles and a `Boss` using the `Boss` class's custom hitbox (`boss.getCustomHitbox()`):
-        - If a projectile intersects the boss's custom hitbox:
-            - The projectile is destroyed.
-            - The boss takes damage.
-    - Ensured default collision detection for other enemies by checking:
-      ```java
-      enemy.getBoundsInParent().intersects(projectile.getBoundsInParent())
-      ```
-
-### Boss.java Changes
-
-#### Added `getCustomHitbox` Method
-- Introduced a new method `getCustomHitbox` to provide a more precise collision detection for the boss.
-- Adjusts the default bounds by adding padding:
-    - Horizontal padding: `80` units.
-    - Vertical padding: `80` units.
-
-#### Code Example:
-```java
-public javafx.geometry.Bounds getCustomHitbox() {
-    // Get the default bounds of the BossSpider
-    javafx.geometry.Bounds originalBounds = super.getBoundsInParent();
-
-    // Adjust the bounds to make the hitbox more precise
-    double paddingX = 80; // Horizontal padding
-    double paddingY = 80; // Vertical padding
-    return new javafx.geometry.BoundingBox(
-            originalBounds.getMinX() + paddingX, // Adjust left boundary
-            originalBounds.getMinY() + paddingY, // Adjust top boundary
-            originalBounds.getWidth() - 2 * paddingX, // Adjust width
-            originalBounds.getHeight() - 2 * paddingY // Adjust height
-    );
-}
-```
-
-### Glow Effect Changes for Boss Plane
-
-#### Changes Made
-
-1. **Replaced Shield Image with Glow Effect:**
-    - Added a `DropShadow` effect to simulate a **bright yellow glow**.
-    - Glow parameters include:
-        - `Color.YELLOW` for the glow color.
-        - `radius` set to `30` for a large glowing radius.
-        - `spread` set to `0.5` for high brightness and intensity.
-
-2. **Updated Shield Activation and Deactivation:**
-    - When the shield is activated, the glow effect is applied using `setEffect(shieldGlowEffect)`.
-    - When the shield is deactivated, the glow effect is removed using `setEffect(null)`.
-
-3. **Constructor Adjustments:**
-    - Initialized the `DropShadow` effect in the constructor of the `Boss` class.
-
-#### Key Code Snippets:
-- **Constructor Changes:**
-```java
-		shieldGlowEffect = new DropShadow();
-		shieldGlowEffect.setColor(Color.YELLOW); // Blue glow for the shield
-		shieldGlowEffect.setRadius(30);       // Adjust the radius for the glow size
-		shieldGlowEffect.setSpread(0.5);      // Spread makes the glow more intense
-
-```
-
-- **Shield Activation and Deactivation:**
-    - **Activate Shield:**
-    ```java
-    private void activateShield() {
-        isShielded = true;
-        setEffect(shieldGlowEffect); // Apply the bright yellow glow
-    }
-    ```
-
-    - **Deactivate Shield:**
-    ```java
-    private void deactivateShield() {
-        isShielded = false;
-        framesWithShieldActivated = 0;
-        setEffect(null); // Remove the glow effect
-    }
-    ```
-
-### LevelParent.java Changes
-
-#### Added Pause/Resume Button
-- **New Feature: Pause/Resume Game**
-    - Added a **Pause** button to allow the player to pause and resume the game.
-    - When paused:
-        - The game loop (`Timeline`) stops.
-        - Player controls are disabled.
-    - When resumed:
-        - The game loop restarts.
-        - Player controls are re-enabled.
-
-- **Code Changes**:
-  ```java
-  private void initializePauseButton() {
-      pauseButton = new Button("Pause");
-      pauseButton.setFont(Font.font("Arial", 14));
-      pauseButton.setStyle("-fx-background-color: orange; -fx-text-fill: white; -fx-background-radius: 10;");
-      pauseButton.setOnAction(e -> togglePause());
-
-      // Position the button at the top-right of the screen
-      pauseButton.setLayoutX(screenWidth - 100);
-      pauseButton.setLayoutY(20);
-
-      root.getChildren().add(pauseButton);
-  }
-
-  private void togglePause() {
-      if (isPaused) {
-          timeline.play();
-          isPaused = false;
-          pauseButton.setText("Pause");
-      } else {
-          timeline.pause();
-          isPaused = true;
-          pauseButton.setText("Resume");
-      }
-  }
-  ```
-
-#### Gameplay Usage
-- During gameplay, click the **Pause** button at the top-right corner to pause the game.
-- Click **Resume** to continue playing.
-
-
-### Main.java Changes
-
-### **1. Added Main Menu Initialization**
-- **What Changed:**
-    - Introduced a `MainMenu` object to initialize the main menu before launching the game.
-    - Passed the `Stage` and the main class instance to the `MainMenu` for better modularity.
-- **Why:**
-    - To separate the main menu logic from the game logic, making it easier to manage and extend.
-
-#### **Added Code:**
-```java
-// Initialize the main menu and pass this instance
-MainMenu menu = new MainMenu();
-menu.start(stage, this); // Pass stage and main class to menu
-```
+### **1. GitHub Repository**
+[GitHub Repository](https://github.com/your-repository-link)
 
 ---
 
-### **2. Introduced a `startGame` Method**
-- **What Changed:**
-    - Extracted game launch logic into a separate method.
-- **Why:**
-    - To improve code readability and separate responsibilities.
-
-#### **New Method:**
-```java
-public void startGame(Stage stage) {
-    try {
-        myController = new Controller(stage);
-        myController.launchGame();
-    } catch (Exception e) {
-        e.printStackTrace(); // Log exceptions if any issues occur during game startup
-    }
-}
-```
-
----
-
-
-### **3. Created `MainMenu` Class**
-- **What Changed:**
-    - Added a new `MainMenu` class to handle the main menu of the game.
-    - The `MainMenu` class is responsible for displaying the main menu interface and transitioning to the game.
-- **Why:**
-    - To modularize the code, making it easier to manage the main menu separately from the game logic.
-
-
-
-
-
-
-### **UserPlane Horizontal Movement Update Modified Classes**
-
-1. **UserPlane.java**
-
-    - **Added horizontal movement capabilities**:
-        - Implemented `moveLeft()`, `moveRight()`, and `stopHorizontal()` methods.
-        - Updated `updatePosition()` to include horizontal velocity adjustments, enabling the plane to move in both directions concurrently.
-
-2. **LevelParent.java**
-
-    - **Updated Key Handling**:
-        - Modified the `initializeBackground()` method to handle `KeyCode.LEFT` and `KeyCode.RIGHT` events for moving the `UserPlane` horizontally.
-
-### **Code Highlights**
-
-#### **UserPlane.java**
-
-- Added methods for handling horizontal movement:
-  ```java
-  public void moveLeft() {
-      horizontalVelocityMultiplier = -1;
-  }
-
-  public void moveRight() {
-      horizontalVelocityMultiplier = 1;
-  }
-
-  public void stopHorizontal() {
-      horizontalVelocityMultiplier = 0;
-  }
-  ```
-- Updated the `updatePosition()` method to factor in horizontal movement.
-
-#### **LevelParent.java**
-
-- Modified key press and release handling:
-  ```java
-  background.setOnKeyPressed(e -> {
-      if (!isPaused) {
-          KeyCode kc = e.getCode();
-          if (kc == KeyCode.UP) getUser().moveUp();
-          if (kc == KeyCode.DOWN) getUser().moveDown();
-          if (kc == KeyCode.LEFT) getUser().moveLeft();
-          if (kc == KeyCode.RIGHT) getUser().moveRight();
-          if (kc == KeyCode.SPACE) fireProjectile();
-      }
-  });
-
-  background.setOnKeyReleased(e -> {
-      if (!isPaused) {
-          KeyCode kc = e.getCode();
-          if (kc == KeyCode.UP || kc == KeyCode.DOWN) getUser().stop();
-          if (kc == KeyCode.LEFT || kc == KeyCode.RIGHT) getUser().stopHorizontal();
-      }
-  });
-  ```
-
-### Level Two: Transition to Level Three
-
-**NEXT_LEVEL Constant**:
-- A constant `NEXT_LEVEL` was defined at the top of the `LevelTwo` class to specify the path to Level Three.
-```java
-private static final String NEXT_LEVEL = "com.example.demo.LevelThree";
-```
-
-
-
-
-
-
-### UserPlane: Added Firepower Mechanic
-
-In the `UserPlane` class, we introduced a new firepower mechanic that allows the player's plane to have different levels of firepower, impacting the number of projectiles fired.
-
-## Key Changes Made:
-
-1. **Firepower Level**:
-
-    - A new attribute `firePowerLevel` was added to represent the current firepower level of the user plane:
-      ```java
-      private int firePowerLevel = 1; // Default firepower level is 1
-      ```
-
-2. **Modified `fireProjectile` Method**:
-
-    - The `fireProjectile` method was modified to fire multiple projectiles based on the current `firePowerLevel`. If `firePowerLevel` is greater than 1, multiple projectiles are fired in a spread pattern:
-      ```java
-      @Override
-      public ActiveActorDestructible fireProjectile() {
-          double currentX = getLayoutX() + getTranslateX();
-          double currentY = getLayoutY() + getTranslateY();
- 
-          List<ActiveActorDestructible> projectiles = new ArrayList<>();
-          for (int i = 0; i < firePowerLevel; i++) {
-              projectiles.add(new UserProjectile(currentX + PROJECTILE_X_POSITION_OFFSET, currentY + PROJECTILE_Y_POSITION_OFFSET + (i * 10)));
-          }
- 
-          // Return the first projectile for backward compatibility, while other projectiles are added manually.
-          return projectiles.get(0);
-      }
-      ```
-
-3. **Managing Firepower Level**:
-
-    - Added methods to manage the firepower level:
-      ```java
-      public int getFirePowerLevel() {
-          return firePowerLevel;
-      }
- 
-      public void setFirePowerLevel(int level) {
-          this.firePowerLevel = level;
-      }
- 
-      public void resetFirePower() {
-          this.firePowerLevel = 1; // Reset to default level
-      }
-      ```
-
-These changes enhance the gameplay by allowing the player to collect power-ups that increase their firepower, enabling them to fire multiple projectiles at once for a limited time.
-
-### Added new class
-- LevelThree.java
-- LevelViewLevelThree.java
-- PowerUp.java
-
-
-### LevelParent: Power-Up Integration
-
-In the LevelParent class, we integrated the functionality to spawn and handle power-ups, allowing the player to collect items that enhance their capabilities.
-
-## Key Changes Made:
-
-1. **Power-Up Collection Handling**:
-
-    - A new method `handlePowerUpCollisions` was added to handle collisions between the user plane and power-ups:
-      ```java
-      private void handlePowerUpCollisions() {
-          for (ActiveActorDestructible powerUp : powerUps) {
-              if (powerUp.getBoundsInParent().intersects(user.getBoundsInParent())) {
-                  System.out.println("PowerUp collected!");
-                  activatePowerUp();
-                  powerUp.destroy();
-              }
-          }
-      }
-      ```
-
-2. **Activating Power-Ups**:
-
-    - The `activatePowerUp` method was added to temporarily increase the user's firepower level when a power-up is collected:
-      ```java
-      private void activatePowerUp() {
-          user.setFirePowerLevel(user.getFirePowerLevel() + 1);
-          Timeline powerUpTimer = new Timeline(new KeyFrame(Duration.seconds(5), e -> user.resetFirePower()));
-          powerUpTimer.setCycleCount(1);
-          powerUpTimer.play();
-      }
-      ```
-
-These additions provide an exciting new mechanic to the game, where players can collect power-ups to gain temporary advantages, adding depth and strategy to gameplay.
-
-
-
-### UserPlane Spreadshot Feature**
-
-### **Changes Made**
-
-1. **Added Spreadshot Capability**:
-    - **Method Added**: `activateOneTimeSpreadshot()`
-        - Activates a spreadshot that allows the user to fire three projectiles at once for the next shot.
-    - **Spreadshot Implementation**:
-        - Updated the `fireProjectile()` method to support firing three projectiles (left, center, right) when the spreadshot is active.
-        - After firing the spreadshot, the plane automatically reverts to firing a single projectile.
-
-   ```java
-   public void activateOneTimeSpreadshot() {
-       oneTimeSpreadshotActive = true; // Activate spreadshot for the next shot
-   }
-
-   @Override
-   public ActiveActorDestructible fireProjectile() {
-       double currentX = getLayoutX() + getTranslateX();
-       double currentY = getLayoutY() + getTranslateY();
-
-       if (oneTimeSpreadshotActive) {
-           // Create spreadshot projectiles
-           ActiveActorDestructible leftProjectile = new UserProjectile(currentX + 100, currentY - 10);
-           ActiveActorDestructible centerProjectile = new UserProjectile(currentX + 100, currentY);
-           ActiveActorDestructible rightProjectile = new UserProjectile(currentX + 100, currentY + 10);
-
-           // Add all projectiles to the scene via LevelParent
-           levelParent.addProjectile(leftProjectile);
-           levelParent.addProjectile(centerProjectile);
-           levelParent.addProjectile(rightProjectile);
-
-           oneTimeSpreadshotActive = false; // Reset spreadshot flag
-           return centerProjectile; // Return the center projectile for compatibility
-       } else {
-           // Single shot
-           ActiveActorDestructible projectile = new UserProjectile(currentX + 100, currentY);
-           levelParent.addProjectile(projectile); // Add to LevelParent
-           return projectile;
-       }
-   }
+### **2. Compilation Instructions**
+#### **Compilation Instructions**
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repository-link.git
    ```
-
----
-
-### **Usage Summary**
-- **Activate Spreadshot**: Call `activateOneTimeSpreadshot()` to enable a spreadshot for the next shot.
-- **Fire Projectile**: Use `fireProjectile()` to fire either a single shot or a spreadshot depending on whether spreadshot is activated.
-
----
-
-### **Key Features**
-- **Single Shot**: By default, fires one projectile.
-- **Spreadshot**: After activation, fires three projectiles (left, center, right).
-
----
-
-### **Notes**
-- The spreadshot fires **only once** after activation, then reverts to the default single shot.
----
-### created
-SpreadshotPowerUp.java class
-
----
-. **LevelParent Method Added**:
-- **Method Added**: `addProjectile(ActiveActorDestructible projectile)`
-- Adds a projectile to the game scene if it is not already present.
-- Ensures that projectiles are tracked and added to the scene graph only once.
-
-   ```java
-   public void addProjectile(ActiveActorDestructible projectile) {
-       if (!userProjectiles.contains(projectile)) {
-           getRoot().getChildren().add(projectile); // Add to the scene graph
-           userProjectiles.add(projectile);         // Track the projectile
-       }
-   }
+2. Navigate to the project directory:
+   ```bash
+   cd CW2024
    ```
+3. Use Maven to clean, compile, and run the project:
+   ```bash
+   mvn clean javafx:run
+   ```
+4. Ensure you have JDK 19 or later and JavaFX dependencies installed.
 
 ---
 
-### Changes in gameoverimage.java
-- set the size of image smaller
-- hard code the image position **might change**
----
-
-# Created SoundManager.java
-## Sound Management
-
-The `SoundManager` class is used in `LevelParent` to handle all sound effects, including:
-
-- **Power-Up Collection**: When the user collects a power-up, a sound effect is played using `SoundManager`.
-- **Game Win/Loss**: The `SoundManager` is used to play sounds when the user wins or loses the game.
-
-The `SoundManager` is initialized in `LevelParent` and provides sound effects throughout the gameplay experience, enhancing the player's immersion.
-
-## Key Features of `LevelParent`
-
-- Manages background, enemies, and projectiles for each level.
-- Includes a pause button for stopping and resuming the game.
-- Handles user input for controlling the player's plane.
-- Updates actors, checks for collisions, and manages power-ups.
+### **3. Implemented and Working Properly**
+#### **Implemented and Working Properly**
+- **Main Menu**:
+    - Features background music and settings (e.g., muting sound effects).
+- **Pause/Resume Functionality**:
+    - Allows players to pause and resume gameplay.
+- **Power-Up Integration**:
+    - Collect power-ups to gain temporary advantages like enhanced firepower.
+- **Collision Management**:
+    - Accurate collision detection between projectiles, enemies, and the player.
+- **Spreadshot Mechanic**:
+    - Fires three projectiles simultaneously upon activation.
+- **Level Transition**:
+    - Smooth transitions between levels, including the appearance of a boss.
 
 ---
 
-## Boss Projectile Modification
-
-The boss projectile has been modified from a normal projectile to a spread web projectile (`BossProjectile`). Key changes include:
-
-- **Explosion with Spread Fragments**: When the boss projectile reaches a certain point, it explodes after a delay, releasing multiple smaller web fragments that spread out in random directions.
-- **Fragment Creation**: The fragments are created with random velocities to ensure a more natural and wider spread, adding challenge to the gameplay.
-- **Delayed Explosion**: The explosion of the boss projectile is delayed by 1 second after it reaches a specific position, providing a more dynamic effect.
-- **Collision Detection**: The fragments check for collisions with the user's plane, reducing health upon impact.
+### **4. Implemented but Not Working Properly**
+#### **Implemented but Not Working Properly**
+- **Boss Projectile Spread**:
+    - Explosion and fragments spread correctly but sometimes collide with other actors unexpectedly.
+- **SoundManager**:
+    - Background music may not stop during rapid transitions between menus.
 
 ---
-## SoundManager.java
-- soundEffectsMuted method, to check whether soound effect is muted
----
-## MainMenu.java
-- added background music
-- settings (mute sound effect & mute background music)
+
+### **5. Features Not Implemented**
+#### **Features Not Implemented**
+- **Online Multiplayer**:
+    - Due to time constraints, multiplayer mode was excluded.
+- **AI Pathfinding for Enemies**:
+    - Implementing advanced pathfinding algorithms proved to be complex within the timeframe.
 
 ---
-## Pausemenu.java
-- pausemenu.java created
-- initialised pause menu & create pause button in levelparrent
-- ---
-## EndGameMenu.java
-- EndGameMenu.java created
-- initialised end game menu in levelparrent
-- ---
-## Single responsibility
-- levelparent split into 7 classes:
-1. Power-Up Management
-2. UI manager
-3. Game State manager
-4. Collision manager
-5. Enemy manager
-6. Input Handler
-7. Projectile Manager
 
-modified to utilize SRP class files from levelparent
-1. usersuperman
-2. level 1-3
+### **6. New Java Classes**
+#### **New Java Classes**
+1. **LevelThree**: Represents the third level of the game, managing its unique enemies, challenges, and transitions.  
+   *Location: `com.example.demo.levels`*
 
-## Design patterns
-Summary of Affected Files
-1/GameStateManager (/Singleton, and /Observer for state changes).
-1/UIManager (/Singleton and /Observer for UI updates).
-1/LevelParent (/Observable for level events and health updates).
+2. **CollisionManager**: Handles collision detection and responses for actors such as projectiles, enemies, and the player.  
+   *Location: `com.example.demo.managers`*
 
-1/EnemyManager (/Singleton and Factory for enemy creation).
+3. **EnemyManager**: Manages the spawning and behavior of enemies in the game.  
+   *Location: `com.example.demo.managers`*
 
+4. **GameStateManager**: Controls the current state of the game, such as playing, paused, game over, and win states, and notifies observers about state changes.  
+   *Location: `com.example.demo.managers`*
 
-2/PowerUpManager (/Singleton).
+5. **InputHandler**: Manages and processes user input for controlling the player’s actions in the game.  
+   *Location: `com.example.demo.managers`*
 
-ProjectileManager (/Singleton).
+6. **PowerUpManager**: Handles the spawning and activation of power-ups to provide temporary boosts to the player.  
+   *Location: `com.example.demo.managers`*
+
+7. **ProjectileManager**: Manages the projectiles fired by the player and enemies, including tracking their positions and behaviors.  
+   *Location: `com.example.demo.managers`*
+
+8. **SoundManager**: Handles sound effects and background music for the game, including muting options and specific event sounds.  
+   *Location: `com.example.demo.managers`*
+
+9. **Observer**: An interface for implementing the Observer design pattern, allowing objects to be notified of changes in observed subjects.  
+   *Location: `com.example.demo.observer`*
+
+10. **PowerUp**: Represents a generic power-up object that players can collect to gain temporary advantages.  
+    *Location: `com.example.demo.powerups`*
+
+11. **SpreadshotPowerUp**: A specialized power-up that activates a spread-shot mechanic, enabling the player to fire multiple projectiles in one shot.  
+    *Location: `com.example.demo.powerups`*
+
+12. **EndGameMenu**: Manages the UI for the end-game menu, allowing players to restart or exit after the game ends.  
+    *Location: `com.example.demo.ui.menus`*
+
+13. **MainMenu**: Represents the main menu interface, including options to start the game, view settings, or exit.  
+    *Location: `com.example.demo.ui.menus`*
+
+14. **PauseMenu**: Provides the pause menu interface, allowing players to resume, navigate to the main menu, or exit the game.  
+    *Location: `com.example.demo.ui.menus`*
+
+15. **UIManager**: Handles the overall UI elements, such as menus and buttons, and responds to game state changes using the Observer pattern.  
+    *Location: `com.example.demo.ui`*
+
+---
+
+### **7. Modified Java Classes**
+#### **Modified Java Classes**
+1. **LevelParent**:
+    - **Changes Made**: Refactored into SRP classes. Added pause functionality, collision management, and enhanced power-up integration.
+    - **Reason**: Simplified codebase for modularity and maintainability.
+
+2. **UserPlane**:
+    - **Changes Made**: Added horizontal movement capabilities and enhanced firepower mechanics, including the spreadshot feature.
+    - **Reason**: Improved gameplay mechanics and added diversity to player abilities.
+
+3. **Boss**:
+    - **Changes Made**: Introduced custom hitbox logic for accurate collision detection and implemented glowing shield effects using DropShadow.
+    - **Reason**: Enhanced boss interactions and improved visual aesthetics.
+
+4. **Main**:
+    - **Changes Made**: Added `startGame` method for launching the game and modularized the initialization of menus.
+    - **Reason**: Improved code structure and enabled separation of menu and game logic.
+
+5. **GameOverImage**:
+    - **Changes Made**: Adjusted image size and hard-coded position.
+    - **Reason**: Improved UI clarity and player feedback during the game over sequence.
+
+---
+
+### **8. Unexpected Problems**
+#### **Unexpected Problems**
+1. **Mockito Mocking Errors**:
+    - **Issue**: Encountered issues mocking JavaFX classes with Mockito due to module restrictions.
+    - **Resolution**: Switched to using dummy classes for testing and avoided direct mocking of restricted classes.
+
+2. **JavaFX Scene Graph**:
+    - **Issue**: Difficulty updating the scene graph dynamically during level transitions.
+    - **Resolution**: Resolved by clearing and rebuilding the scene graph for smoother transitions.
+
+---
+
