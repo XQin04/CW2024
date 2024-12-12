@@ -1,0 +1,13 @@
+module:com.example.demo
+com.example.demo.actors
+com.example.demo.actors.enemies
+com.example.demo.actors.player
+com.example.demo.controller
+com.example.demo.gameplay
+com.example.demo.managers
+com.example.demo.observer
+com.example.demo.powerups
+com.example.demo.projectiles
+com.example.demo.ui
+com.example.demo.ui.gameplayUI
+com.example.demo.ui.menus
