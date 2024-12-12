@@ -25,8 +25,7 @@ class LevelTwoTest extends JavaFXInitializer {
 
     @BeforeAll
     static void initializeJavaFX() {
-        // Initialize the JavaFX platform
-        Platform.startup(() -> {});
+        JavaFXInitializer.initialize();
     }
 
     @BeforeEach

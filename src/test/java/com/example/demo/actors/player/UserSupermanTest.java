@@ -25,9 +25,9 @@ class UserSupermanTest extends JavaFXInitializer {
 
     @BeforeAll
     static void initializeJavaFX() {
-        // Initialize JavaFX toolkit
-        Platform.startup(() -> {});
+        JavaFXInitializer.initialize();
     }
+
 
     @BeforeEach
     void setUp() throws Exception {

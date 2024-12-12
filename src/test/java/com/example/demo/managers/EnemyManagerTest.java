@@ -18,9 +18,9 @@ class EnemyManagerTest extends JavaFXInitializer {
     private Group root;
     @BeforeAll
     static void initializeJavaFX() {
-        // Ensure JavaFX is initialized
-        Platform.startup(() -> {});
+        JavaFXInitializer.initialize();
     }
+
     @BeforeEach
     void setUp() {
         // Set up the JavaFX root group and initialize EnemyManager

@@ -1,11 +1,19 @@
 package com.example.demo.managers;
 
+import com.example.demo.JavaFXInitializer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameStateManagerTest {
+
+    @BeforeAll
+    static void initializeJavaFX() {
+        JavaFXInitializer.initialize();
+    }
+
 
     @BeforeEach
     void setUp() {

@@ -21,9 +21,9 @@ public class BossSpiderTest extends JavaFXInitializer {
 
     @BeforeAll
     static void initializeJavaFX() {
-        // Ensure JavaFX is initialized
-        Platform.startup(() -> {});
+        JavaFXInitializer.initialize();
     }
+
     @BeforeEach
     void setUp() {
         // Initialize JavaFX components

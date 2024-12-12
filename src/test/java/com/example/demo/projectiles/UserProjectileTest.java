@@ -19,8 +19,7 @@ class UserProjectileTest extends JavaFXInitializer {
 
     @BeforeAll
     static void initializeJavaFX() {
-        // Initialize JavaFX toolkit
-        Platform.startup(() -> {});
+        JavaFXInitializer.initialize();
     }
 
     @BeforeEach

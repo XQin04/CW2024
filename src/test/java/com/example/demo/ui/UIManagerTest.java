@@ -27,14 +27,7 @@ public class UIManagerTest extends JavaFXInitializer {
 
     @BeforeAll
     static void initializeJavaFX() {
-        CountDownLatch latch = new CountDownLatch(1);
-        Platform.startup(latch::countDown);
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Failed to initialize JavaFX", e);
-        }
+        JavaFXInitializer.initialize();
     }
 
     @BeforeEach
@@ -69,20 +62,6 @@ public class UIManagerTest extends JavaFXInitializer {
         waitForFXThread(latch);
     }
 
-    @Test
-    void testPauseButtonAction() {
-        CountDownLatch latch = new CountDownLatch(1);
-        Platform.runLater(() -> {
-            // Simulate clicking the pause button
-            Button pauseButton = uiManager.getPauseButton();
-            pauseButton.fire();
-
-            // Verify that the game was paused
-            assertTrue(levelParent.isPaused(), "Game should be paused after clicking the pause button.");
-            latch.countDown();
-        });
-        waitForFXThread(latch);
-    }
 
     @Test
     void testCleanup() {

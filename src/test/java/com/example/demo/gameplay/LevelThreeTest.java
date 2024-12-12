@@ -25,7 +25,7 @@ class LevelThreeTest extends JavaFXInitializer {
 
     @BeforeAll
     static void initializeJavaFX() {
-        Platform.startup(() -> {});
+        JavaFXInitializer.initialize();
     }
 
     @BeforeEach
