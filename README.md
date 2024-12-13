@@ -13,7 +13,9 @@
 
 ## GitHub Repository
 
-[Link to GitHub Repository](https://github.com/your-repository-link)
+Written by: Eng Xiang Qin (20508943)
+
+https://github.com/XQin04/CW2024.git
 
 ---
 
@@ -24,7 +26,7 @@ Follow these steps to compile and run the application:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-repository-link.git
+   git clone https://github.com/XQin04/CW2024.git
    ```
 
 2. **Navigate to the project directory:**
@@ -38,6 +40,7 @@ Follow these steps to compile and run the application:
     - Download and install JavaFX SDK if not already installed.
     - Set the `--module-path` and `--add-modules` flags in your IDE or command-line execution.
 
+
 4. **Run the application from the command line:**
 
    ```bash
@@ -46,9 +49,11 @@ Follow these steps to compile and run the application:
 
 5. **Dependencies:**
 
-    - Java 11 or above
-    - JavaFX SDK (version 11 or higher)
-    - Ensure all required libraries are included in your classpath.
+   **Check and Set Java SDK Version:**
+   - Go to `File > Project Structure > Project`.
+   - Ensure the **SDK** is set to Java 19 (Amazon Corretto 19.0.2, as shown in your screenshot).
+   - Verify the **Language Level** is compatible with JavaFX (11 or higher).
+   - Ensure all required libraries are included in your classpath.
 
 ---
 
