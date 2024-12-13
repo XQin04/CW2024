@@ -103,21 +103,12 @@ Follow these steps to compile and run the application:
 
 ## Implemented but Not Working Properly
 
-1. **Boss Projectile Explosion:**
-
-    - Explosion fragments sometimes fail to render correctly due to timing issues in the `BossProjectile` class.
-    - Related methods: `scheduleExplosion()`, `spawnExplodingFragments()`.
-
-2. **Power-Up Collection Sound:**
-
-    - Intermittent playback of the power-up collection sound, possibly related to the `playPowerUpSound()` method in the `SoundManager` class.
-
-3. **Background Music Mute Issue:**
+1. **Background Music Mute Issue:**
 
     - Initially, when background music was muted via the `MainMenu` settings, it would still play when the game was paused and resumed.
     - Added a checker in the `PauseMenu` class using `setMusicMuted()` and `isMusicMuted()` in the `SoundManager` to ensure mute state consistency during transitions.
 
-4. **Spreadshot Power-Up Count:**
+2. **Spreadshot Power-Up Count:**
 
     - Collecting multiple `SpreadshotPowerUp` items simultaneously only allowed the user to shoot one spread shot.
     - Modified the `PowerUpManager` and `UserSuperman` classes to include methods like `incrementSpreadshotCount()` and `decrementSpreadshotCount()` to track and apply multiple power-ups.
