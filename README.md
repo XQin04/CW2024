@@ -141,9 +141,7 @@ Follow these steps to compile and run the application:
    - Menus like the pause screen and main menu may appear offset or improperly sized on laptops. While the issue is less noticeable on larger monitors or when the display scaling is set to 100%, a proper solution requires implementing dynamic scaling logic.
    - Not implemented due to time constraints, the focus was placed on core gameplay features and functionality rather than UI scaling adjustments, which would have required additional testing and refinements across various display configurations.
 
---- 
 
-Does this meet your needs?
 ---
 
 ## New Java Classes
