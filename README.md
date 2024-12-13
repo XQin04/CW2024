@@ -1,4 +1,4 @@
-# Sky Battle Coursework Report
+# COMP2042 Coursework
 
 ## Table of Contents
 
