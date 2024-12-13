@@ -68,10 +68,12 @@ Follow these steps to compile and run the application:
     - The "Settings" option allows players to toggle background music and sound effects using checkboxes, leveraging the `SoundManager` class for state management.
     - "How to Play" presents gameplay instructions using `createHowToPlayLayout()` for objectives and controls.
 
+
 2. **Pause Menu:**
 
     - The `PauseMenu` class provides in-game pause functionality through methods like `createStyledButton()` and `configureLayout()`.
     - Features options to "Resume" gameplay, return to the main menu, or exit the application.
+
 
 3. **End Game Menu:**
 
@@ -79,20 +81,24 @@ Follow these steps to compile and run the application:
     - Dynamically updates the title to "You Win" or "Game Over" using the `show()` method.
     - Provides options to return to the main menu or exit the game with methods such as `createStyledButton()`.
 
+
 4. **Player Movement:**
 
     - The `InputHandler` class enables smooth player control using methods like `handleInput()` for movement in all four cardinal directions (up, down, left, right).
     - Integrates seamlessly with the `UserSuperman` character's movement logic.
+
 
 5. **Boss Spider Behavior in Level Two:**
 
     - The `BossSpider` class in LevelTwo uses the `shootProjectile()` method to fire a large projectile.
     - The explosion and fragment behavior are managed using the `BossProjectile` class with methods like `scheduleExplosion()` and `spawnExplodingFragments()`.
 
+
 6. **Level Three Waves:**
 
     - The `LevelThree` class introduces waves of `EnemySpider` units using `generateEnemyWaves()`.
     - The final wave features the `BossSpider` as the level's climax, providing a challenging boss fight.
+
 
 7. **Level Three Power-Ups:**
 
@@ -108,6 +114,7 @@ Follow these steps to compile and run the application:
     - Initially, when background music was muted via the `MainMenu` settings, it would still play when the game was paused and resumed.
     - Added a checker in the `PauseMenu` class using `setMusicMuted()` and `isMusicMuted()` in the `SoundManager` to ensure mute state consistency during transitions.
 
+
 2. **Spreadshot Power-Up Count:**
 
     - Collecting multiple `SpreadshotPowerUp` items simultaneously only allowed the user to shoot one spread shot.
@@ -122,11 +129,21 @@ Follow these steps to compile and run the application:
     - Planned to integrate an online leaderboard for players to compare scores.
     - Not implemented due to the time constraints.
 
+
 2. **Dynamic Weather Effects:**
 
     - Intended to include dynamic weather effects (e.g., rain, thunder) to enhance game immersion.
     - Omitted due to the complexity of integrating animations and ensuring performance across systems.
 
+
+3. **Screen Scaling and Alignment Issue:**
+   - The game interface does not consistently adapt to different screen resolutions and scaling settings, causing misalignment on smaller displays or systems with non-standard DPI scaling (e.g., 125% or 150%).
+   - Menus like the pause screen and main menu may appear offset or improperly sized on laptops. While the issue is less noticeable on larger monitors or when the display scaling is set to 100%, a proper solution requires implementing dynamic scaling logic.
+   - Not implemented due to time constraints, the focus was placed on core gameplay features and functionality rather than UI scaling adjustments, which would have required additional testing and refinements across various display configurations.
+
+--- 
+
+Does this meet your needs?
 ---
 
 ## New Java Classes
@@ -175,6 +192,7 @@ Follow these steps to compile and run the application:
     - Encountered a `java.lang.reflect.InvocationTargetException` error when playing Level One due to an incorrect file type for the shield image.
     - Fixed by updating the image file extension from `.jpg` to `.png` in the `ShieldImage` class.
 
+
 2. **Game Crash on Transition to Level Two:**
 
     - The game crashed when transitioning to Level Two due to resources not being cleared from Level One.
@@ -183,6 +201,7 @@ Follow these steps to compile and run the application:
       timeline.stop(); // Stop the current game loop.
       root.getChildren().clear(); // Clear all nodes from the scene to release resources.
       ```
+
 
 3. **Shield Image Not Displaying in Level Two:**
 
